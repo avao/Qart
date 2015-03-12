@@ -212,7 +212,7 @@ namespace Qart.Core.Io.FileRolling
         private static IEnumerable<string> GetFileNamesForBaseName(string baseFileName)
         {
             string fullPath = PathUtils.ResolveRelative(baseFileName);
-            return Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath) + "*", SearchOption.TopDirectoryOnly);
+            return Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath) + ".*", SearchOption.TopDirectoryOnly);
         }
 
         private static IEnumerable<string> OrderByWriteTime(IEnumerable<string> fileNames)

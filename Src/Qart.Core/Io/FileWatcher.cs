@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Qart.Core.Text;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Qart.Core.Io
                             RegexOptions.IgnoreCase | RegexOptions.Singleline);
             _pattern = pattern;
             _queue = new Queue<KeyValuePair<string, IEnumerable<string>>>();
-            var tokens = Tokenize(pattern);
+            var tokens = PatternUtils.Tokenize(pattern);
             _queue.Enqueue(new KeyValuePair<string, IEnumerable<string>>(tokens[0] +  Path.DirectorySeparatorChar, tokens.Skip(1)));
 
             CreateWatchers();
@@ -41,7 +42,7 @@ namespace Qart.Core.Io
                 var kvp = _queue.Dequeue();
                 var first = kvp.Value.First();
                 var path = Path.Combine(kvp.Key, first);
-                if(!IsPattern(first) && Directory.Exists(path))
+                if(!PatternUtils.IsPattern(first) && Directory.Exists(path))
                 {
                     var rest = kvp.Value.Skip(1).ToList();
                     if(rest.Count>0)
@@ -72,16 +73,7 @@ namespace Qart.Core.Io
             return fileWatcher;
         }
 
-        private static bool IsPattern(string token)
-        {
-            return token.Contains('*') || token.Contains('?');
-        }
-
-        private string[] Tokenize(string pattern)
-        {
-            return pattern.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
+        
 
         private static string GetDirectoryForListening(string pattern)
         {

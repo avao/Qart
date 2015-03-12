@@ -51,12 +51,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Io\FileRolling\RollingFileReaderManager.cs" />
     <Compile Include="Io\FileRolling\TimeBasedPoller.cs" />
+    <Compile Include="Io\Search.cs" />
     <Compile Include="Io\FileUtils.cs" />
     <Compile Include="Io\FileWatcher.cs" />
     <Compile Include="Io\PathUtils.cs" />
     <Compile Include="Io\FileRolling\RollingFileReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Text\PatternUtils.cs" />
     <Compile Include="Validation\Require.cs" />
   </ItemGroup>
   <ItemGroup>
