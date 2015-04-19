@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core", "Qart.Core\Qart.Core.csproj", "{2444BC84-514F-41D8-80D5-EF171F514C91}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{AD2EFE07-7A37-4EB6-8F9E-70A493C8FE87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.RandomLogger", "Qart.RandomLogger\Qart.RandomLogger.csproj", "{53D08AFD-EC85-4572-AA24-1B63AAEB931C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.FileForwarder", "Qart.FileForwarder\Qart.FileForwarder.csproj", "{02433D9E-C961-4F6A-AD24-37AE4465E59D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{53D08AFD-EC85-4572-AA24-1B63AAEB931C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53D08AFD-EC85-4572-AA24-1B63AAEB931C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53D08AFD-EC85-4572-AA24-1B63AAEB931C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
