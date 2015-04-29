@@ -142,6 +142,11 @@ namespace Qart.Core.Io.FileRolling
         }
     }
 
+
+
+//TODO line based file reader should it be based on wrapper or should it be based on intenal implementation calling read line method?
+// wrapper can abstract reading anything with various separators though intenal implementation can be faster due to missing double buffering.
+// wrapper will be more generic
     public class RollingFileReader
     {
         IFilePositionStore _store;
@@ -320,6 +325,12 @@ namespace Qart.Core.Io.FileRolling
                 _position.UpdatePosition(_fileStream.Position);
                 _store.SetPosition(_position.FileId, _fileStream.Position);
             }
+        }
+
+        public void RollBack()
+        {
+            _postion = _store.GetPosition(_position.FileId);
+//TODO reopen stream  - we could have moved to a new file.
         }
     }
 }

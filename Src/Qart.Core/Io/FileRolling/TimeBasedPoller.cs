@@ -10,11 +10,11 @@ namespace Qart.Core.Io.FileRolling
 {
     public class TimeBasedPoller
     {
-        private Action<byte[], int, int> _processContent;
+        private Func<byte[], int, int, bool> _processContent;
         private RollingFileReader _rollingFileReader;
         private IObservable<long> _observable;
 
-        public TimeBasedPoller(RollingFileReader fileReader, Action<byte[], int, int> processContent)
+        public TimeBasedPoller(RollingFileReader fileReader, Func<byte[], int, int, bool> processContent)
         {
             _rollingFileReader = fileReader;
             _processContent = processContent;
@@ -29,8 +29,15 @@ namespace Qart.Core.Io.FileRolling
             var length = _rollingFileReader.Read(buf, 0, bufSize);
             while(length > 0)
             {
-                _processContent(buf, 0, length);
-                _rollingFileReader.Ack();
+                if (_processContent(buf, 0, length))
+                {
+                    _rollingFileReader.Ack();
+                }
+                else
+                {
+                    _rollingFileReader.RollBack();
+                    break;
+                }
                 length = _rollingFileReader.Read(buf, 0, bufSize);
             }
         }
