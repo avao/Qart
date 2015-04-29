@@ -20,10 +20,16 @@ namespace Qart.FileForwarder
             var manager = new RollingFileTextReaderManager(@"D:\Work\Qart\Src\Qart.RandomLogger\bin\Debug\log.txt",
                                                         new FileBasedPositionStore(@"c:\work\output"),
                                                         ReadBehaviour.FromWhereLeft,
-                                                        new DummyOutputProvider(@"c:\work\output"));
+                                                        ProcessLine);
 
 
             Console.ReadKey();
+        }
+
+        static bool ProcessLine(string fileName, string line)
+        {
+            Console.WriteLine(fileName + ": " + line);
+            return true;
         }
     }
 }
