@@ -60,7 +60,7 @@ namespace Qart.Core.Io.FileRolling
                 return;
 
             var output = _outputProvider.GetOutput(path);
-            _knownFiles.Add(path, new TimeBasedPoller(new RollingFileReader(path, _positionStore, _readBehaviour), (buf, pos, len) => { output.Write(buf, pos, len); output.Flush(); }));
+            _knownFiles.Add(path, new TimeBasedPoller(new RollingFileReader(path, _positionStore, _readBehaviour), (buf, pos, len) => { output.Write(buf, pos, len); output.Flush(); return true;}));
         }
 
         private bool IsRolledFile(string path)

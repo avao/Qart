@@ -8,138 +8,11 @@ using System.Threading.Tasks;
 
 namespace Qart.Core.Io.FileRolling
 {
-    public class FileId
-    {
-        public string BaseFileName { get; private set; }
-        public DateTime WriteTime { get; private set; }
-
-        public FileId(string baseFileName, DateTime writeTime)
-        {
-            //TODO check that is not rolled file, i.e. "blah.5"
-            BaseFileName = baseFileName;
-            WriteTime = writeTime;
-        }
-
-        public static FileId Create(string baseFileName)
-        {
-            return new FileId(baseFileName, DateTime.UtcNow);
-        }
-    }
-
-    public enum ReadBehaviour
+     public enum ReadBehaviour
     {
         FromBeginning,
         FromWhereLeft,
         FromCurrentPos
-    }
-
-    public class FilePosition
-    {
-        public long Position { get; private set; }
-        public FileId FileId { get; private set; }
-
-        public FilePosition(FileId fileId, long position)
-        {
-            Position = position;
-            FileId = fileId;
-        }
-
-        public void UpdatePosition(long pos)
-        {
-            Position = pos;
-        }
-    }
-
-    public class FilePositionSerialiser
-    {
-        public static FilePosition Read(string baseFileName, StreamReader reader)
-        {
-            var writeTime = reader.ReadDateTime();
-            reader.Read();//skip space
-            var pos = long.Parse(reader.ReadToEnd());
-            return new FilePosition(new FileId(baseFileName, writeTime), pos);
-        }
-
-        public static void Write(FilePosition pos, TextWriter writer)
-        {
-            writer.Write(pos.FileId.WriteTime.ToString("MM/dd/yyyyTHH:mm:ss.fff"));
-            writer.Write(" ");
-            writer.Write(pos.Position);
-        }
-
-    }
-
-    public static class TextReaderExtensions
-    {
-        public static DateTime ReadDateTime(this TextReader reader)
-        {
-            char[] buf = new char[23];
-            reader.Read(buf, 0, 23);
-            return DateTime.ParseExact(new string(buf), "dd/MM/yyyyTHH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-        }
-    }
-
-    public interface IFilePositionStore
-    {
-        FilePosition GetPosition(string baseFileName);
-        void SetPosition(FileId fileId, long pos);
-    }
-
-
-    public class FileBasedPositionStore : IFilePositionStore
-    {
-        //TODO concurrency
-        private IDictionary<string, FilePosition> _positions;
-
-        public string BaseDir { get; private set; }
-
-        public FileBasedPositionStore(string baseDir)
-        {
-            BaseDir = baseDir;
-            _positions = new Dictionary<string, FilePosition>();
-        }
-
-        public FilePosition GetPosition(string baseFileName)
-        {
-            FilePosition item;
-            if (_positions.TryGetValue(baseFileName, out item))
-            {
-                return item;
-            }
-            else
-            {
-                string fileName = GetTargetFileName(baseFileName);
-                if (File.Exists(fileName))
-                {
-                    using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
-                    using (var reader = new StreamReader(stream, Encoding.UTF8, false, 200, true))
-                    {
-                        return FilePositionSerialiser.Read(baseFileName, reader);
-                    }
-                }
-
-                return null;
-            }
-        }
-
-        public void SetPosition(FileId fileId, long pos)
-        {
-            var position = new FilePosition(fileId, pos);
-            _positions[fileId.BaseFileName] = position;
-
-            using (var stream = new FileStream(GetTargetFileName(fileId.BaseFileName), FileMode.OpenOrCreate, FileAccess.Write))
-            using (var writer = new StreamWriter(stream))
-            {
-                FilePositionSerialiser.Write(position, writer);
-            }
-        }
-
-        private string GetTargetFileName(string fileName)
-        {
-            //TODO include dir as well
-
-            return Path.Combine(BaseDir, "_" + Path.GetFileName(fileName));
-        }
     }
 
 
@@ -329,7 +202,7 @@ namespace Qart.Core.Io.FileRolling
 
         public void RollBack()
         {
-            _postion = _store.GetPosition(_position.FileId);
+            _position = _store.GetPosition(_position.FileId.BaseFileName);
 //TODO reopen stream  - we could have moved to a new file.
         }
     }
