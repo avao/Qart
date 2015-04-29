@@ -56,6 +56,8 @@
     <Compile Include="Io\FileRolling\FilePosition.cs" />
     <Compile Include="Io\FileRolling\IFilePositionStore.cs" />
     <Compile Include="Io\FileRolling\RollingFileReaderManager.cs" />
+    <Compile Include="Io\FileRolling\RollingFileTextReader.cs" />
+    <Compile Include="Io\FileRolling\TimeBasedPollerForLineReader.cs" />
     <Compile Include="Io\FileRolling\TimeBasedPoller.cs" />
     <Compile Include="Io\Search.cs" />
     <Compile Include="Io\FileUtils.cs" />

@@ -15,9 +15,9 @@ namespace Qart.FileForwarder
             string host = "localhost";
             string queueName = "";
 
-            var publisher = new RabbitMqPublisher("localhost", "queueName", "exchange", "routing");
+            //var publisher = new RabbitMqPublisher("localhost", "queueName", "exchange", "routing");
 
-            var manager = new RollingFileReaderManager(@"C:\Work\Projects\QartStage\Src\Qart.RandomLogger\bin\Debug\log.txt",
+            var manager = new RollingFileTextReaderManager(@"D:\Work\Qart\Src\Qart.RandomLogger\bin\Debug\log.txt",
                                                         new FileBasedPositionStore(@"c:\work\output"),
                                                         ReadBehaviour.FromWhereLeft,
                                                         new DummyOutputProvider(@"c:\work\output"));

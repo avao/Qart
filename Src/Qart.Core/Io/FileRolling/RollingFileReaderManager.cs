@@ -68,4 +68,45 @@ namespace Qart.Core.Io.FileRolling
             return false; //TODO
         }
     }
+
+
+
+    public class RollingFileTextReaderManager
+    {
+        private FileWatcher _fileWatcher;
+        private IDictionary<string, TimeBasedPollerForLineReader> _knownFiles;
+        private IFilePositionStore _positionStore;
+        private ReadBehaviour _readBehaviour;
+        private IOutputProvider _outputProvider;
+
+        public RollingFileTextReaderManager(string pattern, IFilePositionStore store, ReadBehaviour readBehaviour, IOutputProvider outputProvider)
+        {
+            _positionStore = store;
+            _knownFiles = new Dictionary<string, TimeBasedPollerForLineReader>();
+            _readBehaviour = readBehaviour;
+            _outputProvider = outputProvider;
+            _fileWatcher = new FileWatcher(pattern, OnNewFile);
+            foreach (var file in Search.FindFiles(pattern))
+            {
+                OnNewFile(file);
+            }
+        }
+
+
+
+        private void OnNewFile(string path)
+        {
+            TimeBasedPollerForLineReader reader;
+            if (IsRolledFile(path) || _knownFiles.TryGetValue(path, out reader))
+                return;
+
+            var output = _outputProvider.GetOutput(path);
+            _knownFiles.Add(path, new TimeBasedPollerForLineReader(new RollingFileReader(path, _positionStore, _readBehaviour), (buf) => { /*TODO*/ return true; }));
+        }
+
+        private bool IsRolledFile(string path)
+        {
+            return false; //TODO
+        }
+    }
 }
