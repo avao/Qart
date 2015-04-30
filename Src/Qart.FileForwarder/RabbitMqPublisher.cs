@@ -14,22 +14,19 @@ namespace Qart.FileForwarder
         private IModel _channel;
 
         private string _exchange;
-        private string _routingKey;
 
-        public RabbitMqPublisher(string host, string queueName, string exchange, string routingkey)
+        public RabbitMqPublisher(string host, int port, string user, string password, string exchange)
         {
-            _factory = new ConnectionFactory() { HostName = host };
+            _factory = new ConnectionFactory() { HostName = host, Port = port, UserName = user, Password = password };
             _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queueName, false, false, false, null);
             _exchange = exchange;
-            _routingKey = routingkey;
         }
 
-        public void Publish(string message)
+        public void Publish(string message, string meta)
         {
             var body = Encoding.UTF8.GetBytes(message);
-            _channel.BasicPublish(_exchange, _routingKey, null, body);
+            _channel.BasicPublish(_exchange, meta, null, body);
         }
 
         public void Dispose()

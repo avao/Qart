@@ -12,15 +12,14 @@ namespace Qart.FileForwarder
     {
         static void Main(string[] args)
         {
-            string host = "localhost";
-            string queueName = "";
 
-            //var publisher = new RabbitMqPublisher("localhost", "queueName", "exchange", "routing");
+            string computerName = Environment.GetEnvironmentVariable("COMPUTERNAME");
+            var publisher = new RabbitMqPublisher("localhost", 5672, "publisher", "publisher",  "exchange");
 
             var manager = new RollingFileTextReaderManager(@"D:\Work\Qart\Src\Qart.RandomLogger\bin\Debug\log.txt",
                                                         new FileBasedPositionStore(@"c:\work\output"),
                                                         ReadBehaviour.FromWhereLeft,
-                                                        ProcessLine);
+                                                        (content, meta) => { publisher.Publish(content, computerName + "." + "AppName" + "." + meta); return true; });
 
 
             Console.ReadKey();

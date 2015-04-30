@@ -23,7 +23,6 @@ namespace Qart.Core.Io.FileRolling
     public class RollingFileReader
     {
         IFilePositionStore _store;
-        private string _baseFileName;
         private FilePosition _position;
         private FileStream _fileStream;
         private FileStream FileStream
@@ -55,13 +54,14 @@ namespace Qart.Core.Io.FileRolling
             }
         }
 
+        public string BaseFileName { get; private set; }
 
         public RollingFileReader(string baseFileName, IFilePositionStore store, ReadBehaviour readBehaviour)
         {
             //TODO UNCs are not allowed
 
             _store = store;
-            _baseFileName = baseFileName;
+            BaseFileName = baseFileName;
             switch (readBehaviour)
             {
                 case ReadBehaviour.FromBeginning:
