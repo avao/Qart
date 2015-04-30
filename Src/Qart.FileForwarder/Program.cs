@@ -19,7 +19,7 @@ namespace Qart.FileForwarder
             var manager = new RollingFileTextReaderManager(@"D:\Work\Qart\Src\Qart.RandomLogger\bin\Debug\log.txt",
                                                         new FileBasedPositionStore(@"c:\work\output"),
                                                         ReadBehaviour.FromWhereLeft,
-                                                        (content, meta) => { publisher.Publish(content, computerName + "." + "AppName" + "." + meta); return true; });
+                                                        (meta, content) => { publisher.Publish(content, computerName + "." + "AppName" + "." + meta); return true; });
 
 
             Console.ReadKey();
