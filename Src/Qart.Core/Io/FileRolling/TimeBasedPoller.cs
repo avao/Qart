@@ -8,22 +8,27 @@ using System.Threading.Tasks;
 
 namespace Qart.Core.Io.FileRolling
 {
-    public class TimeBasedPoller
+    public class TimeBasedPoller : IDisposable
     {
         private Func<byte[], int, int, bool> _processContent;
         private RollingFileReader _rollingFileReader;
         private IObservable<long> _observable;
+        private CancellationTokenSource _cancelationTokenSource;
 
         public TimeBasedPoller(RollingFileReader fileReader, Func<byte[], int, int, bool> processContent)
         {
             _rollingFileReader = fileReader;
             _processContent = processContent;
             _observable = Observable.Interval(TimeSpan.FromSeconds(10));
-            _observable.Subscribe(_ => ElapsedEventHandler());
+            _cancelationTokenSource = new CancellationTokenSource();
+            _observable.Subscribe(_ => ElapsedEventHandler(), _cancelationTokenSource.Token);
         }
 
         private void ElapsedEventHandler()
         {
+            if (_cancelationTokenSource.IsCancellationRequested)
+                return;
+
             const int bufSize = 1000;
             byte[] buf = new byte[bufSize];
             var length = _rollingFileReader.Read(buf, 0, bufSize);
@@ -40,6 +45,11 @@ namespace Qart.Core.Io.FileRolling
                 }
                 length = _rollingFileReader.Read(buf, 0, bufSize);
             }
+        }
+
+        public void Dispose()
+        {
+            _cancelationTokenSource.Cancel();
         }
     }
 }

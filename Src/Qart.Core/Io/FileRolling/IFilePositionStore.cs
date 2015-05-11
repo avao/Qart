@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Core.Io.FileRolling
 {
-    public interface IFilePositionStore
+    public interface IFilePositionStore : IDisposable
     {
         FilePosition GetPosition(string baseFileName);
         void SetPosition(FileId fileId, long pos);

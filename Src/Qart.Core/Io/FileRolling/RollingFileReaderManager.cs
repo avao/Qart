@@ -30,7 +30,7 @@ namespace Qart.Core.Io.FileRolling
     }
 
 
-    public class RollingFileReaderManager
+    public class RollingFileReaderManager : IDisposable
     {
         private FileWatcher _fileWatcher;
         private IDictionary<string, TimeBasedPoller> _knownFiles;
@@ -66,6 +66,15 @@ namespace Qart.Core.Io.FileRolling
         private bool IsRolledFile(string path)
         {
             return false; //TODO
+        }
+
+        public void Dispose()
+        {
+            _fileWatcher.Dispose();
+            
+            //TODO 
+            //_knownFiles
+            //_positionStore
         }
     }
 
