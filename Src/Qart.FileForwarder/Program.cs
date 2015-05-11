@@ -33,8 +33,6 @@ namespace Qart.FileForwarder
                 var bits = options.RabbitUrl.Split(new[] { ':', '/' });
                 var publisher = new RabbitMqPublisher(bits[0], int.Parse(bits[1]), "publisher", "publisher", bits[2]);
 
-                string computerName = Environment.GetEnvironmentVariable("COMPUTERNAME");
-                var publisher = new RabbitMqPublisher("localhost", 5672, "publisher", "publisher", "exchange");
                 var manager = new RollingFileTextReaderManager(options.FilePattern,
                                                             new FileBasedPositionStore(options.PositionStoreDir),
                                                             ReadBehaviour.FromWhereLeft,
