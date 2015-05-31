@@ -4,11 +4,11 @@
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <authors>AVAO</authors>
+    <owners>AVAO</owners>
     <projectUrl>https://github.com/avao/Qart</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>Core functionality.</description>
     <copyright>Copyright 2015</copyright>
   </metadata>
 </package>
