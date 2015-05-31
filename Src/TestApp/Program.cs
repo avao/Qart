@@ -16,6 +16,8 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
+            
+
             //var watcher = new FileWatcher(@"c:\work\*\*.txt", _ => Console.WriteLine(_));
 
             var manager = new RollingFileReaderManager(@"C:\Work\Projects\QartStage\Src\Qart.RandomLogger\bin\Debug\log.txt",

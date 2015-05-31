@@ -14,5 +14,11 @@ namespace Qart.Core.Validation
             if (value == null)
                 throw new ArgumentException("Expected non null value.");
         }
-    }
+
+        public static void NotNullOrEmpty(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Expected non null and not empty value.");
+        }
+    }   
 }
