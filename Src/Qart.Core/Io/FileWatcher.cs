@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Core.Io
 {
-    public class FileWatcher
+    public class FileWatcher : IDisposable
     {
         
         private Queue<KeyValuePair<string, IEnumerable<string>>> _queue;
@@ -100,5 +100,11 @@ namespace Qart.Core.Io
             return _regex.IsMatch(value);
         }
 
+
+        public void Dispose()
+        {
+            _fileWatcher.Dispose();
+            //TODO _queue
+        }
     }
 }

@@ -61,5 +61,10 @@ namespace Qart.Core.Io.FileRolling
 
             return Path.Combine(BaseDir, "_" + Path.GetFileName(fileName));
         }
+
+        public void Dispose()
+        {
+            //TODO flush cached postions
+        }
     }
 }
