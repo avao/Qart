@@ -17,7 +17,7 @@ namespace Qart.Core.Tests.Io.FileRolling
     {
         private string BaseDir = PathUtils.ResolveRelative(@"TestData\RollingFileReader");
 
-        [Test]
+        [Test, Ignore]
         public void RolledFilesNoPosition()
         {
             string testDir = Path.Combine(BaseDir, "RolledFilesWithoutPosition");
@@ -31,7 +31,7 @@ namespace Qart.Core.Tests.Io.FileRolling
         }
 
 
-        [Test]
+        [Test, Ignore]
         public void RolledFilesWithPosition()
         {
             string testDir = Path.Combine(BaseDir, "RolledFilesWithPosition");
