@@ -69,9 +69,11 @@
     <Compile Include="Text\PatternUtils.cs" />
     <Compile Include="Text\StringExtensions.cs" />
     <Compile Include="Validation\Require.cs" />
+    <Compile Include="Xml\XmlWriterUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Qart.Core.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
