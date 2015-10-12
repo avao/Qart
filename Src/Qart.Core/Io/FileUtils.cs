@@ -36,5 +36,11 @@ namespace Qart.Core.Io
                 return stream.Read(buf, 0, length);
             }
         }
+
+        public static void WriteAllText(string path, string content)
+        {
+            FileUtils.EnsureCanBeWritten(path);
+            File.WriteAllText(path, content);
+        }
     }
 }

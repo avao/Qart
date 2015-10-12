@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>AVAO</authors>
+    <owners>AVAO</owners>
+    <projectUrl>https://github.com/avao/Quart</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Test system</description>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+</package>

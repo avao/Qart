@@ -12,10 +12,10 @@ namespace Qart.Testing
     {
         public static void AreEqual(string fileName, string content)
         {
-            AreEqual(fileName, content, false);
+            AreEqual(fileName, content, false, (expected, actual) => Assert.Fail("Content in the expeced file is different to the provided one",fileName, content));
         }
 
-        public static void AreEqual(string fileName, string content, bool rebase)
+        public static void AreEqual(string fileName, string content, bool rebase, Action<string, string> failAction)
         {
             if(rebase)
             {
@@ -24,7 +24,10 @@ namespace Qart.Testing
             else
             {
                 var expected = File.ReadAllText(fileName);
-                Assert.AreEqual(expected, content);
+                if(!string.Equals(expected, content))
+                {
+                    failAction(expected, content);
+                }
             }
         }
     }

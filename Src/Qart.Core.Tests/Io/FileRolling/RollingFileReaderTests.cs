@@ -27,7 +27,7 @@ namespace Qart.Core.Tests.Io.FileRolling
             var fileReader = new RollingFileReader(path, filePositionStoreMock.Object, ReadBehaviour.FromBeginning);
             string text = fileReader.ReadAllText();
 
-            BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text, false);
+            BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text);
         }
 
 
@@ -49,7 +49,7 @@ namespace Qart.Core.Tests.Io.FileRolling
             var fileReader = new RollingFileReader(path, filePositionStoreMock.Object, ReadBehaviour.FromWhereLeft);
             string text = fileReader.ReadAllText();
 
-            BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text, false);
+            BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text);
         }
     }
 
