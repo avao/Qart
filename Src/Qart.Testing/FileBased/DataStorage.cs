@@ -17,30 +17,20 @@ namespace Qart.Testing.FileBased
             BasePath = basePath;
         }
 
-        public Stream GetStream(string testCaseId, string itemId)
+        public Stream GetStream(string itemId)
         {
-            return File.OpenRead(GetAbsolutePath(testCaseId, itemId));
+            return FileUtils.OpenFileStreamForReading(GetAbsolutePath(itemId));
         }
 
-        public string GetContent(string testCaseId, string itemId)
+        public void PutContent(string itemId, string content)
         {
-            string absolutePath = GetAbsolutePath(testCaseId, itemId);
-            if (File.Exists(absolutePath))
-            {
-                return File.ReadAllText(absolutePath);
-            }
-            return string.Empty;
-        }
-
-        public void PutContent(string testCaseId, string itemId, string content)
-        {
-            FileUtils.WriteAllText(GetAbsolutePath(testCaseId, itemId), content);
+            FileUtils.WriteAllText(GetAbsolutePath(itemId), content);
         }
 
 
-        private string GetAbsolutePath(string testCaseId, string itemId)
+        private string GetAbsolutePath(string itemId)
         {
-            return Path.Combine(BasePath, testCaseId, itemId);
+            return Path.Combine(BasePath, itemId);
         }
 
     }

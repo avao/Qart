@@ -24,7 +24,7 @@ namespace Qart.Testing
         {
             string actualFormattedContent = XDocument.Parse(actualContent).ToString();
 
-            string expectedContent = TestSystem.DataStorage.GetContent(Id, resultName);
+            string expectedContent = TestSystem.DataStorage.GetContent(GetItemId(resultName));
 
             string expectedFormattedContent = string.IsNullOrEmpty(expectedContent)? string.Empty : XDocument.Parse(expectedContent).ToString();
 
@@ -32,7 +32,7 @@ namespace Qart.Testing
             {
                 if (rebaseline)
                 {
-                    TestSystem.DataStorage.PutContent(Id, resultName, actualFormattedContent);
+                    TestSystem.DataStorage.PutContent(GetItemId(resultName), actualFormattedContent);
                 }
 
                 Assert.AreEqual(expectedFormattedContent, actualFormattedContent);
@@ -42,12 +42,12 @@ namespace Qart.Testing
 
         public void AssertContent(string actualContent, string resultName, bool rebaseline)
         {
-            string content = TestSystem.DataStorage.GetContent(Id, resultName);
+            string content = TestSystem.DataStorage.GetContent(GetItemId(resultName));
             if (content != actualContent)
             {
                 if (rebaseline)
                 {
-                    TestSystem.DataStorage.PutContent(Id, resultName, actualContent);
+                    TestSystem.DataStorage.PutContent(GetItemId(resultName), actualContent);
                 }
 
                 Assert.AreEqual(content, actualContent);
@@ -57,7 +57,12 @@ namespace Qart.Testing
 
         public Stream GetStream(string name)
         {
-            return TestSystem.DataStorage.GetStream(Id, name);
+            return TestSystem.DataStorage.GetStream(GetItemId(name));
+        }
+
+        private string GetItemId(string name)
+        {
+            return Path.Combine(Id, name);
         }
     }
 }
