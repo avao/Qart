@@ -70,6 +70,7 @@
     <Compile Include="Text\StringExtensions.cs" />
     <Compile Include="Validation\Require.cs" />
     <Compile Include="Xml\XmlWriterUtils.cs" />
+    <Compile Include="Xsd\XsdUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
