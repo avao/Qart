@@ -9,19 +9,28 @@ namespace Qart.Testing
 {
     public interface IDataStore
     {
-        Stream GetStream(string itemId);
+        Stream GetReadStream(string itemId);
 
-        void PutContent(string itemId, string content);
+        Stream GetWriteStream(string itemId);
     }
 
     public static class DataStorageExtensions
     {
         public static string GetContent(this IDataStore dataStore, string itemId)
         {
-            using(var stream = dataStore.GetStream(itemId))
+            using(var stream = dataStore.GetReadStream(itemId))
             using(var reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
+            }
+        }
+
+        public static void PutContent(this IDataStore dataStore, string itemId, string content)
+        {
+            using (var stream = dataStore.GetWriteStream(itemId))
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(content);
             }
         }
 

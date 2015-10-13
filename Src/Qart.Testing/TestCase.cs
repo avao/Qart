@@ -57,7 +57,7 @@ namespace Qart.Testing
 
         public Stream GetStream(string name)
         {
-            return TestSystem.DataStorage.GetStream(GetItemId(name));
+            return TestSystem.DataStorage.GetReadStream(GetItemId(name));
         }
 
         private string GetItemId(string name)

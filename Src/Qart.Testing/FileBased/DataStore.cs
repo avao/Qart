@@ -17,14 +17,14 @@ namespace Qart.Testing.FileBased
             BasePath = basePath;
         }
 
-        public Stream GetStream(string itemId)
+        public Stream GetReadStream(string itemId)
         {
             return FileUtils.OpenFileStreamForReading(GetAbsolutePath(itemId));
         }
 
-        public void PutContent(string itemId, string content)
+        public Stream GetWriteStream(string itemId)
         {
-            FileUtils.WriteAllText(GetAbsolutePath(itemId), content);
+            return FileUtils.OpenFileStreamForWriting(GetAbsolutePath(itemId));
         }
 
 
