@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Testing
 {
-    public interface IDataStorage
+    public interface IDataStore
     {
         Stream GetStream(string itemId);
 
@@ -16,7 +16,7 @@ namespace Qart.Testing
 
     public static class DataStorageExtensions
     {
-        public static string GetContent(this IDataStorage dataStore, string itemId)
+        public static string GetContent(this IDataStore dataStore, string itemId)
         {
             using(var stream = dataStore.GetStream(itemId))
             using(var reader = new StreamReader(stream))

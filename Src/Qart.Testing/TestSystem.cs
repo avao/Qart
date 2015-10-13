@@ -9,9 +9,9 @@ namespace Qart.Testing
 {
     public class TestSystem
     {
-        public IDataStorage DataStorage { get; private set; }
+        public IDataStore DataStorage { get; private set; }
 
-        public TestSystem(IDataStorage dataStorage)
+        public TestSystem(IDataStore dataStorage)
         {
             DataStorage = dataStorage;
         }

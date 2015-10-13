@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Qart.Testing.FileBased
 {
-    public class DataStorage : IDataStorage
+    public class DataStore : IDataStore
     {
         public string BasePath { get; private set; }
 
-        public DataStorage(string basePath)
+        public DataStore(string basePath)
         {
             BasePath = basePath;
         }
