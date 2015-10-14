@@ -12,7 +12,7 @@ namespace Qart.Core.Xml
     {
         public static void UsingXmlReader(string fileName, Action<XmlReader> action)
         {
-            using (var stream = FileUtils.OpenFileStreamForWriting(fileName))
+            using (var stream = FileUtils.OpenFileStreamForReading(fileName))
             using (var reader = XmlReader.Create(stream))
             {
                 action(reader);
