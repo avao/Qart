@@ -33,7 +33,7 @@ namespace Qart.Core.Io.FileRolling
                 if (File.Exists(fileName))
                 {
                     using (var stream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
-                    using (var reader = new StreamReader(stream, Encoding.UTF8, false, 200, true))
+                    using (var reader = new StreamReader(stream, Encoding.UTF8, false, 200))
                     {
                         return FilePositionSerialiser.Read(baseFileName, reader);
                     }
