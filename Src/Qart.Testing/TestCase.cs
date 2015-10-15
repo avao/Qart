@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace Qart.Testing
 {
-    public class TestCase
+    public class TestCase : IDataStore
     {
         public TestSystem TestSystem { get; private set; }
         public string Id { get; private set; }
@@ -20,34 +20,33 @@ namespace Qart.Testing
             Id = id;
         }
 
-        public void AssertContentXml(string actualContent, string resultName, bool rebaseline)
+        
+        public Stream GetReadStream(string id)
         {
-            string actualFormattedContent = XDocument.Parse(actualContent).ToString();
-
-            string expectedContent = TestSystem.DataStorage.GetContent(GetItemId(resultName));
-
-            string expectedFormattedContent = string.IsNullOrEmpty(expectedContent)? string.Empty : XDocument.Parse(expectedContent).ToString();
-
-            if (expectedFormattedContent != actualFormattedContent)
-            {
-                if (rebaseline)
-                {
-                    TestSystem.DataStorage.PutContent(GetItemId(resultName), actualFormattedContent);
-                }
-
-                Assert.AreEqual(expectedFormattedContent, actualFormattedContent);
-                Assert.Fail("Just in case...");
-            }
+            return TestSystem.DataStorage.GetReadStream(GetItemId(id));
         }
 
-        public void AssertContent(string actualContent, string resultName, bool rebaseline)
+        public Stream GetWriteStream(string id)
         {
-            string content = TestSystem.DataStorage.GetContent(GetItemId(resultName));
+            return TestSystem.DataStorage.GetWriteStream(GetItemId(id));
+        }
+
+        private string GetItemId(string name)
+        {
+            return Path.Combine(Id, name);
+        }
+    }
+
+    public static class TestCaseExtensions
+    {
+        public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
+        {
+            string content = testCase.GetContent(resultName);
             if (content != actualContent)
             {
                 if (rebaseline)
                 {
-                    TestSystem.DataStorage.PutContent(GetItemId(resultName), actualContent);
+                    testCase.PutContent(resultName, actualContent);
                 }
 
                 Assert.AreEqual(content, actualContent);
@@ -55,10 +54,25 @@ namespace Qart.Testing
             }
         }
 
-
-        private string GetItemId(string name)
+        public static void AssertContentXml(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
         {
-            return Path.Combine(Id, name);
+            string actualFormattedContent = XDocument.Parse(actualContent).ToString();
+
+            string expectedContent = testCase.GetContent(resultName);
+
+            string expectedFormattedContent = string.IsNullOrEmpty(expectedContent) ? string.Empty : XDocument.Parse(expectedContent).ToString();
+
+            if (expectedFormattedContent != actualFormattedContent)
+            {
+                if (rebaseline)
+                {
+                    testCase.PutContent(resultName, actualFormattedContent);
+                }
+
+                Assert.AreEqual(expectedFormattedContent, actualFormattedContent);
+                Assert.Fail("Just in case...");
+            }
         }
+
     }
 }
