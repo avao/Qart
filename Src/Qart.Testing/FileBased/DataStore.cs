@@ -24,7 +24,7 @@ namespace Qart.Testing.FileBased
 
         public Stream GetWriteStream(string itemId)
         {
-            return FileUtils.OpenFileStreamForWritingNoTruncate(GetAbsolutePath(itemId));
+            return FileUtils.OpenFileStreamForWriting(GetAbsolutePath(itemId));
         }
 
         public bool Contains(string itemId)
