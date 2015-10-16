@@ -48,7 +48,7 @@ namespace Qart.Core.Io.FileRolling
             var position = new FilePosition(fileId, pos);
             _positions[fileId.BaseFileName] = position;
 
-            using (var stream = FileUtils.OpenFileStreamForWriting(GetTargetFileName(fileId.BaseFileName)))
+            using (var stream = FileUtils.OpenFileStreamForWritingNoTruncate(GetTargetFileName(fileId.BaseFileName)))
             using (var writer = new StreamWriter(stream))
             {
                 FilePositionSerialiser.Write(position, writer);

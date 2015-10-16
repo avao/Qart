@@ -23,10 +23,16 @@ namespace Qart.Core.Io
             return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
         }
 
-        public static FileStream OpenFileStreamForWriting(string path)
+        public static FileStream OpenFileStreamForWritingNoTruncate(string path)
         {
             FileUtils.EnsureCanBeWritten(path);
             return new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+        }
+
+        public static FileStream OpenFileStreamForWriting(string path)
+        {
+            FileUtils.EnsureCanBeWritten(path);
+            return new FileStream(path, FileMode.Create, FileAccess.Write);
         }
 
         public static int ReadFromFile(string path, int length, byte[] buf)
