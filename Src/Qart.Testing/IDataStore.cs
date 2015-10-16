@@ -18,8 +18,16 @@ namespace Qart.Testing
 
     public static class DataStorageExtensions
     {
+        /// <summary>
+        /// Retrieves content of the requested item. Returns null if an item is missing.
+        /// </summary>
+        /// <param name="dataStore"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         public static string GetContent(this IDataStore dataStore, string itemId)
         {
+            if (!dataStore.Contains(itemId))
+                return null;
             using(var stream = dataStore.GetReadStream(itemId))
             using(var reader = new StreamReader(stream))
             {
