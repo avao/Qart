@@ -46,7 +46,7 @@ namespace Qart.Testing
 
         public static void UsingReadStream(this IDataStore dataStore, string id, Action<Stream> action)
         {
-            dataStore.UsingWriteStream(id, stream => { action(stream); return true; });
+            dataStore.UsingReadStream(id, stream => { action(stream); return true; });
         }
 
         public static T UsingReadStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)

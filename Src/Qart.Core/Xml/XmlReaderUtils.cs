@@ -21,10 +21,7 @@ namespace Qart.Core.Xml
 
         public static void UsingXmlReader(this Stream stream, Action<XmlReader> action)
         {
-            using (var reader = XmlReader.Create(stream))
-            {
-                action(reader);
-            }
+            stream.UsingXmlReader(reader => { action(reader); return true; });
         }
 
         public static T UsingXmlReader<T>(this Stream stream, Func<XmlReader, T> action)
