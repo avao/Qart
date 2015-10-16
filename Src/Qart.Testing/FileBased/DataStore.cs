@@ -27,6 +27,10 @@ namespace Qart.Testing.FileBased
             return FileUtils.OpenFileStreamForWriting(GetAbsolutePath(itemId));
         }
 
+        public bool Contains(string itemId)
+        {
+            return File.Exists(GetAbsolutePath(itemId));
+        }
 
         private string GetAbsolutePath(string itemId)
         {

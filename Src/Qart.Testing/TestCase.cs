@@ -33,6 +33,11 @@ namespace Qart.Testing
             return TestSystem.DataStorage.GetWriteStream(GetItemId(id));
         }
 
+        public bool Contains(string id)
+        {
+            return TestSystem.DataStorage.Contains(GetItemId(id));
+        }
+
         private string GetItemId(string name)
         {
             return Path.Combine(Id, name);

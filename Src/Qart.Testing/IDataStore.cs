@@ -12,6 +12,8 @@ namespace Qart.Testing
         Stream GetReadStream(string itemId);
 
         Stream GetWriteStream(string itemId);
+
+        bool Contains(string itemId);
     }
 
     public static class DataStorageExtensions
