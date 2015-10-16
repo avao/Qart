@@ -1,6 +1,7 @@
 ﻿using Qart.Core.Io;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,13 @@ namespace Qart.Core.Xml
         {
             FileUtils.EnsureCanBeWritten(fileName);
             using (var stream = FileUtils.OpenFileStreamForWriting(fileName))
+            {
+                stream.UsingXmlWriter(action, indent);
+            }
+        }
+
+        public static void UsingXmlWriter(this Stream stream, Action<XmlWriter> action, bool indent)
+        {
             using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = indent }))
             {
                 action(writer);

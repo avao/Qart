@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using NUnit.Framework;
+using System.Xml;
+using Qart.Core.Xml;
 
 namespace Qart.Testing
 {
@@ -39,6 +41,23 @@ namespace Qart.Testing
 
     public static class TestCaseExtensions
     {
+
+        public static void UsingXmlReader(this TestCase testCase, string id, Action<XmlReader> action)
+        {
+            using(var stream = testCase.GetReadStream(id))
+            {
+                stream.UsingXmlReader(action);
+            }
+        }
+
+        public static void UsingXmlWriter(this TestCase testCase, string id, Action<XmlWriter> action)
+        {
+            using (var stream = testCase.GetWriteStream(id))
+            {
+                stream.UsingXmlWriter(action, true);
+            }
+        }
+
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
         {
             string content = testCase.GetContent(resultName);
