@@ -26,5 +26,13 @@ namespace Qart.Core.Xml
                 action(reader);
             }
         }
+
+        public static T UsingXmlReader<T>(this Stream stream, Func<XmlReader, T> action)
+        {
+            using (var reader = XmlReader.Create(stream))
+            {
+                return action(reader);
+            }
+        }
     }
 }

@@ -46,19 +46,28 @@ namespace Qart.Testing
 
         public static void UsingReadStream(this IDataStore dataStore, string id, Action<Stream> action)
         {
+            dataStore.UsingWriteStream(id, stream => { action(stream); return true; });
+        }
+
+        public static T UsingReadStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)
+        {
             using (var stream = dataStore.GetReadStream(id))
             {
-                action(stream);
+                return action(stream);
             }
         }
 
         public static void UsingWriteStream(this IDataStore dataStore, string id, Action<Stream> action)
         {
-            using (var stream = dataStore.GetWriteStream(id))
-            {
-                action(stream);
-            }
+            dataStore.UsingReadStream(id, stream => { action(stream); return true; });
         }
 
+        public static T UsingWriteStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)
+        {
+            using (var stream = dataStore.GetWriteStream(id))
+            {
+                return action(stream);
+            }
+        }
     }
 }

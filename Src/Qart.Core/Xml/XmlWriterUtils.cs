@@ -41,5 +41,13 @@ namespace Qart.Core.Xml
                 action(writer);
             }
         }
+
+        public static T UsingXmlWriter<T>(this Stream stream, Func<XmlWriter, T> action, bool indent)
+        {
+            using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = indent }))
+            {
+                return action(writer);
+            }
+        }
     }
 }
