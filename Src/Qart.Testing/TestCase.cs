@@ -46,21 +46,14 @@ namespace Qart.Testing
 
     public static class TestCaseExtensions
     {
-
         public static void UsingXmlReader(this TestCase testCase, string id, Action<XmlReader> action)
         {
-            using(var stream = testCase.GetReadStream(id))
-            {
-                stream.UsingXmlReader(action);
-            }
+            testCase.UsingReadStream(id, stream => stream.UsingXmlReader(action));
         }
 
         public static void UsingXmlWriter(this TestCase testCase, string id, Action<XmlWriter> action)
         {
-            using (var stream = testCase.GetWriteStream(id))
-            {
-                stream.UsingXmlWriter(action, true);
-            }
+            testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
