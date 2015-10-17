@@ -25,22 +25,39 @@ namespace Qart.Testing
         
         public Stream GetReadStream(string id)
         {
-            return TestSystem.DataStorage.GetReadStream(GetItemId(id));
+            string itemId = GetItemId(id);
+            if(DataStorage.Contains(itemId))
+            {
+                return DataStorage.GetReadStream(itemId);
+            }
+            else if (DataStorage.Contains(GetItemRef(id)))
+            {
+                string target = DataStorage.GetContent(GetItemRef(id));
+                return GetReadStream(target);
+            }
+            return null;
         }
 
         public Stream GetWriteStream(string id)
         {
-            return TestSystem.DataStorage.GetWriteStream(GetItemId(id));
+            return DataStorage.GetWriteStream(GetItemId(id));
         }
 
         public bool Contains(string id)
         {
-            return TestSystem.DataStorage.Contains(GetItemId(id));
+            return DataStorage.Contains(GetItemId(id)) || DataStorage.Contains(GetItemRef(id));
         }
+
+        private IDataStore DataStorage { get { return TestSystem.DataStorage; } }
 
         private string GetItemId(string name)
         {
             return Path.Combine(Id, name);
+        }
+
+        private string GetItemRef(string name)
+        {
+            return GetItemId(name) + ".ref";
         }
     }
 

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.RandomLogger", "Qart.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.FileForwarder", "Qart.FileForwarder\Qart.FileForwarder.csproj", "{02433D9E-C961-4F6A-AD24-37AE4465E59D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Tests", "Qart.Testing.Tests\Qart.Testing.Tests.csproj", "{2BFCE96B-E265-429C-94EE-FF647C2F17FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02433D9E-C961-4F6A-AD24-37AE4465E59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BFCE96B-E265-429C-94EE-FF647C2F17FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BFCE96B-E265-429C-94EE-FF647C2F17FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BFCE96B-E265-429C-94EE-FF647C2F17FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BFCE96B-E265-429C-94EE-FF647C2F17FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
