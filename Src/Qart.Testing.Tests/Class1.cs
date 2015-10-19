@@ -26,5 +26,12 @@ namespace Qart.Testing.Tests
             var testCase = TestSystem.GetTestCase("Ref");
             Assert.IsNull(testCase.GetContent("missing"));
         }
+
+        [Test]
+        public void Tags()
+        {
+            var tags = TestSystem.DataStorage.Tags;
+            Assert.AreEqual(new[]{"Ref", "Shared"}, tags);
+        }
     }
 }

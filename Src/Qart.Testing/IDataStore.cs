@@ -14,6 +14,9 @@ namespace Qart.Testing
         Stream GetWriteStream(string itemId);
 
         bool Contains(string itemId);
+
+        IEnumerable<string> GetItemIds(string tag);
+        IEnumerable<string> Tags { get; }
     }
 
     public static class DataStorageExtensions

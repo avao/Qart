@@ -59,6 +59,17 @@ namespace Qart.Testing
         {
             return GetItemId(name) + ".ref";
         }
+
+
+        public IEnumerable<string> GetItemIds(string tag)
+        {
+            return DataStorage.GetItemIds(tag);
+        }
+
+        public IEnumerable<string> Tags
+        {
+            get { return DataStorage.Tags; }
+        }
     }
 
     public static class TestCaseExtensions

@@ -37,5 +37,14 @@ namespace Qart.Testing.FileBased
             return Path.Combine(BasePath, itemId);
         }
 
+        public IEnumerable<string> GetItemIds(string tag)
+        {
+            return Directory.EnumerateFiles(GetAbsolutePath(tag)).ToList();
+        }
+
+        public IEnumerable<string> Tags
+        {
+            get { return Directory.EnumerateDirectories(BasePath).Select(Path.GetFileName).ToList(); }
+        }
     }
 }
