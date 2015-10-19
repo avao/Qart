@@ -39,7 +39,7 @@ namespace Qart.Testing.FileBased
 
         public IEnumerable<string> GetItemIds(string tag)
         {
-            return Directory.EnumerateFiles(GetAbsolutePath(tag)).ToList();
+            return Directory.EnumerateFiles(GetAbsolutePath(tag)).Select(Path.GetFileName).ToList();
         }
 
         public IEnumerable<string> Tags

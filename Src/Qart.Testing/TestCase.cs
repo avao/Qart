@@ -11,24 +11,24 @@ using Qart.Core.Xml;
 
 namespace Qart.Testing
 {
-    public class TestCase : IDataStore
+    public class TestCase : IDataStore  
     {
         public TestSystem TestSystem { get; private set; }
+        public IDataStore DataStorage { get; private set; }
         public string Id { get; private set; }
 
         internal TestCase(string id, TestSystem testSystem)
         {
             TestSystem = testSystem;
+            DataStorage = new ScopedDataStore(testSystem.DataStorage, id);
             Id = id;
         }
 
-        
         public Stream GetReadStream(string id)
         {
-            string itemId = GetItemId(id);
-            if(DataStorage.Contains(itemId))
+            if(DataStorage.Contains(id))
             {
-                return DataStorage.GetReadStream(itemId);
+                return DataStorage.GetReadStream(id);
             }
             else if (DataStorage.Contains(GetItemRef(id)))
             {
@@ -40,35 +40,23 @@ namespace Qart.Testing
 
         public Stream GetWriteStream(string id)
         {
-            return DataStorage.GetWriteStream(GetItemId(id));
+            return DataStorage.GetWriteStream(id);
         }
 
         public bool Contains(string id)
         {
-            return DataStorage.Contains(GetItemId(id)) || DataStorage.Contains(GetItemRef(id));
+            return DataStorage.Contains(id) || DataStorage.Contains(GetItemRef(id));
         }
 
-        private IDataStore DataStorage { get { return TestSystem.DataStorage; } }
-
-        private string GetItemId(string name)
-        {
-            return Path.Combine(Id, name);
-        }
 
         private string GetItemRef(string name)
         {
-            return GetItemId(name) + ".ref";
+            return name + ".ref"; //TODO reference as a concept
         }
-
 
         public IEnumerable<string> GetItemIds(string tag)
         {
             return DataStorage.GetItemIds(tag);
-        }
-
-        public IEnumerable<string> Tags
-        {
-            get { return DataStorage.Tags; }
         }
     }
 

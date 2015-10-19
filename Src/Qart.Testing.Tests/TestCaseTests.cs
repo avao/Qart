@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Testing.Tests
 {
-    public class SomeTests
+    public class TestCaseTests
     {
         TestSystem TestSystem = new TestSystem(new DataStore(PathUtils.ResolveRelative(@"TestData\TestCases")));
 
@@ -27,11 +27,5 @@ namespace Qart.Testing.Tests
             Assert.IsNull(testCase.GetContent("missing"));
         }
 
-        [Test]
-        public void Tags()
-        {
-            var tags = TestSystem.DataStorage.Tags;
-            Assert.AreEqual(new[]{"Ref", "Shared"}, tags);
-        }
     }
 }

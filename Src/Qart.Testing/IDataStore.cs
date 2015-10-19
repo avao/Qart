@@ -16,9 +16,9 @@ namespace Qart.Testing
         bool Contains(string itemId);
 
         IEnumerable<string> GetItemIds(string tag);
-        IEnumerable<string> Tags { get; }
     }
 
+    
     public static class DataStorageExtensions
     {
         /// <summary>
