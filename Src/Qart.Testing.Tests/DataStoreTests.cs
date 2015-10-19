@@ -16,7 +16,7 @@ namespace Qart.Testing.Tests
         {
             var dataStore = new DataStore(PathUtils.ResolveRelative(@"TestData"));
             var scopedDataStore = new ScopedDataStore(dataStore, "TestCases");
-            Assert.AreEqual(new[]{"artifact.xml.ref"}, scopedDataStore.GetItemIds("Ref"));
+            Assert.AreEqual(new[]{"Ref\\artifact.xml.ref"}, scopedDataStore.GetItemIds("Ref"));
         }
 
     }

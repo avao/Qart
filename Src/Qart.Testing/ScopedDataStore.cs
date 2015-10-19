@@ -33,7 +33,7 @@ namespace Qart.Testing
 
         public IEnumerable<string> GetItemIds(string tag)
         {
-            return _dataStore.GetItemIds(GetItemId(tag));//TODO mixing tags and ids
+            return _dataStore.GetItemIds(GetItemId(tag)).Select(_ => _.Substring(_tag.Length + 1));//TODO mixing tags and ids
         }
 
         private string GetItemId(string name)
