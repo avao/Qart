@@ -20,5 +20,11 @@ namespace Qart.Core.Validation
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentException("Expected non null and not empty value.");
         }
+
+        public static void DoesNotContain(string value, string substring)
+        {
+            if (value.Contains(substring))
+                throw new ArgumentException("Value should not contain substring [" + substring + "]");
+        }
     }   
 }
