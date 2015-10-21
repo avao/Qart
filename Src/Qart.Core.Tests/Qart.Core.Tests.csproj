@@ -50,6 +50,7 @@
     <Compile Include="Io\SearchTests.cs" />
     <Compile Include="Io\FileRolling\RollingFileReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\RequireTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

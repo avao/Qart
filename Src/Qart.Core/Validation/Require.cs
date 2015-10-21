@@ -11,20 +11,30 @@ namespace Qart.Core.Validation
         public static void NotNull<T>(T value)
             where T : class
         {
-            if (value == null)
-                throw new ArgumentException("Expected non null value.");
+            Require.That(() => value != null, "Expected non null value.");
         }
 
         public static void NotNullOrEmpty(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("Expected non null and not empty value.");
+            Require.That(() => !string.IsNullOrEmpty(value), "Expected non null and not empty value.");
         }
 
         public static void DoesNotContain(string value, string substring)
         {
-            if (value.Contains(substring))
-                throw new ArgumentException("Value should not contain substring [" + substring + "]");
+            Require.That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
+        }
+
+        public static void That(Func<bool> predicate, string failMessage)
+        {
+            Require.That(predicate, () => failMessage);
+        }
+
+        public static void That(Func<bool> predicate, Func<string> fail)
+        {
+            if(!predicate())
+            {
+                throw new ArgumentException(fail());
+            }
         }
     }   
 }
