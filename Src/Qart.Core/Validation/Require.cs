@@ -16,7 +16,12 @@ namespace Qart.Core.Validation
 
         public static void NotNullOrEmpty(string value)
         {
-            Require.That(() => !string.IsNullOrEmpty(value), "Expected non null and not empty value.");
+            Require.NotNullOrEmpty(value, "Expected non null and not empty value.");
+        }
+
+        public static void NotNullOrEmpty(string value, string message)
+        {
+            Require.That(() => !string.IsNullOrEmpty(value), message);
         }
 
         public static void DoesNotContain(string value, string substring)
