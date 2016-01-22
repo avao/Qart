@@ -11,7 +11,7 @@ using Qart.Core.Xml;
 
 namespace Qart.Testing
 {
-    public class TestCase : IDataStore  
+    public class TestCase : IDataStore
     {
         public TestSystem TestSystem { get; private set; }
         public IDataStore DataStorage { get; private set; }
@@ -26,7 +26,7 @@ namespace Qart.Testing
 
         public Stream GetReadStream(string id)
         {
-            if(DataStorage.Contains(id))
+            if (DataStorage.Contains(id))
             {
                 return DataStorage.GetReadStream(id);
             }
@@ -88,19 +88,33 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
-        public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
+        public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction)
         {
             string content = testCase.GetContent(resultName);
             if (content != actualContent)
             {
-                if (rebaseline)
-                {
-                    testCase.PutContent(resultName, actualContent);
-                }
+                failAction(actualContent, content);
 
                 Assert.AreEqual(content, actualContent);
                 Assert.Fail("Just in case...");
             }
+        }
+
+        public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction, bool rebase)
+        {
+            testCase.AssertContent(actualContent, resultName, (actual, expected) =>
+            {
+                failAction(actual, expected);
+                if (rebase)
+                {
+                    testCase.PutContent(resultName, actualContent);
+                }
+            });
+        }
+
+        public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
+        {
+            testCase.AssertContent(actualContent, resultName, (actual, expected) => { }, rebaseline);
         }
 
         public static void AssertContentXml(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
