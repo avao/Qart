@@ -35,6 +35,7 @@ namespace Qart.CyberTester
                 {
                     options.Dir = Directory.GetCurrentDirectory();
                 }
+                Execute(options);
             }
         }
 
