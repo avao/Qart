@@ -34,12 +34,20 @@ namespace Qart.Testing.FileBased
 
         private string GetAbsolutePath(string itemId)
         {
+            if (Path.IsPathRooted(itemId))
+                return itemId;
             return Path.Combine(BasePath, itemId);
         }
 
         public IEnumerable<string> GetItemIds(string tag)
         {
             return Directory.EnumerateFiles(GetAbsolutePath(tag)).Select(_ => Path.Combine(tag,Path.GetFileName(_))).ToList();
+        }
+
+
+        public IEnumerable<string> GetItemGroups(string group)
+        {
+            return Directory.EnumerateDirectories(GetAbsolutePath(group)).Select(_ => Path.GetFileName(_)).ToList();
         }
     }
 }

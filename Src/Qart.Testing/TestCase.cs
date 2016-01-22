@@ -58,6 +58,12 @@ namespace Qart.Testing
         {
             return DataStorage.GetItemIds(tag);
         }
+
+
+        public IEnumerable<string> GetItemGroups(string group)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class TestCaseExtensions

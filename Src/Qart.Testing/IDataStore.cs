@@ -16,6 +16,8 @@ namespace Qart.Testing
         bool Contains(string itemId);
 
         IEnumerable<string> GetItemIds(string tag);
+
+        IEnumerable<string> GetItemGroups(string group);
     }
 
     

@@ -45,6 +45,7 @@
     <Compile Include="DataStoreTests.cs" />
     <Compile Include="TestCaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSystemTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Qart.Core\Qart.Core.csproj">
