@@ -26,8 +26,9 @@ namespace Qart.CyberTester
     {
         static ILog Logger = LogManager.GetLogger("");
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            int result = -1;
             var options = new Options();
             if (CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
             {
@@ -35,22 +36,41 @@ namespace Qart.CyberTester
                 {
                     options.Dir = Directory.GetCurrentDirectory();
                 }
-                Execute(options);
+                result = Execute(options);
+                Logger.InfoFormat("Failed testcases: {0}", result);
             }
+            return result;
         }
 
-        static void Execute(Options options)
+        static int Execute(Options options)
         {
+            Logger.DebugFormat("Rebaseline [{0}], TestCases [{1}]", options.Rebaseline, options.Dir);
+
             var container = Bootstrapper.CreateContainer();
 
             var testSystem = new TestSystem(new Qart.Testing.FileBased.DataStore(options.Dir));
+
+            int failedTests = 0;
+            Logger.Debug("Looking for test cases.");
             var testCases = testSystem.GetTestCases();
             foreach (var testCase in testCases)
             {
-                var feature = testCase.GetContent(".test");
-                var processor = container.Resolve<ITestCaseProcessor>(feature);
-                processor.Process(testCase);
+                Logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
+                try
+                {
+                    var feature = testCase.GetContent(".test");
+                    var processor = container.Resolve<ITestCaseProcessor>(feature);
+                    processor.Process(testCase);
+                }
+                catch(Exception ex)
+                {
+                    ++failedTests;
+                    Logger.Error(string.Format("An exception was raised while processing [{0}]", testCase.Id), ex);
+                }
+                Logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
             }
+
+            return failedTests;
         }
     }
 }
