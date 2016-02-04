@@ -56,26 +56,29 @@ namespace Qart.CyberTester
             var container = Bootstrapper.CreateContainer();
 
             var testSystem = new TestSystem(new Qart.Testing.FileBased.DataStore(options.Dir));
-
             Logger.Debug("Looking for test cases.");
             var testCases = testSystem.GetTestCases();
-            foreach (var testCase in testCases)
+
+            using(var testSession = container.Resolve<ITestSession>())
             {
-                Logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
-                tracer.OnBegin(testCase);
-                try
+                foreach (var testCase in testCases)
                 {
-                    var feature = testCase.GetContent(".test");
-                    var processor = container.Resolve<ITestCaseProcessor>(feature);
-                    processor.Process(testCase);
+                    Logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
+                    tracer.OnBegin(testCase);
+                    try
+                    {
+                        var feature = testCase.GetContent(".test");
+                        var processor = container.Resolve<ITestCaseProcessor>(feature);
+                        processor.Process(testCase);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(string.Format("An exception was raised while processing [{0}]", testCase.Id), ex);
+                        tracer.OnFailure(testCase, ex);
+                    }
+                    tracer.OnFinish(testCase);
+                    Logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
                 }
-                catch(Exception ex)
-                {
-                    Logger.Error(string.Format("An exception was raised while processing [{0}]", testCase.Id), ex);
-                    tracer.OnFailure(testCase, ex);
-                }
-                tracer.OnFinish(testCase);
-                Logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
             }
         }
     }
