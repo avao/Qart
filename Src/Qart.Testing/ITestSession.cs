@@ -8,12 +8,12 @@ namespace Qart.Testing
 {
     public interface ITestSession : IDisposable
     {
+        //instead of having explicit Setup and TearDown one can use c-tor and Dispose
+
+        void OnBegin(TestCase testCase);
+        void OnFinish(TestCase testCase, Exception ex);
+
+        IEnumerable<TestCaseResult> Results { get; }
     }
 
-    public class TestSession : ITestSession
-    {
-        public void Dispose()
-        {
-        }
-    }
 }

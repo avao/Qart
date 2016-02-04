@@ -37,19 +37,12 @@ namespace Qart.CyberTester
                 {
                     options.Dir = Directory.GetCurrentDirectory();
                 }
-                var tracer = new TestCaseTracer();
-                Execute(options, tracer);
-                result = tracer.Results.Count(_ => _.Exception != null);
-                Logger.InfoFormat("Failed testcases: {0}", result);
-
-                XElement root = new XElement("TestResults", tracer.Results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"))));
-                root.Save("TestSessionResults.xml");
-
+                result = Execute(options);
             }
             return result;
         }
 
-        static void Execute(Options options, ITestCaseTracer tracer)
+        static int Execute(Options options)
         {
             Logger.DebugFormat("Rebaseline [{0}], TestCases [{1}]", options.Rebaseline, options.Dir);
 
@@ -59,26 +52,39 @@ namespace Qart.CyberTester
             Logger.Debug("Looking for test cases.");
             var testCases = testSystem.GetTestCases();
 
-            using(var testSession = container.Resolve<ITestSession>())
+            using (var testSession = container.Resolve<ITestSession>())
             {
                 foreach (var testCase in testCases)
                 {
                     Logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
-                    tracer.OnBegin(testCase);
                     try
                     {
-                        var feature = testCase.GetContent(".test");
-                        var processor = container.Resolve<ITestCaseProcessor>(feature);
+                        testSession.OnBegin(testCase);
+                        var processorName = testCase.GetContent(".test");
+                        var processor = container.Resolve<ITestCaseProcessor>(processorName);
+                        if (processor == null)
+                        {
+                            throw new Exception(string.Format("Could not resolve a ITestCaseProcessor with name [{0}]", processorName));
+                        }
                         processor.Process(testCase);
+                        testSession.OnFinish(testCase, null);
                     }
                     catch (Exception ex)
                     {
                         Logger.Error(string.Format("An exception was raised while processing [{0}]", testCase.Id), ex);
-                        tracer.OnFailure(testCase, ex);
+                        testSession.OnFinish(testCase, ex);
                     }
-                    tracer.OnFinish(testCase);
+
                     Logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
                 }
+
+                var failedTestsCount = testSession.Results.Count(_ => _.Exception != null);
+                Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);
+
+                XElement root = new XElement("TestResults", testSession.Results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"))));
+                root.Save("TestSessionResults.xml");
+
+                return failedTestsCount;
             }
         }
     }
