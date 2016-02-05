@@ -14,6 +14,7 @@ namespace TestApp
         public void Install(Castle.Windsor.IWindsorContainer container, Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store)
         {
             container.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));
+            //container.Register(Component.For<ITestSession>().ImplementedBy<CustomTestSession>().IsDefault());
         }
     }
 
@@ -32,4 +33,36 @@ namespace TestApp
             throw new NotImplementedException();
         }
     }
+
+    public class CustomTestSession : ITestSession
+    {
+        private ILog _logger;
+        public CustomTestSession(ILogManager logManager)
+        {
+            _logger = logManager.GetLogger<CustomTestSession>();
+            _logger.InfoFormat("Ctor");
+        }
+
+
+        public void OnBegin(TestCase testCase)
+        {
+            _logger.InfoFormat("OnBegin {0}", testCase.Id);
+        }
+
+        public void OnFinish(TestCase testCase, Exception ex)
+        {
+            _logger.InfoFormat("OnFinish {0}", testCase.Id);
+        }
+
+        public IEnumerable<TestCaseResult> Results
+        {
+            get { return Enumerable.Empty<TestCaseResult>(); }
+        }
+
+        public void Dispose()
+        {
+            _logger.Info("Dispose");
+        }
+    }
+
 }
