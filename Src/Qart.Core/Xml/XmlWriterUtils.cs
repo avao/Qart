@@ -28,7 +28,7 @@ namespace Qart.Core.Xml
         public static void ToXmlFile(string fileName, Action<XmlWriter> action, bool indent)
         {
             FileUtils.EnsureCanBeWritten(fileName);
-            using (var stream = FileUtils.OpenFileStreamForWritingNoTruncate(fileName))
+            using (var stream = FileUtils.OpenFileStreamForWriting(fileName))
             {
                 stream.UsingXmlWriter(action, indent);
             }
