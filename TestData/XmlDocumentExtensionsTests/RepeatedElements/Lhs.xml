@@ -1,0 +1,9 @@
+<root>
+  <element>
+    <subelement />
+    <subelement />
+  </element>
+  <element id="2">
+    <subelement>sub element of element2</subelement>
+  </element>
+</root>

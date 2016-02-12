@@ -88,6 +88,15 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
+
+        public static XmlDocument GetXmlDocument(this TestCase testCase, string id)
+        {
+            var xmlDocument = new XmlDocument();
+            testCase.UsingXmlReader(id, xmlDocument.Load);
+            return xmlDocument;
+        }
+
+
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction)
         {
             string content = testCase.GetContent(resultName);

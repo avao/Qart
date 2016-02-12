@@ -71,6 +71,7 @@
     <Compile Include="Text\PatternUtils.cs" />
     <Compile Include="Text\StringExtensions.cs" />
     <Compile Include="Validation\Require.cs" />
+    <Compile Include="Xml\XmlDocumentExtensions.cs" />
     <Compile Include="Xml\XmlReaderUtils.cs" />
     <Compile Include="Xml\XmlWriterUtils.cs" />
     <Compile Include="Xsd\XsdUtils.cs" />
