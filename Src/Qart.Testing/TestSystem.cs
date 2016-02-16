@@ -32,10 +32,11 @@ namespace Qart.Testing
             var groups = DataStorage.GetItemGroups(groupId);
             foreach (var group in groups)
             {
-                testCases.AddRange(GetTestCases(group));
-                if(IsTestCase(group))
+                var id = Path.Combine(groupId, group);
+                testCases.AddRange(GetTestCases(id));
+                if(IsTestCase(id))
                 {
-                    testCases.Add(new TestCase(group, this));
+                    testCases.Add(new TestCase(id, this));
                 }
             }
             return testCases;
