@@ -16,8 +16,8 @@ namespace Qart.Core.Tests.Xml
     {
         TestSystem TestSystem = new TestSystem(new DataStore(PathUtils.ResolveRelative(@"TestData\XmlDocumentExtensionsTests")));
 
-        [TestCase("RepeatedElements")]
-        public void Load_Merge_Assert(string testId)
+        [TestCase(@"override\RepeatedElements")]
+        public void Override(string testId)
         {
             var testCase = TestSystem.GetTestCase(testId);
 
@@ -26,8 +26,20 @@ namespace Qart.Core.Tests.Xml
             
             lhs.OverrideWith(rhs);
 
-            testCase.AssertContentXml(lhs.OuterXml, "merged.xml", true);
+            testCase.AssertContent(lhs, "merged.xml", true);
         }
 
+        [TestCase(@"removeNodes/Element")]
+        public void RemoveNodes(string testId)
+        {
+            var testCase = TestSystem.GetTestCase(testId);
+
+            XmlDocument input = testCase.GetXmlDocument("input.xml");
+            IEnumerable<string> xpaths = testCase.GetContent("xpaths.txt").Split('\n');
+
+            input.RemoveNodes(xpaths);
+
+            testCase.AssertContent(input, "output.xml", true);
+        }
     }
 }

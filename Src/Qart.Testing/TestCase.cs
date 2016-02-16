@@ -126,6 +126,11 @@ namespace Qart.Testing
             testCase.AssertContent(actualContent, resultName, (actual, expected) => { }, rebaseline);
         }
 
+        public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
+        {
+            testCase.AssertContentXml(doc.OuterXml, resultName, rebaseline);
+        }
+
         public static void AssertContentXml(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
         {
             string actualFormattedContent = XDocument.Parse(actualContent).ToString();
