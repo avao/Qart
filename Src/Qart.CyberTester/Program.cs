@@ -52,6 +52,15 @@ namespace Qart.CyberTester
             Logger.Debug("Looking for test cases.");
             var testCases = testSystem.GetTestCases();
 
+            if (!testCases.Any())
+            {
+                var testCase = testSystem.GetTestCase(".");
+                if (testCase.Contains(".test"))
+                {
+                    testCases = new[] { testCase };
+                }
+            }
+
             using (var testSession = container.Resolve<ITestSession>())
             {
                 foreach (var testCase in testCases)
