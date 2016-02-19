@@ -61,7 +61,8 @@ namespace Qart.CyberTester
                 }
             }
 
-            using (var testSession = container.Resolve<ITestSession>())
+            var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
+            using (var testSession = new TestSession(customSession))
             {
                 foreach (var testCase in testCases)
                 {

@@ -18,7 +18,7 @@ namespace Qart.CyberTester
         {
             var container = new WindsorContainer();
             container.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
-            container.Register(Component.For<ITestSession>().ImplementedBy<TestSession>());
+            container.Register(Component.For<TestSession>().ImplementedBy<TestSession>());
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;
         }

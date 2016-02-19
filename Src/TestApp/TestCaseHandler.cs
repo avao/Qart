@@ -49,14 +49,9 @@ namespace TestApp
             _logger.InfoFormat("OnBegin {0}", testCase.Id);
         }
 
-        public void OnFinish(TestCase testCase, Exception ex)
+        public void OnFinish(TestCaseResult result)
         {
-            _logger.InfoFormat("OnFinish {0}", testCase.Id);
-        }
-
-        public IEnumerable<TestCaseResult> Results
-        {
-            get { return Enumerable.Empty<TestCaseResult>(); }
+            _logger.InfoFormat("OnFinish {0}", result.TestCase.Id);
         }
 
         public void Dispose()

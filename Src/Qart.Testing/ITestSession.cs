@@ -11,9 +11,7 @@ namespace Qart.Testing
         //instead of having explicit Setup and TearDown one can use c-tor and Dispose
 
         void OnBegin(TestCase testCase);
-        void OnFinish(TestCase testCase, Exception ex);
-
-        IEnumerable<TestCaseResult> Results { get; }
+        void OnFinish(TestCaseResult result);
     }
 
 }
