@@ -93,6 +93,12 @@ namespace Qart.Testing
         {
             var xmlDocument = new XmlDocument();
             testCase.UsingXmlReader(id, xmlDocument.Load);
+
+            string overrideId = id+".override";
+            if(testCase.Contains(overrideId))
+            {
+                xmlDocument.OverrideWith(testCase.GetXmlDocument(overrideId));
+            }
             return xmlDocument;
         }
 
