@@ -72,7 +72,7 @@ namespace Qart.CyberTester
                 var failedTestsCount = testSession.Results.Count(_ => _.Exception != null);
                 Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);
 
-                XElement root = new XElement("TestResults", testSession.Results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"))));
+                XElement root = new XElement("TestResults", testSession.Results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"), _.Description == null ? null : _.Description.Root)));
                 root.Save("TestSessionResults.xml");
 
                 return failedTestsCount;

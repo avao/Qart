@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace TestApp
 {
@@ -31,6 +32,12 @@ namespace TestApp
         {
             _logger.InfoFormat("About to throw from {0}", testCase.Id);
             throw new NotImplementedException();
+        }
+
+
+        public XDocument GetDescription(TestCase testCase)
+        {
+            return new XDocument(new XElement("blah"));
         }
     }
 

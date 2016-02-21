@@ -31,14 +31,26 @@ namespace Qart.Testing
                 _customTestSession.OnBegin(testCase);
             }
 
+            ITestCaseProcessor processor = null;
             try
             {
-                var processor = _testCaseProcessorResolver.Resolve(testCase);
+                processor = _testCaseProcessorResolver.Resolve(testCase);
                 processor.Process(testCase);
             }
             catch (Exception ex)
             {
                 testResult.MarkAsFailed(ex);
+            }
+
+            if(processor != null)
+            {
+                try
+                {
+                    testResult.Description = processor.GetDescription(testCase);
+                }
+                catch(Exception ex)
+                {//suppress
+                }
             }
 
             if (_customTestSession != null)
