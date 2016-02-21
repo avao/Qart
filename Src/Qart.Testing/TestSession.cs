@@ -9,41 +9,41 @@ namespace Qart.Testing
     public class TestSession : IDisposable
     {
         private readonly ITestSession _customTestSession;
+        private readonly ITestCaseProcessorResolver _testCaseProcessorResolver;
+
         private readonly IList<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results { get { return _results; } }
 
-        public TestSession(ITestSession customTestSession)
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
+            _testCaseProcessorResolver = resolver;
         }
 
-        public void OnBegin(TestCase testCase)
+        public void OnTestCase(TestCase testCase)
         {
-            _results.Add(new TestCaseResult(testCase));
+            TestCaseResult testResult= new TestCaseResult(testCase);
+            _results.Add(testResult);
 
             if (_customTestSession != null)
             {
                 _customTestSession.OnBegin(testCase);
             }
-        }
 
-        public void OnFinish(TestCase testCase, Exception ex)
-        {
-            if(testCase.Contains(".test"))
+            try
             {
-                var processor = testCase.GetContent(".test");
+                var processor = _testCaseProcessorResolver.Resolve(testCase);
+                processor.Process(testCase);
             }
-
-            var result = Results.Where(_ => _.TestCase.Id == testCase.Id).Single(); 
-            if (ex != null)
+            catch (Exception ex)
             {
-                result.MarkAsFailed(ex);
+                testResult.MarkAsFailed(ex);
             }
 
             if (_customTestSession != null)
             {
-                _customTestSession.OnFinish(result);
+                _customTestSession.OnFinish(testResult);
             }
         }
 

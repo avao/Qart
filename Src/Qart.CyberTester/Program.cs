@@ -62,30 +62,11 @@ namespace Qart.CyberTester
             }
 
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
-            using (var testSession = new TestSession(customSession))
+            using (var testSession = new TestSession(customSession, container.Resolve<ITestCaseProcessorResolver>()))
             {
                 foreach (var testCase in testCases)
                 {
-                    Logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
-                    try
-                    {
-                        testSession.OnBegin(testCase);
-                        var processorName = testCase.GetContent(".test");
-                        var processor = container.Resolve<ITestCaseProcessor>(processorName);
-                        if (processor == null)
-                        {
-                            throw new Exception(string.Format("Could not resolve a ITestCaseProcessor with name [{0}]", processorName));
-                        }
-                        processor.Process(testCase);
-                        testSession.OnFinish(testCase, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(string.Format("An exception was raised while processing [{0}]", testCase.Id), ex);
-                        testSession.OnFinish(testCase, ex);
-                    }
-
-                    Logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
+                    testSession.OnTestCase(testCase);
                 }
 
                 var failedTestsCount = testSession.Results.Count(_ => _.Exception != null);
