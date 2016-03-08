@@ -1,4 +1,4 @@
-﻿//using Common.Logging;
+﻿using Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +10,21 @@ namespace Qart.Testing
     public class CyberTester
     {
         private readonly TestSystem _testSystem;
-        //private readonly ILog Logger;
+        private readonly ITestCaseProcessorResolver _processorResolver;
+        private readonly ILog _logger;
 
-        public CyberTester(TestSystem testSystem)
+        public CyberTester(TestSystem testSystem, ILogManager logManager, ITestCaseProcessorResolver processorResolver)
         {
-            //Logger = logManager.GetLogger("");
+            _logger = logManager.GetLogger("");
             _testSystem = testSystem;
+            _processorResolver = processorResolver;
         }
 
-        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession, ITestCaseProcessorResolver processorResolver)
+        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession)
         {
-            //Logger.Debug("Looking for test cases.");
+            _logger.Debug("Looking for test cases.");
             var testCases = _testSystem.GetTestCases();
-
-            if (!testCases.Any())
-            {
-                var testCase = _testSystem.GetTestCase(".");
-                if (testCase.Contains(".test"))
-                {
-                    testCases = new[] { testCase };
-                }
-            }
-
-            using (var testSession = new TestSession(customSession, processorResolver))
+            using (var testSession = new TestSession(customSession, _processorResolver))
             {
                 foreach (var testCase in testCases)
                 {

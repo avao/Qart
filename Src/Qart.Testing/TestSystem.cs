@@ -23,7 +23,16 @@ namespace Qart.Testing
 
         public IEnumerable<TestCase> GetTestCases()
         {
-            return GetTestCases("");
+            var testCases = GetTestCases("");
+            if (!testCases.Any())
+            {
+                var testCase = GetTestCase(".");
+                if (testCase.Contains(".test"))
+                {
+                    testCases = new[] { testCase };
+                }
+            }
+            return testCases;
         }
 
         private IEnumerable<TestCase> GetTestCases(string groupId)
