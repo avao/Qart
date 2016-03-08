@@ -49,34 +49,20 @@ namespace Qart.CyberTester
             var container = Bootstrapper.CreateContainer();
 
             var testSystem = new TestSystem(new Qart.Testing.FileBased.DataStore(options.Dir));
-            Logger.Debug("Looking for test cases.");
-            var testCases = testSystem.GetTestCases();
-
-            if (!testCases.Any())
-            {
-                var testCase = testSystem.GetTestCase(".");
-                if (testCase.Contains(".test"))
-                {
-                    testCases = new[] { testCase };
-                }
-            }
-
+         
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
-            using (var testSession = new TestSession(customSession, container.Resolve<ITestCaseProcessorResolver>()))
-            {
-                foreach (var testCase in testCases)
-                {
-                    testSession.OnTestCase(testCase);
-                }
 
-                var failedTestsCount = testSession.Results.Count(_ => _.Exception != null);
-                Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);
-
-                XElement root = new XElement("TestResults", testSession.Results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"))));
-                root.Save("TestSessionResults.xml");
-
-                return failedTestsCount;
-            }
+            var tester = new Qart.Testing.CyberTester(testSystem);//, container.Resolve<ILogManager>()
+            var results = tester.RunTests(customSession, container.Resolve<ITestCaseProcessorResolver>());
+            
+            var failedTestsCount = results.Count(_ => _.Exception != null);
+                   Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);
+            
+            
+            XElement root = new XElement("TestResults", results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"))));
+            root.Save("TestSessionResults.xml");
+             
+            return failedTestsCount;
         }
     }
 }

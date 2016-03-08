@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="CyberTester.cs" />
     <Compile Include="FileBased\DataStore.cs" />
     <Compile Include="IDataStore.cs" />
     <Compile Include="ITestCaseProcessorResolver.cs" />
