@@ -44,14 +44,14 @@ namespace TestApp
         }
 
 
-        public void OnBegin(TestCase testCase)
+        public void OnBegin(TestCase testCase, ILog logger)
         {
-            _logger.InfoFormat("OnBegin {0}", testCase.Id);
+            logger.InfoFormat("OnBegin {0}", testCase.Id);
         }
 
-        public void OnFinish(TestCaseResult result)
+        public void OnFinish(TestCaseResult result, ILog logger)
         {
-            _logger.InfoFormat("OnFinish {0}", result.TestCase.Id);
+            logger.InfoFormat("OnFinish {0}", result.TestCase.Id);
         }
 
         public void Dispose()

@@ -28,48 +28,44 @@ namespace Qart.Testing
             TestCaseResult testResult= new TestCaseResult(testCase);
             _results.Add(testResult);
 
-            if (_customTestSession != null)
+            using (var logger = _testCaseLoggerFactory.GetLogger(testCase))
             {
-                _customTestSession.OnBegin(testCase);
-            }
 
-            ITestCaseProcessor processor = null;
-            try
-            {
-                processor = _testCaseProcessorResolver.Resolve(testCase);
-                using(var logger = _testCaseLoggerFactory.GetLogger(testCase))
+                if (_customTestSession != null)
+                {
+                    _customTestSession.OnBegin(testCase, logger);
+                }
+
+                ITestCaseProcessor processor = null;
+                try
+                {
+                    processor = _testCaseProcessorResolver.Resolve(testCase);
+                    processor.Process(testCase, logger);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("an error occured", ex);
+                    testResult.MarkAsFailed(ex);
+                }
+
+                if (processor != null)
                 {
                     try
                     {
-                        processor.Process(testCase, logger);
+                        testResult.Description = processor.GetDescription(testCase);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
-                        logger.Error(ex);
-                        throw;
+                        logger.Error("an error occured while getting test case description", ex);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                testResult.MarkAsFailed(ex);
-            }
 
-            if(processor != null)
-            {
-                try
+                if (_customTestSession != null)
                 {
-                    testResult.Description = processor.GetDescription(testCase);
-                }
-                catch(Exception ex)
-                {//suppress
+                    _customTestSession.OnFinish(testResult, logger);
                 }
             }
-
-            if (_customTestSession != null)
-            {
-                _customTestSession.OnFinish(testResult);
-            }
+            
         }
 
         public void Dispose()

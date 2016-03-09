@@ -10,25 +10,18 @@ namespace Qart.CyberTester
 {
     public class LoggingTestSession : ITestSession
     {
-        private readonly ILog _log;
-
-        public LoggingTestSession(ILogManager logManager)
+        public void OnBegin(TestCase testCase, ILog logger)
         {
-            _log = logManager.GetLogger("");
+            logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
         }
 
-        public void OnBegin(TestCase testCase)
-        {
-            _log.DebugFormat("Starting processing test case [{0}]", testCase.Id);
-        }
-
-        public void OnFinish(TestCaseResult result)
+        public void OnFinish(TestCaseResult result, ILog logger)
         {
             if(result.Exception != null)
             {
-                _log.Error("An error occured:", result.Exception);
+                logger.Error("An error occured:", result.Exception);
             }
-            _log.DebugFormat("Finished processing test case [{0}]", result.TestCase.Id);
+            logger.DebugFormat("Finished processing test case [{0}]", result.TestCase.Id);
         }
 
         public void Dispose()
