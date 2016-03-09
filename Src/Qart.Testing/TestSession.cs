@@ -39,7 +39,15 @@ namespace Qart.Testing
                 processor = _testCaseProcessorResolver.Resolve(testCase);
                 using(var logger = _testCaseLoggerFactory.GetLogger(testCase))
                 {
-                    processor.Process(testCase, logger);
+                    try
+                    {
+                        processor.Process(testCase, logger);
+                    }
+                    catch(Exception ex)
+                    {
+                        logger.Error(ex);
+                        throw;
+                    }
                 }
             }
             catch (Exception ex)
