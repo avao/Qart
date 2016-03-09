@@ -52,7 +52,7 @@ namespace Qart.CyberTester
          
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
 
-            var tester = new Qart.Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorResolver>(), container.Resolve<ITestCaseLoggerFactory>());//, container.Resolve<ILogManager>()
+            var tester = new Qart.Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorResolver>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
 
             var results = tester.RunTests(customSession);
             
