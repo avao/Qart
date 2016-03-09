@@ -52,8 +52,8 @@ namespace Qart.CyberTester
          
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
 
-            var tester = new Qart.Testing.CyberTester(testSystem);//, container.Resolve<ILogManager>()
-            var results = tester.RunTests(customSession, container.Resolve<ITestCaseProcessorResolver>());
+            var tester = new Qart.Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorResolver>(), container.Resolve<ITestCaseLoggerFactory>());//, container.Resolve<ILogManager>()
+            var results = tester.RunTests(customSession);
             
             var failedTestsCount = results.Count(_ => _.Exception != null);
                    Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);

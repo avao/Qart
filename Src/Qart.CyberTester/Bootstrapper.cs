@@ -21,6 +21,7 @@ namespace Qart.CyberTester
             container.Register(Component.For<ITestSession>().ImplementedBy<LoggingTestSession>());
             container.Register(Component.For<TestSession>().ImplementedBy<TestSession>());
             container.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
+            container.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;
         }

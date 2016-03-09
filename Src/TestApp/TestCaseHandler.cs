@@ -21,16 +21,9 @@ namespace TestApp
 
     public class TestCaseHandler : ITestCaseProcessor
     {
-        private ILog _logger;
-
-        public TestCaseHandler(ILogManager logManager)
+        public void Process(TestCase testCase, ILog log)
         {
-            _logger = logManager.GetLogger<TestCaseHandler>();
-        }
-
-        public void Process(TestCase testCase)
-        {
-            _logger.InfoFormat("About to throw from {0}", testCase.Id);
+            log.InfoFormat("About to throw from {0}", testCase.Id);
             throw new NotImplementedException();
         }
 

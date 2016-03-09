@@ -10,15 +10,19 @@ namespace Qart.Testing
     public class CyberTester
     {
         private readonly TestSystem _testSystem;
+        private readonly ITestCaseLoggerFactory _loggerFactory;
+        private readonly ITestCaseProcessorResolver _processorResolver;
         //private readonly ILog Logger;
 
-        public CyberTester(TestSystem testSystem)
+        public CyberTester(TestSystem testSystem, ITestCaseProcessorResolver processorResolver, ITestCaseLoggerFactory loggerFactory)
         {
             //Logger = logManager.GetLogger("");
             _testSystem = testSystem;
+            _loggerFactory = loggerFactory;
+            _processorResolver = processorResolver;
         }
 
-        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession, ITestCaseProcessorResolver processorResolver)
+        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession)
         {
             //Logger.Debug("Looking for test cases.");
             var testCases = _testSystem.GetTestCases();
@@ -32,7 +36,7 @@ namespace Qart.Testing
                 }
             }
 
-            using (var testSession = new TestSession(customSession, processorResolver))
+            using (var testSession = new TestSession(customSession, _processorResolver, _loggerFactory))
             {
                 foreach (var testCase in testCases)
                 {

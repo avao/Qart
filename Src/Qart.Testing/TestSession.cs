@@ -10,15 +10,17 @@ namespace Qart.Testing
     {
         private readonly ITestSession _customTestSession;
         private readonly ITestCaseProcessorResolver _testCaseProcessorResolver;
+        private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
 
         private readonly IList<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results { get { return _results; } }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver)
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
             _testCaseProcessorResolver = resolver;
+            _testCaseLoggerFactory = testCaseLoggerFactory;
         }
 
         public void OnTestCase(TestCase testCase)
@@ -35,7 +37,10 @@ namespace Qart.Testing
             try
             {
                 processor = _testCaseProcessorResolver.Resolve(testCase);
-                processor.Process(testCase);
+                using(var logger = _testCaseLoggerFactory.GetLogger(testCase))
+                {
+                    processor.Process(testCase, logger);
+                }
             }
             catch (Exception ex)
             {
