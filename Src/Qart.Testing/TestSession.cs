@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,53 +11,67 @@ namespace Qart.Testing
     {
         private readonly ITestSession _customTestSession;
         private readonly ITestCaseProcessorResolver _testCaseProcessorResolver;
+        private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
+        private readonly ILog _logger;
 
         private readonly IList<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results { get { return _results; } }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver)
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
             _testCaseProcessorResolver = resolver;
+            _testCaseLoggerFactory = testCaseLoggerFactory;
+            _logger = logManager.GetLogger("");
         }
 
         public void OnTestCase(TestCase testCase)
         {
+            _logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
+
             TestCaseResult testResult= new TestCaseResult(testCase);
             _results.Add(testResult);
 
-            if (_customTestSession != null)
+            using (var logger = _testCaseLoggerFactory.GetLogger(testCase))
             {
-                _customTestSession.OnBegin(testCase);
-            }
 
-            ITestCaseProcessor processor = null;
-            try
-            {
-                processor = _testCaseProcessorResolver.Resolve(testCase);
-                processor.Process(testCase);
-            }
-            catch (Exception ex)
-            {
-                testResult.MarkAsFailed(ex);
-            }
+                if (_customTestSession != null)
+                {
+                    _customTestSession.OnBegin(testCase, logger);
+                }
 
-            if(processor != null)
-            {
+                ITestCaseProcessor processor = null;
                 try
                 {
-                    testResult.Description = processor.GetDescription(testCase);
+                    processor = _testCaseProcessorResolver.Resolve(testCase);
+                    processor.Process(testCase, logger);
                 }
-                catch(Exception ex)
-                {//suppress
+                catch (Exception ex)
+                {
+                    logger.Error("an error occured", ex);
+                    testResult.MarkAsFailed(ex);
                 }
-            }
 
-            if (_customTestSession != null)
-            {
-                _customTestSession.OnFinish(testResult);
+                if (processor != null)
+                {
+                    try
+                    {
+                        testResult.Description = processor.GetDescription(testCase);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("an error occured while getting test case description", ex);
+                    }
+                }
+
+                if (_customTestSession != null)
+                {
+                    _customTestSession.OnFinish(testResult, logger);
+                }
             }
+            _logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
+            
         }
 
         public void Dispose()

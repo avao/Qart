@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace Qart.Testing
         //instead of having explicit Setup and TearDown one can use c-tor and Dispose
         //TODO add dedicated functions instead
 
-        void OnBegin(TestCase testCase);
-        void OnFinish(TestCaseResult result);
+        void OnBegin(TestCase testCase, ILog logger);
+        void OnFinish(TestCaseResult result, ILog logger);
     }
 
 }
