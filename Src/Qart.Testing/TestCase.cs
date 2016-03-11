@@ -28,11 +28,11 @@ namespace Qart.Testing
         {
             if (DataStorage.Contains(id))
             {
-                return DataStorage.GetReadStream(id);
+                return DataStorage.GetRequiredReadStream(id);
             }
             else if (DataStorage.Contains(GetItemRef(id)))
             {
-                string target = DataStorage.GetContent(GetItemRef(id));
+                string target = DataStorage.GetRequiredContent(GetItemRef(id));
                 return GetReadStream(target.Trim());
             }
             return null;

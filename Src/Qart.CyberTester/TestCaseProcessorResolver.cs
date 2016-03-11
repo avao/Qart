@@ -19,7 +19,7 @@ namespace Qart.CyberTester
 
         public ITestCaseProcessor Resolve(TestCase testCase)
         {
-            var processorName = testCase.GetContent(".test");
+            var processorName = testCase.GetRequiredContent(".test");
             return _container.Resolve<ITestCaseProcessor>(processorName);
         }
     }

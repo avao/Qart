@@ -41,6 +41,12 @@ namespace Qart.Testing
             }
         }
 
+        public static string GetRequiredContent(this IDataStore dataStore, string itemId)
+        {
+            return Require.NotNull(dataStore.GetContent(itemId), "No content read from [" + itemId + "]");
+        }
+
+
         public static void PutContent(this IDataStore dataStore, string itemId, string content)
         {
             using (var stream = dataStore.GetWriteStream(itemId))
