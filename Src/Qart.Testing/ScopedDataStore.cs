@@ -38,7 +38,9 @@ namespace Qart.Testing
 
         private string GetScopedId(string name)
         {
-            return Path.Combine(_tag, name);
+            if(!Path.IsPathRooted(name))
+                return Path.Combine(_tag, name);
+            return name;
         }
 
         public IEnumerable<string> GetItemGroups(string group)
