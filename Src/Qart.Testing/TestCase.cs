@@ -33,7 +33,7 @@ namespace Qart.Testing
             else if (DataStorage.Contains(GetItemRef(id)))
             {
                 string target = DataStorage.GetContent(GetItemRef(id));
-                return GetReadStream(target);
+                return GetReadStream(target.Trim());
             }
             return null;
         }
