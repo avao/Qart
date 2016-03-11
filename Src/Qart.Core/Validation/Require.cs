@@ -8,15 +8,23 @@ namespace Qart.Core.Validation
 {
     public static class Require
     {
-        public static void NotNull<T>(T value)
+        public static T NotNull<T>(T value)
             where T : class
         {
-            Require.That(() => value != null, "Expected non null value.");
+            return NotNull(value, "Expected non null value.");
         }
 
-        public static void NotNullOrEmpty(string value)
+        public static T NotNull<T>(T value, string message)
+            where T : class
+        {
+            Require.That(() => value != null, message);
+            return value;
+        }
+
+        public static string NotNullOrEmpty(string value)
         {
             Require.NotNullOrEmpty(value, "Expected non null and not empty value.");
+            return value;
         }
 
         public static void NotNullOrEmpty(string value, string message)

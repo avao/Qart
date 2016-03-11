@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Qart.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace Qart.Testing
         {
             if (!dataStore.Contains(itemId))
                 return null;
-            using(var stream = dataStore.GetReadStream(itemId))
+            using(var stream = dataStore.GetRequiredReadStream(itemId))
             using(var reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
@@ -56,7 +57,7 @@ namespace Qart.Testing
 
         public static T UsingReadStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)
         {
-            using (var stream = dataStore.GetReadStream(id))
+            using (var stream = dataStore.GetRequiredReadStream(id))
             {
                 return action(stream);
             }
@@ -73,6 +74,11 @@ namespace Qart.Testing
             {
                 return action(stream);
             }
+        }
+
+        public static Stream GetRequiredReadStream(this IDataStore dataStore, string id)
+        {
+            return Require.NotNull(dataStore.GetReadStream(id), "Could not get stream [" + id + "]");
         }
     }
 }
