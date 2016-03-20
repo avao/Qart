@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStore\FileBasedDataStore.cs" />
+    <Compile Include="DataStore\ScopedDataStore.cs" />
     <Compile Include="Io\FileBasedStore.cs" />
     <Compile Include="Io\FileRolling\FileBasedPositionStore.cs" />
     <Compile Include="Io\FileRolling\FileId.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Io\PathUtils.cs" />
     <Compile Include="Io\FileRolling\RollingFileReader.cs" />
     <Compile Include="Io\StreamExtensions.cs" />
+    <Compile Include="DataStore\IDataStore.cs" />
     <Compile Include="Logging\CompositeLogger.cs" />
     <Compile Include="Logging\IDisposableLogger.cs" />
     <Compile Include="Logging\TextWriterLogger.cs" />

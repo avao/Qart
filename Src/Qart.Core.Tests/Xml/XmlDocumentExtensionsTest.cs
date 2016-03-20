@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Qart.Core.Io;
 using Qart.Testing;
-using Qart.Testing.FileBased;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Qart.Core.Xml;
+using Qart.Core.DataStore;
 
 namespace Qart.Core.Tests.Xml
 {
     class XmlDocumentExtensionsTest
     {
-        TestSystem TestSystem = new TestSystem(new DataStore(PathUtils.ResolveRelative(@"TestData\XmlDocumentExtensionsTests")));
+        TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(@"TestData\XmlDocumentExtensionsTests")));
 
         [TestCase(@"override\RepeatedElements")]
         public void Override(string testId)

@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using NUnit.Framework;
 using System.Xml;
 using Qart.Core.Xml;
+using Qart.Core.DataStore;
 
 namespace Qart.Testing
 {

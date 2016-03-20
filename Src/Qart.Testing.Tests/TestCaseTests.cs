@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
+using Qart.Core.DataStore;
 using Qart.Core.Io;
-using Qart.Testing.FileBased;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Qart.Testing.Tests
 {
     public class TestCaseTests
     {
-        TestSystem TestSystem = new TestSystem(new DataStore(PathUtils.ResolveRelative(@"TestData\TestCases")));
+        TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(@"TestData\TestCases")));
 
         [Test]
         public void Ref()

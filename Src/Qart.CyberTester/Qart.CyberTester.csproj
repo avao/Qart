@@ -71,6 +71,10 @@
     <None Include="Qart.CyberTester.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Qart.Core\Qart.Core.csproj">
+      <Project>{2444bc84-514f-41d8-80d5-ef171f514c91}</Project>
+      <Name>Qart.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj">
       <Project>{dcdf538c-7f9c-4f0f-ac6e-851ef9344db5}</Project>
       <Name>Qart.Testing</Name>

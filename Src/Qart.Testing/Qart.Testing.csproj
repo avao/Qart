@@ -55,14 +55,11 @@
   <ItemGroup>
     <Compile Include="BaseLineAssert.cs" />
     <Compile Include="CyberTester.cs" />
-    <Compile Include="FileBased\DataStore.cs" />
-    <Compile Include="IDataStore.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorResolver.cs" />
     <Compile Include="ITestSession.cs" />
     <Compile Include="ITestCaseProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScopedDataStore.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="TestCaseLoggerFactory.cs" />
     <Compile Include="TestCaseResult.cs" />

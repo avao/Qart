@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Qart.Testing
+namespace Qart.Core.DataStore
 {
     public class ScopedDataStore : IDataStore
     {

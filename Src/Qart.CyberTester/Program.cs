@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using Common.Logging;
+using Qart.Core.DataStore;
 using Qart.Testing;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace Qart.CyberTester
 
             var container = Bootstrapper.CreateContainer();
 
-            var testSystem = new TestSystem(new Qart.Testing.FileBased.DataStore(options.Dir));
+            var testSystem = new TestSystem(new FileBasedDataStore(options.Dir));
          
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
 

@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Qart.Testing.FileBased
+namespace Qart.Core.DataStore
 {
-    public class DataStore : IDataStore
+    public class FileBasedDataStore : IDataStore
     {
         public string BasePath { get; private set; }
 
-        public DataStore(string basePath)
+        public FileBasedDataStore(string basePath)
         {
             BasePath = basePath;
         }
@@ -41,7 +40,7 @@ namespace Qart.Testing.FileBased
 
         public IEnumerable<string> GetItemIds(string tag)
         {
-            return Directory.EnumerateFiles(GetAbsolutePath(tag)).Select(_ => Path.Combine(tag,Path.GetFileName(_))).ToList();
+            return Directory.EnumerateFiles(GetAbsolutePath(tag)).Select(_ => Path.Combine(tag, Path.GetFileName(_))).ToList();
         }
 
 
@@ -49,5 +48,6 @@ namespace Qart.Testing.FileBased
         {
             return Directory.EnumerateDirectories(GetAbsolutePath(group)).Select(_ => Path.GetFileName(_)).ToList();
         }
+
     }
 }

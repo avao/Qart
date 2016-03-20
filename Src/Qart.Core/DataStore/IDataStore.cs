@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Qart.Testing
+namespace Qart.Core.DataStore
 {
     public interface IDataStore
     {
@@ -20,7 +19,7 @@ namespace Qart.Testing
         IEnumerable<string> GetItemGroups(string group);
     }
 
-    
+
     public static class DataStorageExtensions
     {
         /// <summary>
@@ -33,8 +32,8 @@ namespace Qart.Testing
         {
             if (!dataStore.Contains(itemId))
                 return null;
-            using(var stream = dataStore.GetReadStream(itemId))
-            using(var reader = new StreamReader(stream))
+            using (var stream = dataStore.GetReadStream(itemId))
+            using (var reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
             }
