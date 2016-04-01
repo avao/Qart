@@ -1,4 +1,5 @@
 ﻿using Common.Logging;
+using Qart.Core.Collections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -84,6 +85,14 @@ namespace Qart.Testing
             {
                 _customTestSession.Dispose();
             }
+        }
+    }
+
+    public static class TestSessionExtensions
+    {
+        public static bool IsRebaseline(this TestSession testSession)
+        {
+            return testSession.Options.GetValue("rebase", false, bool.Parse);
         }
     }
 }
