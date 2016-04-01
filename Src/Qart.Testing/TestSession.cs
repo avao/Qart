@@ -50,7 +50,7 @@ namespace Qart.Testing
                 try
                 {
                     processor = _testCaseProcessorResolver.Resolve(testCase);
-                    processor.Process(testCase, logger);
+                    processor.Process(this, testCase, logger);
                 }
                 catch (Exception ex)
                 {

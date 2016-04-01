@@ -22,12 +22,7 @@ namespace TestApp
     public class TestCaseHandler : ITestCaseProcessor
     {
 
-        public TestCaseHandler(TestSession testSession)
-        {
-
-        }
-
-        public void Process(TestCase testCase, ILog log)
+        public void Process(TestSession testSession, TestCase testCase, ILog log)
         {
             log.InfoFormat("About to throw from {0}", testCase.Id);
             throw new NotImplementedException();

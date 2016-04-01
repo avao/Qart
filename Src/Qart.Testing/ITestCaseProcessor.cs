@@ -10,7 +10,7 @@ namespace Qart.Testing
 {
     public interface ITestCaseProcessor //TODO separate assembly
     {
-        void Process(TestCase testCase, ILog logger);
+        void Process(TestSession testSession, TestCase testCase, ILog logger);
         XDocument GetDescription(TestCase testCase);
     }
 }
