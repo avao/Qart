@@ -22,11 +22,11 @@ namespace Qart.Testing
             _logManager = logManager;
         }
 
-        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession)
+        public IEnumerable<TestCaseResult> RunTests(ITestSession customSession, IDictionary<string, string> options)
         {
             //_logger.Debug("Looking for test cases.");
             var testCases = _testSystem.GetTestCases();
-            using (var testSession = new TestSession(customSession, _processorResolver, _testCaseLoggerFactory, _logManager))
+            using (var testSession = new TestSession(customSession, _processorResolver, _testCaseLoggerFactory, _logManager, options))
             {
                 foreach (var testCase in testCases)
                 {

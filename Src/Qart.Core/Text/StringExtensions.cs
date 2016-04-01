@@ -8,6 +8,16 @@ namespace Qart.Core.Text
 {
     public static class StringExtensions
     {
+        public static string SubstringBefore(this string value, string token)
+        {
+            var pos = value.IndexOf(token);
+            if (pos == -1)
+            {
+                throw new ArgumentException("String does not contain requested token [" + token + "]");
+            }
+            return value.Substring(0, pos);
+        }
+
         public static string SubstringAfter(this string value, string token)
         {
             var pos = value.IndexOf(token);

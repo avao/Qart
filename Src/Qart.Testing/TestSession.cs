@@ -1,6 +1,7 @@
 ﻿using Common.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +18,16 @@ namespace Qart.Testing
         private readonly IList<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results { get { return _results; } }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
+        public IDictionary<string, string> Options { get; private set; }
+
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
             _testCaseProcessorResolver = resolver;
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _logger = logManager.GetLogger("");
+            Options = new ReadOnlyDictionary<string, string>(options);
         }
 
         public void OnTestCase(TestCase testCase)
