@@ -76,7 +76,7 @@ namespace Qart.Core.DataStore
 
         public static IEnumerable<string> GetAllGroups(this IDataStore dataStore)
         {
-            return dataStore.GetAllGroups(".");
+            return dataStore.GetAllGroups(string.Empty);
         }
 
         public static IEnumerable<string> GetAllGroups(this IDataStore dataStore, string groupId)
@@ -95,7 +95,7 @@ namespace Qart.Core.DataStore
 
         public static IEnumerable<string> GetAllIds(this IDataStore dataStore, string relativeId)
         {
-            return dataStore.GetAllGroups(".").Select(_ => Path.Combine(_, relativeId)).Where(_ => dataStore.Contains(_));
+            return dataStore.GetAllGroups().Select(_ => Path.Combine(_, relativeId)).Where(_ => dataStore.Contains(_));
         }
     }
 }
