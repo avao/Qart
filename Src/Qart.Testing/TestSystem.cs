@@ -24,37 +24,7 @@ namespace Qart.Testing
 
         public IEnumerable<TestCase> GetTestCases()
         {
-            var testCases = GetTestCases("");
-            if (!testCases.Any())
-            {
-                var testCase = GetTestCase(".");
-                if (testCase.Contains(".test"))
-                {
-                    testCases = new[] { testCase };
-                }
-            }
-            return testCases;
-        }
-
-        private IEnumerable<TestCase> GetTestCases(string groupId)
-        {
-            var testCases = new List<TestCase>();
-            var groups = DataStorage.GetItemGroups(groupId);
-            foreach (var group in groups)
-            {
-                var id = Path.Combine(groupId, group);
-                testCases.AddRange(GetTestCases(id));
-                if(IsTestCase(id))
-                {
-                    testCases.Add(new TestCase(id, this));
-                }
-            }
-            return testCases;
-        }
-
-        private bool IsTestCase(string group)
-        {
-            return DataStorage.Contains(Path.Combine(group, ".test"));
+            return DataStorage.GetAllGroups().Where(_ => DataStorage.Contains(Path.Combine(_, ".test"))).Select(_ => new TestCase(_, this));
         }
     }
 }

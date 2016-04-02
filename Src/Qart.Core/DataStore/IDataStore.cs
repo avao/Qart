@@ -73,5 +73,29 @@ namespace Qart.Core.DataStore
                 return action(stream);
             }
         }
+
+        public static IEnumerable<string> GetAllGroups(this IDataStore dataStore)
+        {
+            return dataStore.GetAllGroups(".");
+        }
+
+        public static IEnumerable<string> GetAllGroups(this IDataStore dataStore, string groupId)
+        {
+            foreach (var group in dataStore.GetItemGroups(groupId))
+            {
+                var id = Path.Combine(groupId, group);
+                yield return id;
+
+                foreach (var subGroup in GetAllGroups(dataStore, id))
+                {
+                    yield return subGroup;
+                }
+            }
+        }
+
+        public static IEnumerable<string> GetAllIds(this IDataStore dataStore, string relativeId)
+        {
+            return dataStore.GetAllGroups(".").Select(_ => Path.Combine(_, relativeId)).Where(_ => dataStore.Contains(_));
+        }
     }
 }
