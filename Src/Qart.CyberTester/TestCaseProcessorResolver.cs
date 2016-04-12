@@ -1,5 +1,7 @@
 ﻿using Castle.Windsor;
+using Newtonsoft.Json;
 using Qart.Core.DataStore;
+using Qart.Core.Text;
 using Qart.Testing;
 using System;
 using System.Collections.Generic;
@@ -20,8 +22,15 @@ namespace Qart.CyberTester
 
         public ITestCaseProcessor Resolve(TestCase testCase)
         {
-            var processorName = testCase.GetContent(".test");
-            return _container.Resolve<ITestCaseProcessor>(processorName);
+            var content = testCase.GetContent(".test");
+            var processorName = content.LeftOfOptional("\n");
+
+            Dictionary<string, dynamic> parameters = null;
+            if(processorName != content)
+            {
+                parameters = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content.RightOf("\n"));
+            }
+            return _container.Resolve<ITestCaseProcessor>(processorName.Trim(), parameters);
         }
     }
 }

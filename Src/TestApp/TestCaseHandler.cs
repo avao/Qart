@@ -21,6 +21,16 @@ namespace TestApp
 
     public class TestCaseHandler : ITestCaseProcessor
     {
+        public TestCaseHandler()
+        {
+
+        }
+
+        public TestCaseHandler(string abc, string[] obj)
+        {
+
+        }
+
 
         public void Process(TestSession testSession, TestCase testCase, ILog log)
         {
