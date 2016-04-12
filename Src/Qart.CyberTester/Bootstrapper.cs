@@ -18,8 +18,11 @@ namespace Qart.CyberTester
         {
             var container = new WindsorContainer();
             container.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
-            container.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
             container.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
+            container.Register(Component.For<ITestCaseProcessorInfoExtractor>().ImplementedBy<TestCaseProcessorInfoExtractor>());
+            
+            container.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
+            
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;
         }

@@ -60,5 +60,22 @@ namespace Qart.Core.Text
             }
             return value.Substring(0, pos);
         }
+
+        public static string SubstringWhile(this string value, Func<char, bool> predicate)
+        {
+            var builder = new StringBuilder();
+            foreach (char c in value)
+            {
+                if(predicate(c))
+                {
+                    builder.Append(c);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return builder.ToString();
+        }
     }
 }
