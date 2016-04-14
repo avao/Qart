@@ -24,7 +24,7 @@ namespace Qart.Testing
 
         public IEnumerable<TestCase> GetTestCases()
         {
-            return DataStorage.GetAllGroups().Where(_ => DataStorage.Contains(Path.Combine(_, ".test"))).Select(_ => new TestCase(_, this));
+            return DataStorage.GetAllGroups().Concat(new[]{"."}).Where(_ => DataStorage.Contains(Path.Combine(_, ".test"))).Select(_ => new TestCase(_, this));
         }
     }
 }
