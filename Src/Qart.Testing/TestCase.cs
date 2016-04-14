@@ -135,6 +135,11 @@ namespace Qart.Testing
 
         public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
         {
+            string exclusionListFileName = resultName + ".xpath_exclude";
+            if(testCase.Contains(exclusionListFileName))
+            {
+                doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n'));
+            }
             testCase.AssertContentXml(doc.OuterXml, resultName, rebaseline);
         }
 
