@@ -138,7 +138,7 @@ namespace Qart.Testing
             string exclusionListFileName = resultName + ".xpath_exclude";
             if(testCase.Contains(exclusionListFileName))
             {
-                doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n'));
+                doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)));
             }
             testCase.AssertContentXml(doc.OuterXml, resultName, rebaseline);
         }
