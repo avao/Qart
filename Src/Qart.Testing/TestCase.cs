@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System.Xml;
 using Qart.Core.Xml;
 using Qart.Core.DataStore;
+using Newtonsoft.Json;
 
 namespace Qart.Testing
 {
@@ -89,6 +90,10 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
+        public static T GetFromJson<T>(this TestCase testCase, string id)
+        {
+            return JsonConvert.DeserializeObject<T>(testCase.GetContent(id));
+        }
 
         public static XmlDocument GetXmlDocument(this TestCase testCase, string id)
         {
