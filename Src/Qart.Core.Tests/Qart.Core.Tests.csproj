@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStore\ExtendedDataStoreTests.cs" />
     <Compile Include="Io\FileBasedStoreTests.cs" />
     <Compile Include="Io\SearchTests.cs" />
     <Compile Include="Io\FileRolling\RollingFileReaderTests.cs" />

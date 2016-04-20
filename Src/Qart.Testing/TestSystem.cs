@@ -14,7 +14,7 @@ namespace Qart.Testing
 
         public TestSystem(IDataStore dataStorage)
         {
-            DataStorage = dataStorage;
+            DataStorage = new ExtendedDataStore(dataStorage);
         }
 
         public TestCase GetTestCase(string id)

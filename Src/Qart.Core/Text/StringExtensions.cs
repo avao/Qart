@@ -77,5 +77,12 @@ namespace Qart.Core.Text
             }
             return builder.ToString();
         }
+
+
+        public static bool IsXml(this string content)
+        {
+            return content.StartsWith("<xml?");
+        }
+
     }
 }

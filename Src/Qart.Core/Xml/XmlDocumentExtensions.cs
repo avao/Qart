@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Qart.Core.Text;
 
 namespace Qart.Core.Xml
 {
@@ -50,6 +51,16 @@ namespace Qart.Core.Xml
                     {
                         lhsAttribute.Value = attribute.Value;
                     }
+                }
+
+
+                if (lhsElement.ChildNodes.Count == 0 && lhsElement.InnerText.IsXml() && rhs.ChildNodes.Count == 1)
+                {//if lhs node is simple content and rhs node is complex then try parsing content as XML and apply overrides to it
+                    var doc = new XmlDocument();
+                    doc.LoadXml(lhsElement.InnerText);
+                    Override(doc.DocumentElement, rhs.ChildNodes[0]);
+                    lhsElement.InnerText = doc.OuterXml;
+                    return;
                 }
 
 

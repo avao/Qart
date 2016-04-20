@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DictionaryExtensions.cs" />
+    <Compile Include="DataStore\ExtendedDataStore.cs" />
     <Compile Include="DataStore\FileBasedDataStore.cs" />
     <Compile Include="DataStore\ScopedDataStore.cs" />
     <Compile Include="Io\FileBasedStore.cs" />

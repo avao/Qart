@@ -28,16 +28,7 @@ namespace Qart.Testing
 
         public Stream GetReadStream(string id)
         {
-            if (DataStorage.Contains(id))
-            {
-                return DataStorage.GetReadStream(id);
-            }
-            else if (DataStorage.Contains(GetItemRef(id)))
-            {
-                string target = DataStorage.GetContent(GetItemRef(id));
-                return GetReadStream(target);
-            }
-            return null;
+            return DataStorage.GetReadStream(id);
         }
 
         public Stream GetWriteStream(string id)
@@ -47,13 +38,7 @@ namespace Qart.Testing
 
         public bool Contains(string id)
         {
-            return DataStorage.Contains(id) || DataStorage.Contains(GetItemRef(id));
-        }
-
-
-        private string GetItemRef(string name)
-        {
-            return name + ".ref"; //TODO reference as a concept
+            return DataStorage.Contains(id);
         }
 
         public IEnumerable<string> GetItemIds(string tag)
@@ -90,7 +75,7 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
-        public static T GetFromJson<T>(this TestCase testCase, string id)
+        public static T GetObjectJson<T>(this TestCase testCase, string id)
         {
             return JsonConvert.DeserializeObject<T>(testCase.GetContent(id));
         }
