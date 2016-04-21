@@ -77,7 +77,7 @@ namespace Qart.Core.DataStore
             //first redirection point should be found and then itemId should be rewriten in accordance to redirection
 
             var groupId = Path.GetDirectoryName(itemId);
-            var referenceItemId = GetItemRef(groupId);
+            var referenceItemId = Path.Combine(groupId, ".ref");
             if (_dataStore.Contains(referenceItemId))
             {
                 var reference = _dataStore.GetContent(referenceItemId).Trim();
