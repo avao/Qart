@@ -26,12 +26,12 @@ namespace Qart.Core.DataStore
                 string itemRef = GetItemRef(itemId);
                 if (_dataStore.Contains(itemRef))
                 {
-                    string target = CombinePaths(Path.GetDirectoryName(itemId), "", _dataStore.GetContent(itemRef));
+                    string target = CombinePaths(Path.GetDirectoryName(itemRef), "", _dataStore.GetContent(itemRef));
                     return GetReadStream(target);
                 }
 
                 itemRef = GetRedirectedItemId(itemId);
-                if (itemRef!=null && _dataStore.Contains(itemRef))
+                if (itemRef != null && itemRef != itemId)
                 {
                     return GetReadStream(itemRef);
                 }
@@ -51,9 +51,9 @@ namespace Qart.Core.DataStore
                 return true;
 
             var redirectedId = GetRedirectedItemId(itemId);
-            if (redirectedId != null)
+            if (redirectedId != null && itemId != redirectedId)
             {
-                return _dataStore.Contains(redirectedId);
+                return Contains(redirectedId);
             }
 
             return false;

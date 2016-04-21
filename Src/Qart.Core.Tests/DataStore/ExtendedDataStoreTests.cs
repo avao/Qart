@@ -19,9 +19,8 @@ namespace Qart.Core.Tests.DataStore
             var store = new ExtendedDataStore(new FileBasedDataStore(baseDir));
             Assert.That(store.Contains("afile.xml"), Is.True);
             Assert.That(store.Contains("nonexistent"), Is.False);
-            string content = store.GetContent("afile.xml ");
+            string content = store.GetContent("afile.xml");
             Assert.That(content, Is.EqualTo("<root/>"));
-
         }
 
     }
