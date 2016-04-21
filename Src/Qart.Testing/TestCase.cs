@@ -8,6 +8,8 @@ using System.Xml.Linq;
 using NUnit.Framework;
 using System.Xml;
 using Qart.Core.Xml;
+using Qart.Core.DataStore;
+using Newtonsoft.Json;
 
 namespace Qart.Testing
 {
@@ -26,16 +28,7 @@ namespace Qart.Testing
 
         public Stream GetReadStream(string id)
         {
-            if (DataStorage.Contains(id))
-            {
-                return DataStorage.GetRequiredReadStream(id);
-            }
-            else if (DataStorage.Contains(GetItemRef(id)))
-            {
-                string target = DataStorage.GetRequiredContent(GetItemRef(id));
-                return GetReadStream(target.Trim());
-            }
-            return null;
+            return DataStorage.GetReadStream(id);
         }
 
         public Stream GetWriteStream(string id)
@@ -45,13 +38,7 @@ namespace Qart.Testing
 
         public bool Contains(string id)
         {
-            return DataStorage.Contains(id) || DataStorage.Contains(GetItemRef(id));
-        }
-
-
-        private string GetItemRef(string name)
-        {
-            return name + ".ref"; //TODO reference as a concept
+            return DataStorage.Contains(id);
         }
 
         public IEnumerable<string> GetItemIds(string tag)
@@ -88,6 +75,10 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
+        public static T GetObjectJson<T>(this TestCase testCase, string id)
+        {
+            return JsonConvert.DeserializeObject<T>(testCase.GetContent(id));
+        }
 
         public static XmlDocument GetXmlDocument(this TestCase testCase, string id)
         {
@@ -134,6 +125,11 @@ namespace Qart.Testing
 
         public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
         {
+            string exclusionListFileName = resultName + ".xpath_exclude";
+            if(testCase.Contains(exclusionListFileName))
+            {
+                doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)));
+            }
             testCase.AssertContentXml(doc.OuterXml, resultName, rebaseline);
         }
 

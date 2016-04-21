@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Qart.Testing
+namespace Qart.Core.DataStore
 {
     public interface IDataStore
     {
@@ -21,7 +20,7 @@ namespace Qart.Testing
         IEnumerable<string> GetItemGroups(string group);
     }
 
-    
+
     public static class DataStorageExtensions
     {
         /// <summary>
@@ -34,6 +33,7 @@ namespace Qart.Testing
         {
             if (!dataStore.Contains(itemId))
                 return null;
+
             using(var stream = dataStore.GetRequiredReadStream(itemId))
             using(var reader = new StreamReader(stream))
             {
@@ -85,6 +85,30 @@ namespace Qart.Testing
         public static Stream GetRequiredReadStream(this IDataStore dataStore, string id)
         {
             return Require.NotNull(dataStore.GetReadStream(id), "Could not get stream [" + id + "]");
+        }
+       
+        public static IEnumerable<string> GetAllGroups(this IDataStore dataStore)
+        {
+            return dataStore.GetAllGroups(string.Empty);
+        }
+
+        public static IEnumerable<string> GetAllGroups(this IDataStore dataStore, string groupId)
+        {
+            foreach (var group in dataStore.GetItemGroups(groupId))
+            {
+                var id = Path.Combine(groupId, group);
+                yield return id;
+
+                foreach (var subGroup in GetAllGroups(dataStore, id))
+                {
+                    yield return subGroup;
+                }
+            }
+        }
+
+        public static IEnumerable<string> GetAllIds(this IDataStore dataStore, string relativeId)
+        {
+            return dataStore.GetAllGroups().Select(_ => Path.Combine(_, relativeId)).Where(_ => dataStore.Contains(_));
         }
     }
 }

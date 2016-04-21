@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Qart.Core.Io
 
         public static int ReadFromFile(string path, int length, byte[] buf)
         {
-            using(var stream = OpenFileStreamForReading(path))
+            using (var stream = OpenFileStreamForReading(path))
             {
                 return stream.Read(buf, 0, length);
             }
@@ -47,6 +48,14 @@ namespace Qart.Core.Io
         {
             FileUtils.EnsureCanBeWritten(path);
             File.WriteAllText(path, content);
+        }
+
+        public static string GetAssemblyDirectory()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
         }
     }
 }

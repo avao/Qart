@@ -1,6 +1,8 @@
 ﻿using Common.Logging;
+using Qart.Core.Collections;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +19,16 @@ namespace Qart.Testing
         private readonly IList<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results { get { return _results; } }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
+        public IDictionary<string, string> Options { get; private set; }
+
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
             _testCaseProcessorResolver = resolver;
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _logger = logManager.GetLogger("");
+            Options = new ReadOnlyDictionary<string, string>(options);
         }
 
         public void OnTestCase(TestCase testCase)
@@ -45,7 +50,7 @@ namespace Qart.Testing
                 try
                 {
                     processor = _testCaseProcessorResolver.Resolve(testCase);
-                    processor.Process(testCase, logger);
+                    processor.Process(this, testCase, logger);
                 }
                 catch (Exception ex)
                 {
@@ -80,6 +85,14 @@ namespace Qart.Testing
             {
                 _customTestSession.Dispose();
             }
+        }
+    }
+
+    public static class TestSessionExtensions
+    {
+        public static bool IsRebaseline(this TestSession testSession)
+        {
+            return testSession.Options.GetValue("rebase", false, bool.Parse);
         }
     }
 }
