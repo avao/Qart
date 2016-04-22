@@ -4,18 +4,14 @@ using Qart.Core.Io;
 using Qart.Core.Io.FileRolling;
 using Qart.Testing;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Core.Tests.Io.FileRolling
 {
     [TestFixture]
     public class RollingFileReaderTests
     {
-        private string BaseDir = PathUtils.ResolveRelative(@"TestData\RollingFileReader");
+        readonly string BaseDir = PathUtils.ResolveRelative(Path.Combine("TestData", "RollingFileReader"));
 
         [Test, Ignore]
         public void RolledFilesNoPosition()

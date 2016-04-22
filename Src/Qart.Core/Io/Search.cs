@@ -18,11 +18,20 @@ namespace Qart.Core.Io
             var tokens = PatternUtils.Tokenize(pattern);
             if(tokens.Length <2)
                 return Enumerable.Empty<string>();
+            string ds = Path.DirectorySeparatorChar.ToString();
             var first = tokens[0];
-            if(first.EndsWith(":"))
+            if(first.EndsWith (":", StringComparison.Ordinal))
             {
-                first += @"\";
+                // if the token is a windows drive, add a backslash to make it an absolute path.
+                first += ds;
             }
+            else if(pattern.StartsWith(ds, StringComparison.Ordinal))
+            {
+                // if the token was originally an absolute path (unix) or absolute path
+                // minus the drive letter (windows) add the slash/backslash again.
+                first = ds + first;
+            }
+
             return FindFiles( first, tokens.Skip(1)).ToList();
         }
 

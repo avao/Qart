@@ -1,17 +1,15 @@
 ﻿using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Io;
-using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing.Tests
 {
     class TestSystemTests
     {
-        TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(@"TestData\TestCases")));
+        readonly TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))));
 
         [Test]
         public void GetTestCases()
