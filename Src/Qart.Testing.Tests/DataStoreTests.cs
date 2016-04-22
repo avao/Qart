@@ -1,11 +1,7 @@
 ﻿using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Io;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Qart.Testing.Tests
 {
@@ -16,7 +12,7 @@ namespace Qart.Testing.Tests
         {
             var dataStore = new FileBasedDataStore(PathUtils.ResolveRelative(@"TestData"));
             var scopedDataStore = new ScopedDataStore(dataStore, "TestCases");
-            Assert.AreEqual(new[]{"Ref\\artifact.xml.ref"}, scopedDataStore.GetItemIds("Ref"));
+            Assert.AreEqual(new[]{Path.Combine("Ref", "artifact.xml.ref")}, scopedDataStore.GetItemIds("Ref"));
         }
 
     }
