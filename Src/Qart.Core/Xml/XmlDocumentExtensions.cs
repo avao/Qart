@@ -13,8 +13,8 @@ namespace Qart.Core.Xml
         {
             foreach (var xpath in xpaths)
             {
-                foreach (XmlNode node in doc.SelectNodes(xpath))
-                {
+                XmlNode node = doc.SelectSingleNode(xpath);
+                while(node != null) {
                     var attribute = node as XmlAttribute;
                     if (attribute != null)
                     {
@@ -24,6 +24,7 @@ namespace Qart.Core.Xml
                     {
                         node.ParentNode.RemoveChild(node);
                     }
+                    node = doc.SelectSingleNode(xpath);
                 }
             }
         }
