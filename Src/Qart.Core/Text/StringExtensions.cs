@@ -66,7 +66,7 @@ namespace Qart.Core.Text
             var builder = new StringBuilder();
             foreach (char c in value)
             {
-                if(predicate(c))
+                if (predicate(c))
                 {
                     builder.Append(c);
                 }
@@ -84,5 +84,11 @@ namespace Qart.Core.Text
             return content.StartsWith("<xml?");
         }
 
+
+        public static T ToEnum<T>(this string value)
+            where T : struct, IConvertible
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
     }
 }
