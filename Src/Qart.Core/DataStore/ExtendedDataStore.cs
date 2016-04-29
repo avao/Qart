@@ -9,8 +9,14 @@ namespace Qart.Core.DataStore
     public class ExtendedDataStore : IDataStore
     {
         private readonly IDataStore _dataStore;
+        private readonly Func<string, IDataStore, Stream> _streamFunc;
 
         public ExtendedDataStore(IDataStore dataStore)
+        {
+            _dataStore = dataStore;
+        }
+
+        public ExtendedDataStore(IDataStore dataStore, Func<string, IDataStore, Stream> streamFunc)
         {
             _dataStore = dataStore;
         }
@@ -21,22 +27,25 @@ namespace Qart.Core.DataStore
             {
                 return _dataStore.GetReadStream(itemId);
             }
-            else
-            {
-                string itemRef = GetItemRef(itemId);
-                if (_dataStore.Contains(itemRef))
-                {
-                    string target = CombinePaths(Path.GetDirectoryName(itemRef), "", _dataStore.GetContent(itemRef));
-                    return GetReadStream(target);
-                }
 
-                itemRef = GetRedirectedItemId(itemId);
-                if (itemRef != null && itemRef != itemId)
-                {
-                    return GetReadStream(itemRef);
-                }
+            string itemRef = GetItemRef(itemId);
+            if (_dataStore.Contains(itemRef))
+            {
+                string target = CombinePaths(Path.GetDirectoryName(itemId), "", _dataStore.GetContent(itemRef));
+                return GetReadStream(target);
             }
 
+            itemRef = GetRedirectedItemId(itemId);
+            if (itemRef != null && _dataStore.Contains(itemRef))
+            {
+                return GetReadStream(itemRef);
+            }
+
+            string func = GetItemFunc(itemId);
+            if(_dataStore.Contains(func))
+            {
+                return _streamFunc(_dataStore.GetContent(func), this);
+            }
             return null;
         }
 
@@ -100,6 +109,11 @@ namespace Qart.Core.DataStore
         private string GetItemRef(string name)
         {
             return name + ".ref";
+        }
+
+        private string GetItemFunc(string name)
+        {
+            return name + ".func";
         }
     }
 }
