@@ -12,7 +12,7 @@ namespace Qart.Core.Tests.DataStore
         [Test]
         public void ResolvingAnItemSucceeds()
         {
-            var baseDir = PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases", "ExtendedDataStore"));
+            var baseDir = PathUtils.ResolveRelative("TestData/TestCases/ExtendedDataStore");
             var store = new ExtendedDataStore(new FileBasedDataStore(baseDir));
             Assert.That(store.Contains("afile.xml"), Is.True);
             Assert.That(store.Contains("nonexistent"), Is.False);

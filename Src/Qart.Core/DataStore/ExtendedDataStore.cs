@@ -36,7 +36,7 @@ namespace Qart.Core.DataStore
             }
 
             itemRef = GetRedirectedItemId(itemId);
-            if (itemRef != null && _dataStore.Contains(itemRef))
+            if (itemRef != null && Contains(itemRef))
             {
                 return GetReadStream(itemRef);
             }
