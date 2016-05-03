@@ -22,6 +22,8 @@ namespace Qart.CyberTester
             container.Register(Component.For<ITestCaseProcessorInfoExtractor>().ImplementedBy<TestCaseProcessorInfoExtractor>());
             
             container.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
+            container.Register(Component.For<IStreamTransformerResolver>().Instance(new StreamTransformerResolver(container)));
+            container.Register(Component.For<IContentProcessor>().ImplementedBy<ContentProcessor>());
             
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;

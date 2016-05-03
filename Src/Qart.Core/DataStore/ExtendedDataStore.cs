@@ -19,6 +19,7 @@ namespace Qart.Core.DataStore
         public ExtendedDataStore(IDataStore dataStore, Func<string, IDataStore, Stream> streamFunc)
         {
             _dataStore = dataStore;
+            _streamFunc = streamFunc;
         }
 
         public Stream GetReadStream(string itemId)
@@ -65,7 +66,8 @@ namespace Qart.Core.DataStore
                 return Contains(redirectedId);
             }
 
-            return false;
+            string func = GetItemFunc(itemId);
+            return _dataStore.Contains(func);
         }
 
         public IEnumerable<string> GetItemIds(string tag)
@@ -113,7 +115,7 @@ namespace Qart.Core.DataStore
 
         private string GetItemFunc(string name)
         {
-            return name + ".func";
+            return name + ".transform";
         }
     }
 }

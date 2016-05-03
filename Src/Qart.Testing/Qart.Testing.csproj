@@ -58,7 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
+    <Compile Include="IContentProcessor.cs" />
+    <Compile Include="IStreamTransformer.cs" />
+    <Compile Include="IStreamTransformerResolver.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorInfoExtractor.cs" />
     <Compile Include="ITestCaseProcessorResolver.cs" />
