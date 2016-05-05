@@ -10,15 +10,15 @@ namespace Qart.Testing.Tests
     {
         class TextStreamTranformer : IStreamTransformer
         {
-            public Stream Transform(Stream strm)
+            public Stream Transform(Stream strm, IDataStore dataStore, object param)
             {
-                return new MemoryStream(UTF8Encoding.UTF8.GetBytes("blah"));
+                return new MemoryStream(UTF8Encoding.UTF8.GetBytes((string)param));
             }
         }
 
         class StreamTransformResolver : IStreamTransformerResolver
         {
-            public IStreamTransformer ResolveTransformer(string name, object param)
+            public IStreamTransformer ResolveTransformer(string name)
             {
                 return new TextStreamTranformer();
             }
@@ -44,7 +44,7 @@ namespace Qart.Testing.Tests
         public void Transform()
         {
             var testCase = TestSystem.GetTestCase("Transform");
-            Assert.AreEqual("blah", testCase.GetContent("artifact.xml"));
+            Assert.AreEqual("hhh", testCase.GetContent("artifact.xml"));
         }
     }
 }

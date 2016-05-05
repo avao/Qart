@@ -20,5 +20,15 @@ namespace Qart.Core.Io
                 return action(reader);
             }
         }
+
+        public static void Append(this Stream dst, Stream streamToAppend)
+        {
+            using (var reader = new StreamReader(streamToAppend))
+            {
+                var content = reader.ReadToEnd();
+                var bytes = UTF8Encoding.UTF8.GetBytes(content);
+                dst.Write(bytes, 0, bytes.Length);
+            }
+        }
     }
 }

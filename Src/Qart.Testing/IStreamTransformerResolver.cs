@@ -8,6 +8,6 @@ namespace Qart.Testing
 {
     public interface IStreamTransformerResolver
     {
-        IStreamTransformer ResolveTransformer(string name, object param);
+        IStreamTransformer ResolveTransformer(string name);
     }
 }
