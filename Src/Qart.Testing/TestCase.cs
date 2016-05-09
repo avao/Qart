@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using NUnit.Framework;
 using System.Xml;
@@ -45,7 +43,6 @@ namespace Qart.Testing
         {
             return DataStorage.GetItemIds(tag);
         }
-
 
         public IEnumerable<string> GetItemGroups(string group)
         {
@@ -92,7 +89,6 @@ namespace Qart.Testing
             }
             return xmlDocument;
         }
-
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction)
         {
@@ -152,6 +148,5 @@ namespace Qart.Testing
                 Assert.Fail("Just in case...");
             }
         }
-
     }
 }
