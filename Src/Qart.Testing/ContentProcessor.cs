@@ -1,24 +1,20 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing
 {
     public class ContentProcessor : IContentProcessor
     {
-        private IStreamTransformerResolver _streamTransformerResolver;
+        private readonly IStreamTransformerResolver _streamTransformerResolver;
 
         public ContentProcessor(IStreamTransformerResolver streamTransformerResolver)
         {
             _streamTransformerResolver = streamTransformerResolver;
         }
 
-
-        public System.IO.Stream Process(string content, Core.DataStore.IDataStore dataStore)
+        public Stream Process(string content, Core.DataStore.IDataStore dataStore)
         {
             //[{"ref":"c:/dddd"},{"xslt" : "c:/dddd"}]
             Stream strm=null;

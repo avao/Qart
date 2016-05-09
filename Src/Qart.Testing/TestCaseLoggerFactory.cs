@@ -1,11 +1,6 @@
 ﻿using Common.Logging;
 using Qart.Core.Logging;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing
 {
@@ -29,7 +24,6 @@ namespace Qart.Testing
             return new CompositeLogger(new[] {   
                 new CompositeLogger.LoggerInfo(_log, true), 
                 new CompositeLogger.LoggerInfo(new TextWriterLogger("TestCaseLogger", LogLevel.All, true, true, true, "yyyy-MM-dd hh:mm:ss", writer), false) });
-
         }
     }
 }

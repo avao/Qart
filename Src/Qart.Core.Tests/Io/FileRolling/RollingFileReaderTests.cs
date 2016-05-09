@@ -26,7 +26,6 @@ namespace Qart.Core.Tests.Io.FileRolling
             BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text);
         }
 
-
         [Test, Ignore("TODO")]
         public void RolledFilesWithPosition()
         {
