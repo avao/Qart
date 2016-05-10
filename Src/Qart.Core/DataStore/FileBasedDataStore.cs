@@ -1,9 +1,7 @@
 ﻿using Qart.Core.Io;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Qart.Core.DataStore
 {
@@ -43,11 +41,9 @@ namespace Qart.Core.DataStore
             return Directory.EnumerateFiles(GetAbsolutePath(tag)).Select(_ => Path.Combine(tag, Path.GetFileName(_))).ToList();
         }
 
-
         public IEnumerable<string> GetItemGroups(string group)
         {
             return Directory.EnumerateDirectories(GetAbsolutePath(group)).Select(_ => Path.GetFileName(_)).ToList();
         }
-
     }
 }
