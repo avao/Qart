@@ -3,9 +3,6 @@ using Qart.Core.Collections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing
 {
@@ -40,7 +37,6 @@ namespace Qart.Testing
 
             using (var logger = _testCaseLoggerFactory.GetLogger(testCase))
             {
-
                 if (_customTestSession != null)
                 {
                     _customTestSession.OnBegin(testCase, logger);

@@ -1,0 +1,3 @@
+language: csharp
+solution: Src/Qart.sln
+mono: alpha

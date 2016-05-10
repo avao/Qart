@@ -13,7 +13,7 @@ namespace Qart.Core.Tests.Io.FileRolling
     {
         readonly string BaseDir = PathUtils.ResolveRelative(Path.Combine("TestData", "RollingFileReader"));
 
-        [Test, Ignore]
+        [Test, Ignore("TODO")]
         public void RolledFilesNoPosition()
         {
             string testDir = Path.Combine(BaseDir, "RolledFilesWithoutPosition");
@@ -26,8 +26,7 @@ namespace Qart.Core.Tests.Io.FileRolling
             BaseLineAssert.AreEqual(Path.Combine(testDir, "expected.txt"), text);
         }
 
-
-        [Test, Ignore]
+        [Test, Ignore("TODO")]
         public void RolledFilesWithPosition()
         {
             string testDir = Path.Combine(BaseDir, "RolledFilesWithPosition");

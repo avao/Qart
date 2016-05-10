@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Newtonsoft.Json.Linq;
@@ -57,7 +55,5 @@ namespace Qart.Testing
 
             return JTokenType.Object;
         }
-
-
     }
 }
