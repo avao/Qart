@@ -36,17 +36,18 @@ namespace Qart.Core.DataStore
                 return GetReadStream(target);
             }
 
+            string func = GetItemFunc(itemId);
+            if (_dataStore.Contains(func))
+            {
+                return _streamFunc(_dataStore.GetContent(func), this);
+            }
+
             itemRef = GetRedirectedItemId(itemId);
             if (itemRef != null && Contains(itemRef))
             {
                 return GetReadStream(itemRef);
             }
 
-            string func = GetItemFunc(itemId);
-            if(_dataStore.Contains(func))
-            {
-                return _streamFunc(_dataStore.GetContent(func), this);
-            }
             return null;
         }
 
