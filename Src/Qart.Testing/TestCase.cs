@@ -17,10 +17,10 @@ namespace Qart.Testing
         public IDataStore DataStorage { get; private set; }
         public string Id { get; private set; }
 
-        internal TestCase(string id, TestSystem testSystem)
+        internal TestCase(string id, TestSystem testSystem, IDataStore dataStore)
         {
             TestSystem = testSystem;
-            DataStorage = new ScopedDataStore(testSystem.DataStorage, id);
+            DataStorage = dataStore;
             Id = id;
         }
 
