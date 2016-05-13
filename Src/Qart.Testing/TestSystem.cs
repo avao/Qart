@@ -12,15 +12,14 @@ namespace Qart.Testing
         public IContentProcessor ContentProcessor { get; private set; }
 
         public TestSystem(IDataStore dataStorage)
+            : this(dataStorage, null)
         {
-            ContentProcessor = null;
-            DataStorage = new ExtendedDataStore(dataStorage, (content, dataStore) => null);
         }
 
         public TestSystem(IDataStore dataStorage, IContentProcessor processor)
         {
             ContentProcessor = processor;
-            DataStorage = new ExtendedDataStore(dataStorage, (content, dataStore) => processor.Process(content, dataStore));
+            DataStorage = dataStorage;
         }
 
         public TestCase GetTestCase(string id)
