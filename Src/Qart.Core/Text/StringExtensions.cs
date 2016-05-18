@@ -81,7 +81,7 @@ namespace Qart.Core.Text
 
         public static bool IsXml(this string content)
         {
-            return content.StartsWith("<xml?");
+            return content.StartsWith("<?xml");
         }
 
 
