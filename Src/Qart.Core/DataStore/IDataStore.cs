@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Qart.Core.DataStore
 {
@@ -45,7 +44,6 @@ namespace Qart.Core.DataStore
         {
             return Require.NotNull(dataStore.GetContent(itemId), "No content read from [" + itemId + "]");
         }
-
 
         public static void PutContent(this IDataStore dataStore, string itemId, string content)
         {

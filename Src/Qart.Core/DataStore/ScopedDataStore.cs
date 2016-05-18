@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Qart.Core.DataStore
 {
@@ -48,5 +46,4 @@ namespace Qart.Core.DataStore
             return _dataStore.GetItemGroups(GetScopedId(group));
         }
     }
-
 }

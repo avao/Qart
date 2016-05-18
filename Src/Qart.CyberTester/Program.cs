@@ -53,7 +53,8 @@ namespace Qart.CyberTester
 
             var container = Bootstrapper.CreateContainer();
 
-            var testSystem = new TestSystem(new FileBasedDataStore(options.Dir));
+            IContentProcessor contentProcessor = container.Resolve<IContentProcessor>();
+            var testSystem = new TestSystem(new FileBasedDataStore(options.Dir), contentProcessor);
 
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
 

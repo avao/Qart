@@ -1,10 +1,7 @@
 ﻿using Qart.Core.DataStore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing
 {
@@ -12,19 +9,27 @@ namespace Qart.Testing
     {
         public IDataStore DataStorage { get; private set; }
 
+        public IContentProcessor ContentProcessor { get; private set; }
+
         public TestSystem(IDataStore dataStorage)
+            : this(dataStorage, null)
         {
-            DataStorage = new ExtendedDataStore(dataStorage);
+        }
+
+        public TestSystem(IDataStore dataStorage, IContentProcessor processor)
+        {
+            ContentProcessor = processor;
+            DataStorage = dataStorage;
         }
 
         public TestCase GetTestCase(string id)
         {
-            return new TestCase(id, this);
+            return new TestCase(id, this, new ExtendedDataStore(new ScopedDataStore(DataStorage, id), (content, dataStore) => ContentProcessor.Process(content, dataStore)));
         }
 
         public IEnumerable<TestCase> GetTestCases()
         {
-            return DataStorage.GetAllGroups().Concat(new[]{"."}).Where(_ => DataStorage.Contains(Path.Combine(_, ".test"))).Select(_ => new TestCase(_, this));
+            return DataStorage.GetAllGroups().Concat(new[]{"."}).Where(_ => DataStorage.Contains(Path.Combine(_, ".test"))).Select(GetTestCase);
         }
     }
 }

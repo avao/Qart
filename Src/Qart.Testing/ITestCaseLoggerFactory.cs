@@ -1,10 +1,4 @@
-﻿using Common.Logging;
-using Qart.Core.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Qart.Core.Logging;
 
 namespace Qart.Testing
 {
