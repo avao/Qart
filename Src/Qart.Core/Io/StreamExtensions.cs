@@ -26,7 +26,7 @@ namespace Qart.Core.Io
             using (var reader = new StreamReader(streamToAppend))
             {
                 var content = reader.ReadToEnd();
-                var bytes = UTF8Encoding.UTF8.GetBytes(content);
+                var bytes = Encoding.UTF8.GetBytes(content);
                 dst.Write(bytes, 0, bytes.Length);
             }
         }

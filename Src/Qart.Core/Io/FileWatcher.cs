@@ -97,6 +97,7 @@ namespace Qart.Core.Io
 
         private bool IsMatching(string value, string pattern)
         {
+            //TODO why do we need pattern here again?
             return _regex.IsMatch(value);
         }
 

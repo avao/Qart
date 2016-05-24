@@ -13,7 +13,7 @@ namespace Qart.Core.Io
         public static void EnsureCanBeWritten(string path)
         {
             string dirName = Path.GetDirectoryName(path);
-            if (!System.IO.Directory.Exists(dirName))
+            if (!Directory.Exists(dirName))
             {//Create it
                 Directory.CreateDirectory(dirName);
             }
@@ -26,13 +26,13 @@ namespace Qart.Core.Io
 
         public static FileStream OpenFileStreamForWritingNoTruncate(string path)
         {
-            FileUtils.EnsureCanBeWritten(path);
+            EnsureCanBeWritten(path);
             return new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
         }
 
         public static FileStream OpenFileStreamForWriting(string path)
         {
-            FileUtils.EnsureCanBeWritten(path);
+            EnsureCanBeWritten(path);
             return new FileStream(path, FileMode.Create, FileAccess.Write);
         }
 
@@ -46,7 +46,7 @@ namespace Qart.Core.Io
 
         public static void WriteAllText(string path, string content)
         {
-            FileUtils.EnsureCanBeWritten(path);
+            EnsureCanBeWritten(path);
             File.WriteAllText(path, content);
         }
 

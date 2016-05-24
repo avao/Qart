@@ -28,7 +28,7 @@ namespace Qart.Core.Io
                 //TODO reading file writetime twice
                 if(File.GetLastWriteTime(fileName) < File.GetLastWriteTime(newestFile))
                 {//try to recover
-                    var postfix = newestFile.SubstringAfter(NewFileToken);
+                    var postfix = newestFile.RightOf(NewFileToken);
                     var bakFileName = FileName + BakFileToken + postfix;
                     RotateFiles(bakFileName, newestFile);
                 }

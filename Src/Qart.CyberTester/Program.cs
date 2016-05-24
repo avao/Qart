@@ -36,7 +36,7 @@ namespace Qart.CyberTester
         {
             int result = -1;
             var options = new CommandlineOptions();
-            if (CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
+            if (Parser.Default.ParseArgumentsStrict(args, options))
             {
                 if (string.IsNullOrEmpty(options.Dir))
                 {
@@ -58,9 +58,9 @@ namespace Qart.CyberTester
 
             var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
 
-            var tester = new Qart.Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorResolver>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
+            var tester = new Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorResolver>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
 
-            var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.SubstringBefore("="), _ => _.SubstringAfter("="));
+            var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
             var results = tester.RunTests(customSession, parsedOptions);
 
             var failedTestsCount = results.Count(_ => _.Exception != null);
