@@ -68,13 +68,13 @@ namespace Qart.Core.Io.FileRolling
                 if (pos == -1)
                 {
                     bContinue = true;
-                    chars = ASCIIEncoding.UTF8.GetChars(_byteBuffer, currentPos, currentLen - currentPos);
+                    chars = Encoding.UTF8.GetChars(_byteBuffer, currentPos, currentLen - currentPos);
                     _sb.Append(chars);
                     currentPos = currentLen;
                 }
                 else
                 {                    
-                    chars = ASCIIEncoding.UTF8.GetChars(_byteBuffer, currentPos, pos - currentPos);
+                    chars = Encoding.UTF8.GetChars(_byteBuffer, currentPos, pos - currentPos);
                     _sb.Append(chars);
                     var line = _sb.ToString();
                     _sb.Clear();
