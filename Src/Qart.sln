@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Tests", "Qart.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.CyberTester", "Qart.CyberTester\Qart.CyberTester.csproj", "{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core.IO.FileRolling", "Qart.Core.IO.FileRoller\Qart.Core.IO.FileRolling.csproj", "{95D2D28F-BEAF-4B1F-B3F5-19E8578257E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95D2D28F-BEAF-4B1F-B3F5-19E8578257E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95D2D28F-BEAF-4B1F-B3F5-19E8578257E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95D2D28F-BEAF-4B1F-B3F5-19E8578257E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95D2D28F-BEAF-4B1F-B3F5-19E8578257E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
