@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core", "Qart.Core\Qart.Core.csproj", "{2444BC84-514F-41D8-80D5-EF171F514C91}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Tests", "Qart.Testing.Tests\Qart.Testing.Tests.csproj", "{2BFCE96B-E265-429C-94EE-FF647C2F17FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.CyberTester", "Qart.CyberTester\Qart.CyberTester.csproj", "{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core.Io.FileRolling", "Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj", "{C367DF29-18E0-4266-AFFA-781E203DDBFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
