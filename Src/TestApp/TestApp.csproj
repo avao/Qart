@@ -66,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Qart.Core.IO.FileRoller\Qart.Core.IO.FileRolling.csproj">
+      <Project>{95d2d28f-beaf-4b1f-b3f5-19e8578257e7}</Project>
+      <Name>Qart.Core.IO.FileRolling</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Qart.Core.Tests\Qart.Core.Tests.csproj">
       <Project>{761188d6-e48e-4795-be2f-28c020e5be8d}</Project>
       <Name>Qart.Core.Tests</Name>
