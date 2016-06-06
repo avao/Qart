@@ -44,10 +44,7 @@ namespace Qart.Core.Io
             {
                 return Directory.EnumerateDirectories(path, first).SelectMany(_ => FindFiles(_, rest));
             }
-            else
-            {
-                return Directory.EnumerateFiles(path, first);
-            }
+            return Directory.EnumerateFiles(path, first);
         }
     }
 }

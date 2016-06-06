@@ -56,7 +56,7 @@ namespace Qart.Core.Io
 
         public static void WriteAllText(string path, string content)
         {
-            FileUtils.EnsureCanBeWritten(path);
+            EnsureCanBeWritten(path);
             File.WriteAllText(path, content);
         }
 

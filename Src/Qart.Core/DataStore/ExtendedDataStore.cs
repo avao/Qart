@@ -32,7 +32,7 @@ namespace Qart.Core.DataStore
             string itemRef = GetItemRef(itemId);
             if (_dataStore.Contains(itemRef))
             {
-                string target = CombinePaths(Path.GetDirectoryName(itemId), "", _dataStore.GetContent(itemRef));
+                string target = CombinePaths(Path.GetDirectoryName(itemId), string.Empty, _dataStore.GetContent(itemRef));
                 return GetReadStream(target);
             }
 

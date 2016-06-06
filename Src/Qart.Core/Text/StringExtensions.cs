@@ -8,12 +8,6 @@ namespace Qart.Core.Text
 {
     public static class StringExtensions
     {
-        [Obsolete]
-        public static string SubstringBefore(this string value, string token)
-        {
-            return value.LeftOf(token);
-        }
-
         public static string LeftOf(this string value, string token)
         {
             string result = value.LeftOfOptional(token);
@@ -22,13 +16,6 @@ namespace Qart.Core.Text
                 throw new ArgumentException("String does not contain requested token [" + token + "]");
             }
             return result;
-        }
-
-
-        [Obsolete]
-        public static string SubstringAfter(this string value, string token)
-        {
-            return value.RightOf(token);
         }
 
         public static string RightOf(this string value, string token)
@@ -43,7 +30,7 @@ namespace Qart.Core.Text
 
         public static string RightOfOptional(this string value, string token)
         {
-            var pos = value.IndexOf(token);
+            var pos = value.IndexOf(token, StringComparison.InvariantCulture);
             if (pos == -1)
             {
                 return value;
@@ -53,7 +40,7 @@ namespace Qart.Core.Text
 
         public static string LeftOfOptional(this string value, string token)
         {
-            var pos = value.IndexOf(token);
+            var pos = value.IndexOf(token, StringComparison.InvariantCulture);
             if (pos == -1)
             {
                 return value;
@@ -81,7 +68,7 @@ namespace Qart.Core.Text
 
         public static bool IsXml(this string content)
         {
-            return content.StartsWith("<?xml");
+            return content.StartsWith("<?xml", StringComparison.InvariantCulture);
         }
 
 
