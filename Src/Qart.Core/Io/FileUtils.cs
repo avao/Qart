@@ -12,11 +12,7 @@ namespace Qart.Core.Io
     {
         public static void EnsureCanBeWritten(string path)
         {
-            string dirName = Path.GetDirectoryName(path);
-            if (!System.IO.Directory.Exists(dirName))
-            {//Create it
-                Directory.CreateDirectory(dirName);
-            }
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
         }
 
         public static FileStream OpenFileStreamForReading(string path)
@@ -26,14 +22,28 @@ namespace Qart.Core.Io
 
         public static FileStream OpenFileStreamForWritingNoTruncate(string path)
         {
-            FileUtils.EnsureCanBeWritten(path);
-            return new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+            return OpenFileStreamForWriting(path, FileMode.OpenOrCreate, FileAccess.Write);
         }
 
         public static FileStream OpenFileStreamForWriting(string path)
         {
+            return OpenFileStreamForWriting(path, FileMode.Create, FileAccess.Write);
+        }
+
+        private static FileStream OpenFileStreamForWriting(string path, FileMode fileMode, FileAccess fileAccess)
+        {
+            //if IO is slow (shared network folder) it is faster to try executing an action and then if directory does not exist catch exception and create one. 
+            try
+            {
+                return new FileStream(path, fileMode, fileAccess);
+            }
+            catch (IOException ex)
+            {
+                //TODO more specific exception
+            }
+            
             FileUtils.EnsureCanBeWritten(path);
-            return new FileStream(path, FileMode.Create, FileAccess.Write);
+            return new FileStream(path, fileMode, fileAccess);
         }
 
         public static int ReadFromFile(string path, int length, byte[] buf)
