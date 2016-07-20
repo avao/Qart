@@ -2,10 +2,23 @@
 
 # Qart
 
-Qart is a generic framework designed for writing system and acceptance
-tests in C#. A typical usage of Qart starts by extending it with a
-domain specific _Processor_ for your system. You then generate one or
-more _Test Cases_ according to the Qart format. These may also contain
-data files required by your _Procesor_. Finally, you execute the tests
-via the ```Qart.CyberTester``` command, which generates a _Test
-Report_ detailing successes and failures.
+Qart is a generic framework for System and Acceptance Testing [1]. In
+order to write tests for your system, you need to augment Qart with
+the domain specific logic; Qart then manages testing execution and
+reporting for you, called from within a CI system and/or locally from
+a developer's machine. Qart also provides basic infrastructure to help
+writing the domain specific extensions.
+
+You can install Qart from NuGet.
+
+```
+Install-Package Qart.CyberTester
+```
+
+For more details on Qart see the
+[manual](https://github.com/avao/Qart/blob/master/Doc/manual.md). If
+you'd like to submit a pull request or raise an issue, please read the
+document on
+[contributing](https://github.com/avao/Qart/blob/master/Doc/CONTRIBUTING.md).
+
+[1] https://en.wikipedia.org/wiki/Acceptance_testing
