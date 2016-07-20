@@ -64,7 +64,7 @@ i.e. ```my_system_tests/test_suite_1/test_1```.
 Once Qart has located a ```.test``` file, it expects it to have the
 following format (described in EBNF):
 
-``` .test file
+```
 PROCESSOR_ID[ PAYLOAD]
 ```
 
