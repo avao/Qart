@@ -35,11 +35,31 @@ defined.
 
 ### Test Structure
 
-Qart uses the filesystem to define tests; any directory can be used to
-house a test case, provided a ```.test``` file is present. This means
-that users are free to organise the directory structure as they like,
-provided the leaf directories have the expected ```.test``` file. For
-example, a possible structure could be:
+Qart attempts to be as flexible as possible in what it allows as a
+structure for tests. In fact, there is only one core requirement to
+define a Test Case: it must be housed in a directory containing a file
+with the name ```.test```. This file is called a _Test Definition
+File_. As a corollary, each Test Case must be housed in its own
+directory.
+
+Test Cases are executed in the context of a _Test Session_.  The
+process of determining which tests to run on a Test Session is called
+_Test Case Discovery_ and it works as follows: starting from a
+top-level directory, we check it and all of its child-directories for
+Test Definition Files; each directory with a Test Definition File is
+added to the current session as a Test Case for execution.
+
+Users are thus free to choose any directory structure they'd like for
+their tests, and often this structure evolves over time as more tests
+are added. Ideally one should choose to place tests that are often
+executed together in the same directory. Also, it is possible - though
+not wise - to have a Test Definition File in a directory which itself
+has sub-directories. However, for clarity, it's better to have only
+leaf directories as Test Cases. The choice of test structure becomes
+crucial once your tests grow from a few to several hundreds, and
+usability will be drastically affected by it.
+
+As an example, a possible directory structure could be:
 
 ```
 / my_system_tests
@@ -53,32 +73,54 @@ example, a possible structure could be:
 ...
 ```
 
-Its important to bear in mind that this structure is presented here
-just as an example; all of these directory names are defined by the
-user, and have no meaning at all to Qart. The full path to the test
-directory is treated as a test ID -
-i.e. ```my_system_tests/test_suite_1/test_1```.
+However, bear in mind that this structure is presented here just for
+illustrative purposes; all of these directory names are defined by the
+user, and have no meaning at all to Qart.
 
-#### ```.test``` Files
+#### Test Cases
 
-Once Qart has located a ```.test``` file, it expects it to have the
-following format (described in EBNF):
+Each Test Case has a unique identifier called the Test Case ID. It is
+made up of the full path to directory housing the Test Definition
+File. Using the example above, the Test Case ID for ```test_1``` would
+be ```my_system_tests/test_suite_1/test_1```.
+
+The Test Definition File has a well-defined format, described here in
+EBNF:
 
 ```
-PROCESSOR_ID[ PAYLOAD]
+test_case_processor_id[ payload]
 ```
 
-```PROCESSOR_ID``` can be a string of any length, but it must be made
-up of letters (lower or upper case), digits or underscores. When the
-optional ```PAYLOAD``` is present, the two fields must be separated by
-a space. Qart reads the ```PROCESSOR_ID``` and uses it to locate a
-Test Case Processor for it. If found, it is then used to execute the
-test. If there are no registrations against that processor ID, the
-test will fail.
+```test_case_processor_id``` can be a string of any length, but it
+must be made up of letters (lower or upper case), digits or
+underscores. When the optional ```payload``` is present, the two
+fields must be separated by a space. Qart reads the
+```test_case_processor_id``` and uses it to locate a _Test Case
+Processor_ - which we will cover in detail later on. If found, the
+processor is then used to execute the test. If there are no
+registrations against that ID, the test will fail to execute.
 
-The second part of the ```.test``` file is the ```PAYLOAD```. At
-present it is expected to be in JSON and it may span any number of
-lines. Although Qart performs some basic pre-processing on the JSON,
-the contents of the ```PAYLOAD``` are really only meaningful to the
-Test Case Processor. The ```PAYLOAD``` can be thought of as the
-arguments for the Test Case Processor.
+The second part of the Test Definition File file is the
+```payload```. The ```payload``` is encoded in JSON and it may span
+any number of lines. The contents of the ```payload``` are arguments
+for the Test Case Processor and are really only meaningful to
+it. However, in order to simplify the Test Case Processor, Qart
+pre-processes the JSON into a more C#-idiomatic representation.
+
+#### Test Case Processor
+
+Out of the box, Qart will not do very much. This is because there are
+no Test Case Processors built-in. They require knowledge of the system
+you are trying to test.
+
+#### Test Execution
+
+Qart provides the command line utility ```Qart.CyberTester.exe``` to
+execute tests. It has the following command line arguments:
+
+| Short | Long       | Description                                                     |
+|-------+------------+-----------------------------------------------------------------|
+| -d    | dir        | Directory with test cases. Accepts multiple directories         |
+| -r    | rebaseline | Rebaselines the test data. This is a processor specific command |
+| -o    | options    | Processor specific variables as kvp, separated by ```;````.     |
+| -h    | help       | Provides the usage documentation                                |
