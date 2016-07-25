@@ -1,16 +1,14 @@
 ﻿using Common.Logging;
 using Common.Logging.Simple;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Qart.Core.Logging
 {
     public class TextWriterLogger : AbstractSimpleLogger, IDisposableLogger
     {
-        TextWriter _writer;
+        readonly TextWriter _writer;
 
         public TextWriterLogger(string logName, LogLevel logLevel, bool showLevel, bool showDateTime, bool showLogName, string dateTimeFormat, TextWriter writer)
             : base(logName, logLevel, showLevel, showDateTime, showLogName, dateTimeFormat)

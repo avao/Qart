@@ -2,7 +2,6 @@
 using Qart.Core.DataStore;
 using Qart.Core.Io;
 using System;
-using System.IO;
 
 namespace Qart.Core.Tests.DataStore
 {
