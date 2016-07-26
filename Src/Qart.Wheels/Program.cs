@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Owin.Hosting;
 
 namespace Qart.Wheels
 {
@@ -6,7 +7,12 @@ namespace Qart.Wheels
     {
         public static void Main (string[] args)
         {
-            Console.WriteLine ("Hello World!");
+            string baseUrl = "http://localhost:5000";
+            using (WebApp.Start<Startup>(baseUrl))
+            {
+                Console.WriteLine("Press Enter to quit.");
+                Console.ReadKey();
+            }
         }
     }
 }
