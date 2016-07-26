@@ -79,10 +79,11 @@ user, and have no meaning at all to Qart.
 
 #### Test Cases
 
-Each Test Case has a unique identifier called the Test Case ID. It is
-made up of the full path to directory housing the Test Definition
+Each Test Case has a unique identifier called the _Test Case ID_. It
+is made up of the full path to directory housing the Test Definition
 File. Using the example above, the Test Case ID for ```test_1``` would
-be ```my_system_tests/test_suite_1/test_1```.
+be ```my_system_tests/test_suite_1/test_1```. By virtue of the
+properties of the filesystem, Test Case IDs are unique.
 
 The Test Definition File has a well-defined format, described here in
 EBNF:
@@ -100,12 +101,12 @@ Processor_ - which we will cover in detail later on. If found, the
 processor is then used to execute the test. If there are no
 registrations against that ID, the test will fail to execute.
 
-The second part of the Test Definition File file is the
-```payload```. The ```payload``` is encoded in JSON and it may span
-any number of lines. The contents of the ```payload``` are arguments
-for the Test Case Processor and are really only meaningful to
-it. However, in order to simplify the Test Case Processor, Qart
-pre-processes the JSON into a more C#-idiomatic representation.
+The second part of the Test Definition File is the ```payload```. The
+```payload``` is encoded in JSON and it may span any number of
+lines. The contents of the ```payload``` are arguments for the Test
+Case Processor and are really only meaningful to it. However, in order
+to simplify the Test Case Processor, Qart pre-processes the JSON into
+a more C#-idiomatic representation.
 
 #### Test Case Processor
 
@@ -113,13 +114,21 @@ Out of the box, Qart will not do very much. This is because there are
 no Test Case Processors built-in. They require knowledge of the system
 you are trying to test.
 
+
+
+
+
+
+
+Test Case Processors are injected use the Qart testing framework
+
 #### Test Execution
 
 Qart provides the command line utility ```Qart.CyberTester.exe``` to
 execute tests. It has the following command line arguments:
 
 | Short | Long       | Description                                                     |
-|-------+------------+-----------------------------------------------------------------|
+|-------|------------|-----------------------------------------------------------------|
 | -d    | dir        | Directory with test cases. Accepts multiple directories         |
 | -r    | rebaseline | Rebaselines the test data. This is a processor specific command |
 | -o    | options    | Processor specific variables as kvp, separated by ```;````.     |
