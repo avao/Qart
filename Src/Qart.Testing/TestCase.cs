@@ -82,13 +82,25 @@ namespace Qart.Testing
             var xmlDocument = new XmlDocument();
             testCase.UsingXmlReader(id, xmlDocument.Load);
 
-            string overrideId = id+".override";
-            if(testCase.Contains(overrideId))
+			string overrideId = id + ".override";
+			if (testCase.Contains(overrideId))
             {
                 xmlDocument.OverrideWith(testCase.GetXmlDocument(overrideId));
             }
             return xmlDocument;
         }
+
+		public static IEnumerable<string> GetXPathsToExclude(this TestCase testCase, string id)
+		{
+			IEnumerable<string> xpathsToExclude = Enumerable.Empty<string>();
+			var excluderFileName = id + ".exclude.xpath";
+			if (testCase.Contains (excluderFileName))
+			{
+				// FIXME: won't work on Linux.
+				xpathsToExclude = testCase.GetContent (excluderFileName).Split (new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+			}
+			return xpathsToExclude;
+		}
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction)
         {
