@@ -1,5 +1,6 @@
 ﻿using Common.Logging;
 using Qart.Core.Collections;
+using Qart.Testing.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,7 +33,7 @@ namespace Qart.Testing
         {
             _logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
 
-            TestCaseResult testResult= new TestCaseResult(testCase);
+            TestCaseResult testResult = new TestCaseResult(testCase);
             _results.Add(testResult);
 
             using (var logger = _testCaseLoggerFactory.GetLogger(testCase))
@@ -42,11 +43,12 @@ namespace Qart.Testing
                     _customTestSession.OnBegin(testCase, logger);
                 }
 
+                var descriptionWriter = new XDocumentDescriptionWriter();
                 ITestCaseProcessor processor = null;
                 try
                 {
                     processor = _testCaseProcessorResolver.Resolve(testCase);
-                    processor.Process(this, testCase, logger);
+                    processor.Process(new TestCaseContext(this, testCase, logger, descriptionWriter));
                 }
                 catch (Exception ex)
                 {
@@ -54,16 +56,13 @@ namespace Qart.Testing
                     testResult.MarkAsFailed(ex);
                 }
 
-                if (processor != null)
+                try
                 {
-                    try
-                    {
-                        testResult.Description = processor.GetDescription(testCase);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error("an error occured while getting test case description", ex);
-                    }
+                    testResult.Description = descriptionWriter.GetContent();
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("an error occured while getting test case description", ex);
                 }
 
                 if (_customTestSession != null)
@@ -72,7 +71,7 @@ namespace Qart.Testing
                 }
             }
             _logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
-            
+
         }
 
         public void Dispose()
