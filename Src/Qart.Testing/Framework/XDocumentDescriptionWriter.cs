@@ -15,7 +15,7 @@ namespace Qart.Testing.Framework
 
         public XDocumentDescriptionWriter()
         {
-            _document = new XDocument();
+            _document = new XDocument(new XElement("Description"));
             _element = _document.Root;
         }
 

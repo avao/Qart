@@ -15,8 +15,8 @@ namespace Qart.Testing.Tests
         public void GetTestCases()
         {
             var testCases = TestSystem.GetTestCases();
-            Assert.That(testCases.Count(), Is.EqualTo(1));
-            Assert.That(testCases.First().Id, Is.EqualTo("ATestCase"));
+            Assert.That(testCases.Count(), Is.GreaterThanOrEqualTo(1));
+            Assert.That(testCases.FirstOrDefault(_ => _.Id == "ATestCase"), Is.Not.Null);
         }
     }
 }
