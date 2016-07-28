@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Io;
+using Qart.Testing.Framework;
 using System.IO;
 using System.Text;
 
@@ -24,7 +25,7 @@ namespace Qart.Testing.Tests
             }
         }
 
-        TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))), new ContentProcessor(new StreamTransformResolver()));
+        ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))), _=>true, new ContentProcessor(new StreamTransformResolver()));
 
         [Test]
         public void Ref()

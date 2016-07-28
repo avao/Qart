@@ -7,12 +7,13 @@ using System.Xml;
 using System.IO;
 using Qart.Core.Xml;
 using Qart.Core.DataStore;
+using Qart.Testing.Framework;
 
 namespace Qart.Core.Tests.Xml
 {
     class XmlDocumentExtensionsTest
     {
-        readonly TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "XmlDocumentExtensionsTests"))));
+        readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true);
 
         [TestCase("Override/RepeatedElements")]
         public void Override(string testId)
@@ -21,7 +22,7 @@ namespace Qart.Core.Tests.Xml
 
             XmlDocument lhs = testCase.GetXmlDocument("Lhs.xml");
             XmlDocument rhs = testCase.GetXmlDocument("Rhs.xml");
-            
+
             lhs.OverrideWith(rhs);
 
             testCase.AssertContent(lhs, "Merged.xml", true);

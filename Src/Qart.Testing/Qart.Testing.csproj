@@ -72,6 +72,7 @@
     <Compile Include="ITestCaseProcessorResolver.cs" />
     <Compile Include="ITestSession.cs" />
     <Compile Include="ITestCaseProcessor.cs" />
+    <Compile Include="ITestSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamTransformers\ConcatStreamTransformer.cs" />
     <Compile Include="StreamTransformers\RefStreamTransformer.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="TestCaseProcessors\ActionPipelineProcessor.cs" />
     <Compile Include="TestCaseResult.cs" />
     <Compile Include="TestSession.cs" />
-    <Compile Include="TestSystem.cs" />
+    <Compile Include="Framework\TestSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

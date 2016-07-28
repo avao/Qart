@@ -2,7 +2,9 @@
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Common.Logging;
+using Qart.Core.DataStore;
 using Qart.Testing;
+using Qart.Testing.Framework;
 using Qart.Testing.StreamTransformers;
 using System;
 using System.Collections.Generic;
@@ -15,19 +17,21 @@ namespace Qart.CyberTester
 {
     public class Bootstrapper
     {
-        public static WindsorContainer CreateContainer()
+        public static WindsorContainer CreateContainer(IDataStore testsDataStore)
         {
             var container = new WindsorContainer();
             container.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
             container.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
             container.Register(Component.For<ITestCaseProcessorInfoExtractor>().ImplementedBy<TestCaseProcessorInfoExtractor>());
+            container.Register(Component.For<IDataStore>().Instance(testsDataStore).Named("testsDataStore"));
+            container.Register(Component.For<ITestSystem>().ImplementedBy<TestSystem>());
             
             container.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
             container.Register(Component.For<IStreamTransformerResolver>().Instance(new StreamTransformerResolver(container)));
             container.Register(Component.For<IContentProcessor>().ImplementedBy<ContentProcessor>());
             container.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatStreamTransformer>().Named("concat"));
             container.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));
-            
+                        
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;
         }

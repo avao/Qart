@@ -4,19 +4,20 @@ using Qart.Core.Io;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Qart.Testing.Framework;
 
 namespace Qart.Testing.Tests
 {
     class TestSystemTests
     {
-        readonly TestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))));
+        private readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))));
 
         [Test]
         public void GetTestCases()
         {
-            var testCases = TestSystem.GetTestCases();
+            var testCases = TestSystem.GetTestCaseIds();
             Assert.That(testCases.Count(), Is.GreaterThanOrEqualTo(1));
-            Assert.That(testCases.FirstOrDefault(_ => _.Id == "ATestCase"), Is.Not.Null);
+            Assert.That(testCases.FirstOrDefault(_ => _ == "ATestCase"), Is.Not.Null);
         }
     }
 }
