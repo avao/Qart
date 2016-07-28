@@ -44,6 +44,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DictionaryExtensions.cs" />
@@ -69,6 +72,9 @@
     <Compile Include="Xml\XmlReaderUtils.cs" />
     <Compile Include="Xml\XmlWriterUtils.cs" />
     <Compile Include="Xsd\XsdUtils.cs" />
+    <Compile Include="Xml\XmlDocumentWrapper.cs" />
+    <Compile Include="Json\JObjectWrapper.cs" />
+    <Compile Include="Utils\Algorithms.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -82,4 +88,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Json\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
 </Project>
