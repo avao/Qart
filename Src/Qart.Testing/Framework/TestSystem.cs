@@ -33,12 +33,13 @@ namespace Qart.Testing.Framework
 
         public TestCase GetTestCase(string id)
         {
-            return new TestCase(id, this, new ExtendedDataStore(new ScopedDataStore(DataStorage, id), (content, dataStore) => ContentProcessor.Process(content, dataStore)));
+            var testCaseDataStore = new ExtendedDataStore(new ScopedDataStore(DataStorage, id), (content, dataStore) => ContentProcessor.Process(content, dataStore));
+            return new TestCase(id, this, testCaseDataStore);
         }
 
         public IEnumerable<string> GetTestCaseIds()
         {
-            return DataStorage.GetAllGroups().Concat(new[]{"."}).Where(_ => _isTestCasePredicate(new ScopedDataStore(DataStorage, _)));
+            return DataStorage.GetAllGroups().Concat(new[] { "." }).Where(_ => _isTestCasePredicate(new ScopedDataStore(DataStorage, _)) != null);
         }
     }
 }

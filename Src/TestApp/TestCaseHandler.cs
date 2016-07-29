@@ -1,4 +1,6 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Common.Logging;
@@ -14,32 +16,38 @@ using System.Xml.Linq;
 
 namespace TestApp
 {
-    public static class WindsorContainerExtensions
-    {
-        public static void RegisterProcessor(this IWindsorContainer container, ITestCaseProcessor processor, string name)
-        {
-            container.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));
-        }
-
-        public static void RegisterPiplineActionInstance<T>(this IWindsorContainer container, IPipelineAction<T> action, string name)
-        {
-            container.Register(Component.For<IPipelineAction<T>>().Instance(action).Named(name));
-        }
-    }
-
     public class ActionContext
     {
-
     }
 
     public class AnAction<T> : IPipelineAction<T>
     {
-        public string Id { get { return "anAction"; } }
+        private readonly string _somethingToSay;
+
+        public AnAction(string somethingToSay)
+        {
+            _somethingToSay = somethingToSay;
+        }
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            testCaseContext.Logger.Info("Typed Action Execute");
+            testCaseContext.Logger.Info(_somethingToSay);
         }
+    }
+
+    public class TypedFactoryComponentSelectorWithDynamicBinding : DefaultTypedFactoryComponentSelector
+    {
+        protected override System.Collections.IDictionary GetArguments(System.Reflection.MethodInfo method, object[] arguments)
+        {
+            if(arguments.Length == 1)
+            {
+                var dictionary = arguments[0] as System.Collections.IDictionary;
+                if (dictionary != null)
+                    return dictionary;
+            }
+            return base.GetArguments(method, arguments);
+        }
+
     }
 
     public class TestCaseHandlerWindsorInstaller : IWindsorInstaller
@@ -48,12 +56,16 @@ namespace TestApp
         {
             var kernel = container.Kernel;
             kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
+            kernel.AddFacility<TypedFactoryFacility>();
 
-            container.Register(Component.For<ActionContext>().ImplementedBy<ActionContext>());
-            container.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));
-            container.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContext>>().Named("piper"));
-            container.RegisterPiplineActionInstance(new AnAction<ActionContext>(), "anAction");
-            //container.Register(Component.For<ITestSession>().ImplementedBy<CustomTestSession>().IsDefault());
+            kernel.Register(Component.For<ITypedFactoryComponentSelector>().ImplementedBy<TypedFactoryComponentSelectorWithDynamicBinding>());
+            kernel.Register(Component.For<IPipelineActionFactory<ActionContext>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
+
+            kernel.Register(Component.For<ActionContext>().ImplementedBy<ActionContext>());
+            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));
+            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContext>>().Named("piper"));
+            kernel.Register(Component.For<IPipelineAction<ActionContext>>().ImplementedBy<AnAction<ActionContext>>().Named("anAction"));
+            //kernel.Register(Component.For<ITestSession>().ImplementedBy<CustomTestSession>().IsDefault());
         }
     }
 

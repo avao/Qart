@@ -25,7 +25,7 @@ namespace Qart.Testing.Tests
             }
         }
 
-        ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))), _=>true, new ContentProcessor(new StreamTransformResolver()));
+        ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))), _ => true, new ContentProcessor(new StreamTransformResolver()));
 
         [Test]
         public void Ref()
