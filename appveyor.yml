@@ -1,8 +1,0 @@
-version: 1.0.1.{build}
-before_build:
-- cd Src
-- nuget restore
-- cd ..
-build:
-  publish_nuget: true
-  verbosity: minimal
