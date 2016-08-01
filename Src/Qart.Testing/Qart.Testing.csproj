@@ -80,7 +80,7 @@
     <Compile Include="StreamTransformers\RefStreamTransformer.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="TestCaseLoggerFactory.cs" />
-    <Compile Include="TestCaseProcessorInfoExtractor.cs" />
+    <Compile Include="Framework\TestCaseProcessorInfoExtractor.cs" />
     <Compile Include="TestCaseProcessors\ActionPipelineProcessor.cs" />
     <Compile Include="TestCaseResult.cs" />
     <Compile Include="TestSession.cs" />

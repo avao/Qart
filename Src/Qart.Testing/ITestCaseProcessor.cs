@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Qart.Testing
 {
-    public interface ITestCaseProcessor //TODO separate assembly
+    public interface ITestCaseProcessor
     {
         void Process(TestCaseContext testCaseContext);
     }

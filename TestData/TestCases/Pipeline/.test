@@ -1,1 +1,9 @@
-piper
+{
+	"ProcessorId" : "piper",
+	"Parameters" : {
+		"actions" : ["anAction?somethingToSay=Hello World!"],
+		"prop" : {
+			"nnn" : "bbb"
+		}
+	}
+}

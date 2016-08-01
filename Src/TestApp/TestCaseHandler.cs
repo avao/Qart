@@ -35,6 +35,8 @@ namespace TestApp
         }
     }
 
+
+    //TODO move to a more accessible place
     public class TypedFactoryComponentSelectorWithDynamicBinding : DefaultTypedFactoryComponentSelector
     {
         protected override System.Collections.IDictionary GetArguments(System.Reflection.MethodInfo method, object[] arguments)
@@ -58,13 +60,16 @@ namespace TestApp
             kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
             kernel.AddFacility<TypedFactoryFacility>();
 
-            kernel.Register(Component.For<ITypedFactoryComponentSelector>().ImplementedBy<TypedFactoryComponentSelectorWithDynamicBinding>());
-            kernel.Register(Component.For<IPipelineActionFactory<ActionContext>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
-
-            kernel.Register(Component.For<ActionContext>().ImplementedBy<ActionContext>());
+            // Standalone processor
             kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));
+
+            // Action pipeline registration
+            kernel.Register(Component.For<IPipelineActionFactory<ActionContext>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
+            kernel.Register(Component.For<ActionContext>().ImplementedBy<ActionContext>());
             kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContext>>().Named("piper"));
             kernel.Register(Component.For<IPipelineAction<ActionContext>>().ImplementedBy<AnAction<ActionContext>>().Named("anAction"));
+            
+            // Custom session
             //kernel.Register(Component.For<ITestSession>().ImplementedBy<CustomTestSession>().IsDefault());
         }
     }

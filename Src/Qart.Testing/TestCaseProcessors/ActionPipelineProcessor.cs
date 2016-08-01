@@ -10,11 +10,6 @@ using System.Web;
 
 namespace Qart.Testing.TestCaseProcessors
 {
-    public interface IPipelineContextFactory<T>
-    {
-        T CreateContext();
-    }
-
     public interface IPipelineActionFactory<T>
     {
         IPipelineAction<T> Create(IDictionary<string, object> arguments);
@@ -23,37 +18,20 @@ namespace Qart.Testing.TestCaseProcessors
 
     public class ActionPipelineProcessor<T> : ITestCaseProcessor
     {
-        private readonly IPipelineContextFactory<T> _contextFactory;
         private readonly IPipelineActionFactory<T> _actionFactory;
         private readonly T _pipelineActionContext;
+        private readonly IEnumerable<object> _actionDefinitions;
 
-        public ActionPipelineProcessor(IPipelineContextFactory<T> contextFactory, IPipelineActionFactory<T> actionFactory)
-        {
-            _contextFactory = contextFactory;
-            _actionFactory = actionFactory;
-        }
-
-        public ActionPipelineProcessor(T context, IPipelineActionFactory<T> actionFactory)
+        public ActionPipelineProcessor(T context, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
         {
             _pipelineActionContext = context;
             _actionFactory = actionFactory;
+            _actionDefinitions = actions;
         }
 
         public void Process(TestCaseContext c)
         {
-            T pipelineActionContext;
-            if (_contextFactory != null)
-            {
-                pipelineActionContext = _contextFactory.CreateContext();
-            }
-            else
-            {
-                pipelineActionContext = _pipelineActionContext;
-            }
-
-            string actionsContent = c.TestCase.GetContent("actions");
-            var actionDefinitions = JsonConvert.DeserializeObject<List<object>>(actionsContent);
-            foreach (var actionDefinition in actionDefinitions)
+            foreach (var actionDefinition in _actionDefinitions)
             {
                 IPipelineAction<T> action = null;
                 var stringActionDef = actionDefinition as string;
@@ -84,7 +62,7 @@ namespace Qart.Testing.TestCaseProcessors
                 }
 
                 var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
-                action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), pipelineActionContext);
+                action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), _pipelineActionContext);
             }
         }
     }
