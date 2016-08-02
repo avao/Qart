@@ -3,6 +3,6 @@ namespace Qart.Testing
 {
     public interface IStreamTransformerResolver
     {
-        IStreamTransformer ResolveTransformer(string name);
+        IStreamTransformer GetTransformer(string name);
     }
 }
