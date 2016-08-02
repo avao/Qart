@@ -2,7 +2,7 @@
 using Qart.Core.Logging;
 using System.IO;
 
-namespace Qart.Testing
+namespace Qart.Testing.Framework
 {
     public class TestCaseLoggerFactory : ITestCaseLoggerFactory
     {
