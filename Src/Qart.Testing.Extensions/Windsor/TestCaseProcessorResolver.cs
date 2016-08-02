@@ -2,7 +2,7 @@
 using Qart.Testing;
 using System.Collections;
 
-namespace Qart.CyberTester
+namespace Qart.Testing.Extensions.Windsor
 {
     public class TestCaseProcessorResolver : ITestCaseProcessorResolver
     {

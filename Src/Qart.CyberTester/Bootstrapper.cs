@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Facilities.TypedFactory;
+using Qart.Testing.Extensions.Windsor;
 
 namespace Qart.CyberTester
 {
