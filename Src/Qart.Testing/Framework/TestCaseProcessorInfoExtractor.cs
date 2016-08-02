@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Qart.Testing.Framework
 {
-    public class TestCaseProcessorInfoExtractor : ITestCaseProcessorInfoExtractor
+    public class TestCaseProcessorInfoExtractor 
     {
         private class TestDef
         {

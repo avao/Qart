@@ -61,8 +61,15 @@ namespace Qart.Testing.TestCaseProcessors
                     throw new ArgumentException(string.Format("Unable to resolve pipeline action [{0}]", stringActionDef));
                 }
 
-                var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
-                action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), _pipelineActionContext);
+                try
+                {
+                    var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
+                    action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), _pipelineActionContext);
+                }
+                finally
+                {
+                    _actionFactory.Release(action);
+                }
             }
         }
     }

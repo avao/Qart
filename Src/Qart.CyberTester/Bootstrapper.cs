@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Castle.Facilities.TypedFactory;
 using Qart.Testing.Extensions.Windsor;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 
 namespace Qart.CyberTester
 {
@@ -23,13 +24,16 @@ namespace Qart.CyberTester
         {
             var container = new WindsorContainer();
             var kernel = container.Kernel;
+
+            kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
+            kernel.AddFacility<TypedFactoryFacility>();
+
             kernel.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
             kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
-            kernel.Register(Component.For<ITestCaseProcessorInfoExtractor>().ImplementedBy<TestCaseProcessorInfoExtractor>());
             kernel.Register(Component.For<IDataStore>().Instance(testsDataStore).Named("testsDataStore"));
             kernel.Register(Component.For<ITestSystem>().ImplementedBy<TestSystem>());
             
-            kernel.Register(Component.For<ITestCaseProcessorResolver>().Instance(new TestCaseProcessorResolver(container)));
+            kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory( c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
 
             //content/stream transformation
             kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory());

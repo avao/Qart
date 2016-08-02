@@ -70,8 +70,7 @@
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
-    <Compile Include="ITestCaseProcessorInfoExtractor.cs" />
-    <Compile Include="ITestCaseProcessorResolver.cs" />
+    <Compile Include="ITestCaseProcessorFactory.cs" />
     <Compile Include="ITestSession.cs" />
     <Compile Include="ITestCaseProcessor.cs" />
     <Compile Include="ITestSystem.cs" />

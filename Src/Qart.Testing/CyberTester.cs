@@ -8,10 +8,10 @@ namespace Qart.Testing
     {
         private readonly ITestSystem _testSystem;
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
-        private readonly ITestCaseProcessorResolver _processorResolver;
+        private readonly ITestCaseProcessorFactory _processorResolver;
         private readonly ILogManager _logManager;
 
-        public CyberTester(ITestSystem testSystem, ITestCaseProcessorResolver processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
+        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
         {
             _testSystem = testSystem;
             _testCaseLoggerFactory = testCaseLoggerFactory;

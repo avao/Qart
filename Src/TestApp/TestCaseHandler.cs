@@ -42,8 +42,8 @@ namespace TestApp
         public void Install(IWindsorContainer container, Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store)
         {
             var kernel = container.Kernel;
-            kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
-            kernel.AddFacility<TypedFactoryFacility>();
+            //kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
+            //kernel.AddFacility<TypedFactoryFacility>();
 
             // Standalone processor
             kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<TestCaseHandler>().Named("blah"));

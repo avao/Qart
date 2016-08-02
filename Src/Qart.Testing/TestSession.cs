@@ -10,7 +10,7 @@ namespace Qart.Testing
     public class TestSession : IDisposable
     {
         private readonly ITestSession _customTestSession;
-        private readonly ITestCaseProcessorResolver _testCaseProcessorResolver;
+        private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
         private readonly ILog _logger;
 
@@ -19,11 +19,11 @@ namespace Qart.Testing
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorResolver resolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
+        public TestSession(ITestSession customTestSession, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
         {
             _results = new List<TestCaseResult>();
             _customTestSession = customTestSession;
-            _testCaseProcessorResolver = resolver;
+            _testCaseProcessorFactory = testCaseProcessorFactory;
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _logger = logManager.GetLogger("");
             Options = new ReadOnlyDictionary<string, string>(options);
@@ -47,13 +47,20 @@ namespace Qart.Testing
                 ITestCaseProcessor processor = null;
                 try
                 {
-                    processor = _testCaseProcessorResolver.Resolve(testCase);
+                    processor = _testCaseProcessorFactory.GetProcessor(testCase);
                     processor.Process(new TestCaseContext(this, testCase, logger, descriptionWriter));
                 }
                 catch (Exception ex)
                 {
                     logger.Error("an error occured", ex);
                     testResult.MarkAsFailed(ex);
+                }
+                finally
+                {
+                    if(processor!=null)
+                    {
+                        _testCaseProcessorFactory.Release(processor);
+                    }
                 }
 
                 try
