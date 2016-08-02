@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Wheels.TestAutomation"
 EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Qart.Wheels.SystemTests", "Qart.Wheels.SystemTests\Qart.Wheels.SystemTests.mdproj", "{E663D521-82C5-4F21-A745-A3811F41C0EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Extensions", "Qart.Testing.Extensions\Qart.Testing.Extensions.csproj", "{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

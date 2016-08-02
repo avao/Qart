@@ -5,6 +5,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Common.Logging;
 using Qart.Testing;
+using Qart.Testing.Extensions.Windsor;
 using Qart.Testing.Framework;
 using Qart.Testing.TestCaseProcessors;
 using System;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+
 
 namespace TestApp
 {
@@ -33,23 +35,6 @@ namespace TestApp
         {
             testCaseContext.Logger.Info(_somethingToSay);
         }
-    }
-
-
-    //TODO move to a more accessible place
-    public class TypedFactoryComponentSelectorWithDynamicBinding : DefaultTypedFactoryComponentSelector
-    {
-        protected override System.Collections.IDictionary GetArguments(System.Reflection.MethodInfo method, object[] arguments)
-        {
-            if(arguments.Length == 1)
-            {
-                var dictionary = arguments[0] as System.Collections.IDictionary;
-                if (dictionary != null)
-                    return dictionary;
-            }
-            return base.GetArguments(method, arguments);
-        }
-
     }
 
     public class TestCaseHandlerWindsorInstaller : IWindsorInstaller
