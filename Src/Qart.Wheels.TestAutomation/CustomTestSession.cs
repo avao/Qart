@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using Common.Logging;
 using Qart.Testing;
+using Qart.Testing.Framework;
 
 namespace Qart.Wheels.TestAutomation
 {
@@ -14,9 +15,9 @@ namespace Qart.Wheels.TestAutomation
             _logger.InfoFormat("Ctor");
         }
 
-        public void OnBegin(TestCase testCase, ILog logger)
+        public void OnBegin(TestCaseContext ctx)
         {
-            logger.InfoFormat("OnBegin {0}", testCase.Id);
+            ctx.Logger.InfoFormat("OnBegin {0}", ctx.TestCase.Id);
         }
 
         public void OnFinish(TestCaseResult result, ILog logger)

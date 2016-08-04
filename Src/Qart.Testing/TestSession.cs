@@ -38,17 +38,18 @@ namespace Qart.Testing
 
             using (var logger = _testCaseLoggerFactory.GetLogger(testCase))
             {
+                var descriptionWriter = new XDocumentDescriptionWriter();
+                var testCaseContext = new TestCaseContext(this, testCase, logger, descriptionWriter);
                 if (_customTestSession != null)
                 {
-                    _customTestSession.OnBegin(testCase, logger);
+                    _customTestSession.OnBegin(testCaseContext);
                 }
 
-                var descriptionWriter = new XDocumentDescriptionWriter();
                 ITestCaseProcessor processor = null;
                 try
                 {
                     processor = _testCaseProcessorFactory.GetProcessor(testCase);
-                    processor.Process(new TestCaseContext(this, testCase, logger, descriptionWriter));
+                    processor.Process(testCaseContext);
                 }
                 catch (Exception ex)
                 {

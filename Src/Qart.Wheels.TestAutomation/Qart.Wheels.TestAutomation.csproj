@@ -46,6 +46,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PipelineActions\LogLineAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CustomTestSession.cs" />
     <Compile Include="TestCaseProcessors\ThrowAnExceptionProcessor.cs" />
@@ -56,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj">
+      <Project>{069268e9-911b-4d57-9cb4-cb2c8e3c86bb}</Project>
+      <Name>Qart.Testing.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj">
       <Project>{DCDF538C-7F9C-4F0F-AC6E-851EF9344DB5}</Project>
       <Name>Qart.Testing</Name>
@@ -65,7 +70,5 @@
       <Name>Qart.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PipelineActions\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

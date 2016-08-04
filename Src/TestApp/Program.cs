@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Qart.Core.Io.FileRolling;
 using System.Threading;
-using Qart.Core.Tests.Io;
-using Qart.Core.Tests.Io.FileRolling;
 using Qart.Core.Io;
 
 namespace TestApp
