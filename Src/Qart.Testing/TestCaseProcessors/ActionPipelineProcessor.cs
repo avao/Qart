@@ -10,6 +10,12 @@ using System.Web;
 
 namespace Qart.Testing.TestCaseProcessors
 {
+    public interface IPipelineContextFactory<T>
+    {
+        T CreateContext(TestCaseContext c);
+        void Release(T context);
+    }
+
     public interface IPipelineActionFactory<T>
     {
         IPipelineAction<T> Create(IDictionary<string, object> arguments);
@@ -19,57 +25,66 @@ namespace Qart.Testing.TestCaseProcessors
     public class ActionPipelineProcessor<T> : ITestCaseProcessor
     {
         private readonly IPipelineActionFactory<T> _actionFactory;
-        private readonly T _pipelineActionContext;
+        private readonly IPipelineContextFactory<T> _pipelineContextFactory;
         private readonly IEnumerable<object> _actionDefinitions;
 
-        public ActionPipelineProcessor(T context, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
+        public ActionPipelineProcessor(IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
         {
-            _pipelineActionContext = context;
+            _pipelineContextFactory = pipelineContextFactory;
             _actionFactory = actionFactory;
             _actionDefinitions = actions;
         }
 
         public void Process(TestCaseContext c)
         {
-            foreach (var actionDefinition in _actionDefinitions)
+            var pipelineContext = _pipelineContextFactory.CreateContext(c);
+            try
             {
-                IPipelineAction<T> action = null;
-                var stringActionDef = actionDefinition as string;
-                if (stringActionDef != null)
+                foreach (var actionDefinition in _actionDefinitions)
                 {
-                    string actionName = stringActionDef;
-                    IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-                    int index = stringActionDef.IndexOf('?');
-                    if (index != -1)
+                    IPipelineAction<T> action = null;
+                    var stringActionDef = actionDefinition as string;
+                    if (stringActionDef != null)
                     {
-                        actionName = stringActionDef.Substring(0, index);
-                        string stringParameters = (index < stringActionDef.Length - 1) ? stringActionDef.Substring(index + 1) : String.Empty;
-                        var parametersAsNVC = HttpUtility.ParseQueryString(stringParameters);
-                        parameters = parametersAsNVC.AllKeys.ToDictionary(_ => _, _ => (object)parametersAsNVC[_]);
+                        string actionName = stringActionDef;
+                        IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+                        int index = stringActionDef.IndexOf('?');
+                        if (index != -1)
+                        {
+                            actionName = stringActionDef.Substring(0, index);
+                            string stringParameters = (index < stringActionDef.Length - 1) ? stringActionDef.Substring(index + 1) : String.Empty;
+                            var parametersAsNVC = HttpUtility.ParseQueryString(stringParameters);
+                            parameters = parametersAsNVC.AllKeys.ToDictionary(_ => _, _ => (object)parametersAsNVC[_]);
+                        }
+                        c.Logger.DebugFormat("Resolving action with definition [{0}]", stringActionDef);
+                        
+                        action = _actionFactory.Create(parameters);
+                    }
+                    else
+                    {
+                        //TODO implement non-url based parameters
                     }
 
-                    action = _actionFactory.Create(parameters);
-                }
-                else
-                {
-                    //TODO implement non-url based parameters
-                }
+                    if (action == null)
+                    {
+                        throw new ArgumentException(string.Format("Unable to resolve pipeline action [{0}]", stringActionDef));
+                    }
 
-                if (action == null)
-                {
-                    throw new ArgumentException(string.Format("Unable to resolve pipeline action [{0}]", stringActionDef));
+                    try
+                    {
+                        var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
+                        action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), pipelineContext);
+                    }
+                    finally
+                    {
+                        _actionFactory.Release(action);
+                    }
                 }
-
-                try
-                {
-                    var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
-                    action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), _pipelineActionContext);
-                }
-                finally
-                {
-                    _actionFactory.Release(action);
-                }
+            }
+            finally
+            {
+                _pipelineContextFactory.Release(pipelineContext);
             }
         }
     }

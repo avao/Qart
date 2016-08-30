@@ -57,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Qart.CyberTester\Qart.CyberTester.csproj">
+      <Project>{c471ed5c-2edd-4629-a884-6f140a9f7eb1}</Project>
+      <Name>Qart.CyberTester</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj">
       <Project>{069268e9-911b-4d57-9cb4-cb2c8e3c86bb}</Project>
       <Name>Qart.Testing.Extensions</Name>

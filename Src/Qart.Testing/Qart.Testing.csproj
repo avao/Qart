@@ -67,6 +67,7 @@
     <Compile Include="IContentProcessor.cs" />
     <Compile Include="IDescriptionWriter.cs" />
     <Compile Include="IPipelineAction.cs" />
+    <Compile Include="IProvidePipelineActionDescription.cs" />
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
