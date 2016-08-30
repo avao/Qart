@@ -18,7 +18,7 @@ namespace Qart.Testing.Extensions.Windsor
                 var testCase = arguments[0] as TestCase;
                 if (testCase != null)
                 {
-                    return _parametersExtractor.Execute(testCase).ProcessorId;
+                    return _parametersExtractor.Execute(testCase).Name;
                 }
             }
             return base.GetComponentName(method, arguments);

@@ -47,20 +47,10 @@ namespace Qart.Testing.TestCaseProcessors
                     var stringActionDef = actionDefinition as string;
                     if (stringActionDef != null)
                     {
-                        string actionName = stringActionDef;
-                        IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-                        int index = stringActionDef.IndexOf('?');
-                        if (index != -1)
-                        {
-                            actionName = stringActionDef.Substring(0, index);
-                            string stringParameters = (index < stringActionDef.Length - 1) ? stringActionDef.Substring(index + 1) : String.Empty;
-                            var parametersAsNVC = HttpUtility.ParseQueryString(stringParameters);
-                            parameters = parametersAsNVC.AllKeys.ToDictionary(_ => _, _ => (object)parametersAsNVC[_]);
-                        }
+                        var info = UrlBasedParameterExtraction.Parse(stringActionDef);
                         c.Logger.DebugFormat("Resolving action with definition [{0}]", stringActionDef);
-                        
-                        action = _actionFactory.Get(actionName, parameters);
+
+                        action = _actionFactory.Get(info.Name, info.Parameters);
                     }
                     else
                     {
@@ -74,8 +64,7 @@ namespace Qart.Testing.TestCaseProcessors
 
                     try
                     {
-                        var actionDescriptionWriter = c.DescriptionWriter.CreateNestedWriter("action");
-                        action.Execute(new TestCaseContext(c.TestSession, c.TestCase, c.Logger, actionDescriptionWriter), pipelineContext);
+                        action.Execute(c, pipelineContext);
                     }
                     finally
                     {

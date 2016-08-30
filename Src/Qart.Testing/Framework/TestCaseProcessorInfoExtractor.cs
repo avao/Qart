@@ -10,13 +10,7 @@ namespace Qart.Testing.Framework
 {
     public class TestCaseProcessorInfoExtractor 
     {
-        private class TestDef
-        {
-            public string ProcessorId { get; set; }
-            public Dictionary<string, object> Parameters { get; set; }
-        }
-
-        public TestCaseProcessorInfo Execute(TestCase testCase)
+        public ResolvableItemDescription Execute(TestCase testCase)
         {
             var content = testCase.GetContent(".test").TrimStart();
 
@@ -35,12 +29,10 @@ namespace Qart.Testing.Framework
             }
             else
             {
-                var parsedJson = JsonConvert.DeserializeObject<TestCaseProcessorInfo>(content, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error });
-                processorId = parsedJson.ProcessorId;
-                parameters = parsedJson.Parameters;
+                return JsonConvert.DeserializeObject<ResolvableItemDescription>(content, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error });
             }
 
-            return new TestCaseProcessorInfo(processorId, PostProcess(parameters));
+            return new ResolvableItemDescription(processorId, PostProcess(parameters));
         }
 
         private IDictionary<string, object> PostProcess(IDictionary<string, object> obj)

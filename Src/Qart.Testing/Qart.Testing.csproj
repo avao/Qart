@@ -62,7 +62,8 @@
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
     <Compile Include="Framework\TestCaseContext.cs" />
-    <Compile Include="Framework\TestCaseProcessorInfo.cs" />
+    <Compile Include="Framework\ResolvableItemDescription.cs" />
+    <Compile Include="Framework\UrlBasedParameterExtraction.cs" />
     <Compile Include="Framework\XDocumentDescriptionWriter.cs" />
     <Compile Include="IContentProcessor.cs" />
     <Compile Include="IDescriptionWriter.cs" />
