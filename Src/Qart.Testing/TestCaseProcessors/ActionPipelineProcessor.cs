@@ -19,6 +19,7 @@ namespace Qart.Testing.TestCaseProcessors
     public interface IPipelineActionFactory<T>
     {
         IPipelineAction<T> Create(IDictionary<string, object> arguments);
+        IPipelineAction<T> Get(string name, IDictionary<string, object> arguments);
         void Release(IPipelineAction<T> action);
     }
 
@@ -59,7 +60,7 @@ namespace Qart.Testing.TestCaseProcessors
                         }
                         c.Logger.DebugFormat("Resolving action with definition [{0}]", stringActionDef);
                         
-                        action = _actionFactory.Create(parameters);
+                        action = _actionFactory.Get(actionName, parameters);
                     }
                     else
                     {

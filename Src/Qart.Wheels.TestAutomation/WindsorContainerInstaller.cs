@@ -29,8 +29,8 @@ namespace Qart.Wheels.TestAutomation
             kernel.Register(Component.For<IPipelineActionFactory<ActionContextExample>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
             kernel.Register(Component.For<ActionContextExample>().ImplementedBy<ActionContextExample>());
             kernel.Register(Component.For<IPipelineContextFactory<ActionContextExample>>().AsFactory());
-            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContextExample>>().Named("piper"));
-            kernel.Register(Component.For<IPipelineAction<ActionContextExample>>().ImplementedBy<LogLineAction<ActionContextExample>>().Named("anAction"));
+            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContextExample>>().Named("piper").LifeStyle.Transient);
+            kernel.Register(Component.For<IPipelineAction<ActionContextExample>>().ImplementedBy<LogLineAction<ActionContextExample>>().Named("anAction").LifeStyle.Transient);
         }
     }
 
