@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 namespace Qart.Testing.Framework
 {
-    class ErrorMessageCapturingTestSession : ITestSession
+    public class ErrorMessageCapturingTestSession : ITestSession
     {
         public void OnBegin(TestCaseContext ctx)
         {
