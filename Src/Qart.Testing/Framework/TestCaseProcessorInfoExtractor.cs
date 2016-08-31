@@ -29,7 +29,9 @@ namespace Qart.Testing.Framework
             }
             else
             {
-                return JsonConvert.DeserializeObject<ResolvableItemDescription>(content, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error });
+                var parsedJson = JsonConvert.DeserializeObject<ResolvableItemDescription>(content, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error });
+                processorId = parsedJson.Name;
+                parameters = parsedJson.Parameters;
             }
 
             return new ResolvableItemDescription(processorId, PostProcess(parameters));

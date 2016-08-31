@@ -47,9 +47,10 @@ namespace Qart.Testing.TestCaseProcessors
                     var stringActionDef = actionDefinition as string;
                     if (stringActionDef != null)
                     {
+                        c.Logger.TraceFormat("Parsing action with definition [{0}]", stringActionDef);
                         var info = UrlBasedParameterExtraction.Parse(stringActionDef);
-                        c.Logger.DebugFormat("Resolving action with definition [{0}]", stringActionDef);
-
+                        
+                        c.Logger.DebugFormat("Creating action [{0}] with parameters [{1}]", info.Name, string.Join("\n", info.Parameters.Select(_ => _.Key + ": " + _.Value)));
                         action = _actionFactory.Get(info.Name, info.Parameters);
                     }
                     else

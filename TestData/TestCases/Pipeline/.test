@@ -1,5 +1,5 @@
 {
-	"ProcessorId" : "piper",
+	"Name" : "piper",
 	"Parameters" : {
 		"actions" : ["anAction?somethingToSay=Hello World!"],
 		"prop" : {
