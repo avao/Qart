@@ -39,7 +39,7 @@ namespace Qart.Testing.Framework
 
         public IEnumerable<string> GetTestCaseIds()
         {
-            return DataStorage.GetAllGroups().Concat(new[] { "." }).Where(_ => _isTestCasePredicate(new ScopedDataStore(DataStorage, _)) != null);
+            return DataStorage.GetAllGroups().Concat(new[] { "." }).Where(_ => _isTestCasePredicate(new ScopedDataStore(DataStorage, _)));
         }
     }
 }
