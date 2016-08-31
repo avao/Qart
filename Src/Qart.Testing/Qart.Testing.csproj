@@ -61,6 +61,7 @@
     <Compile Include="BaseLineAssert.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
+    <Compile Include="Framework\ErrorMessageCapturingTestSession.cs" />
     <Compile Include="Framework\TestCaseContext.cs" />
     <Compile Include="Framework\ResolvableItemDescription.cs" />
     <Compile Include="Framework\UrlBasedParameterExtraction.cs" />

@@ -5,11 +5,18 @@ using System.Linq;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Newtonsoft.Json.Linq;
+using Qart.Core.Validation;
 
 namespace Qart.Testing.Framework
 {
     public class TestCaseProcessorInfoExtractor 
     {
+        private class ProcessorInfo
+        {
+            public string ProcessorId { get; set; }
+            public Dictionary<string, object> Parameters { get; set; }
+        }
+
         public ResolvableItemDescription Execute(TestCase testCase)
         {
             var content = testCase.GetContent(".test").TrimStart();
@@ -29,11 +36,12 @@ namespace Qart.Testing.Framework
             }
             else
             {
-                var parsedJson = JsonConvert.DeserializeObject<ResolvableItemDescription>(content, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error });
-                processorId = parsedJson.Name;
+                var parsedJson = JsonConvert.DeserializeObject<ProcessorInfo>(content);
+                processorId = parsedJson.ProcessorId;
                 parameters = parsedJson.Parameters;
             }
 
+            Require.NotNullOrEmpty(processorId, "ProcessorId could not be empty");
             return new ResolvableItemDescription(processorId, PostProcess(parameters));
         }
 
