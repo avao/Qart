@@ -32,8 +32,11 @@ namespace Qart.Testing
         public void OnTestCase(TestCase testCase)
         {
             _logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
+            var isMuted = testCase.Contains(".muted");
+            if(isMuted)
+                _logger.Debug("Test is muted.");
 
-            TestCaseResult testResult = new TestCaseResult(testCase);
+            TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
 
             using (var logger = _testCaseLoggerFactory.GetLogger(testCase))

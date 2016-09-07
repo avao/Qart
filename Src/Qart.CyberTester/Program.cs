@@ -60,15 +60,16 @@ namespace Qart.CyberTester
             var tester = new Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorFactory>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
 
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
-            var results = tester.RunTests(customSession, parsedOptions);
+            var results = tester.RunTests(customSession, parsedOptions).ToList();
 
             var failedTestsCount = results.Count(_ => _.Exception != null);
-            Logger.InfoFormat("Tests execution finished. Number of failed testcases: {0}", failedTestsCount);
+            var nonMutedfailedTestsCount = results.Count(_ => _.Exception != null && !_.IsMuted);
+            Logger.InfoFormat("Tests execution finished. Testcases: {0}, total failures: {1}, non-muted failures: {2}", results.Count, failedTestsCount, nonMutedfailedTestsCount);
 
-            XElement root = new XElement("TestResults", results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"), _.Description == null ? null : _.Description.Root)));
+            XElement root = new XElement("TestResults", results.Select(_ => new XElement("Test", new XAttribute("id", _.TestCase.Id), new XAttribute("status", _.Exception == null ? "succeeded" : "failed"), new XAttribute("muted", _.IsMuted), _.Description == null ? null : _.Description.Root)));
             root.Save("TestSessionResults.xml");
 
-            return failedTestsCount;
+            return nonMutedfailedTestsCount;
         }
     }
 }
