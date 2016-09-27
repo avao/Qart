@@ -20,14 +20,13 @@ namespace Qart.Testing.Tests
 
         class StreamTransformResolver : IStreamTransformerResolver
         {
-            public IStreamTransformer Create(string name)
+            public IStreamTransformer GetTransformer(string name)
             {
                 return new TextStreamTranformer();
             }
 
             public void Release(IStreamTransformer streamTransformer)
             {
-                throw new NotImplementedException();
             }
         }
 
