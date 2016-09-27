@@ -4,6 +4,7 @@ using Qart.Core.Io;
 using Qart.Testing.Framework;
 using System.IO;
 using System.Text;
+using System;
 
 namespace Qart.Testing.Tests
 {
@@ -13,7 +14,7 @@ namespace Qart.Testing.Tests
         {
             public Stream Transform(Stream strm, IDataStore dataStore, object param)
             {
-                return new MemoryStream(UTF8Encoding.UTF8.GetBytes((string)param));
+                return new MemoryStream(Encoding.UTF8.GetBytes((string)param));
             }
         }
 
@@ -22,6 +23,11 @@ namespace Qart.Testing.Tests
             public IStreamTransformer GetTransformer(string name)
             {
                 return new TextStreamTranformer();
+            }
+
+            public void Release(IStreamTransformer streamTransformer)
+            {
+                throw new NotImplementedException();
             }
         }
 
