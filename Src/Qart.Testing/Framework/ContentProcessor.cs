@@ -21,7 +21,7 @@ namespace Qart.Testing.Framework
             foreach (var action in JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(content))
             {
                 var kvp = action.Single();
-                var transformer = _streamTransformerResolver.GetTransformer(kvp.Key);
+                var transformer = _streamTransformerResolver.Create(kvp.Key);
                 strm = transformer.Transform(strm, dataStore, kvp.Value);
             }
             return strm;

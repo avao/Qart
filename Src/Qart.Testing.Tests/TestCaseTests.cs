@@ -20,7 +20,7 @@ namespace Qart.Testing.Tests
 
         class StreamTransformResolver : IStreamTransformerResolver
         {
-            public IStreamTransformer GetTransformer(string name)
+            public IStreamTransformer Create(string name)
             {
                 return new TextStreamTranformer();
             }
