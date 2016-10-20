@@ -7,14 +7,14 @@ namespace Qart.Core.DataStore
     public class ExtendedDataStore : IDataStore
     {
         private readonly IDataStore _dataStore;
-        private readonly Func<string, IDataStore, Stream> _streamFunc;
+        private readonly Func<IDataStore, string, IDataStore, Stream> _streamFunc;
 
         public ExtendedDataStore(IDataStore dataStore)
         {
             _dataStore = dataStore;
         }
 
-        public ExtendedDataStore(IDataStore dataStore, Func<string, IDataStore, Stream> streamFunc)
+        public ExtendedDataStore(IDataStore dataStore, Func<IDataStore, string, IDataStore, Stream> streamFunc)
         {
             _dataStore = dataStore;
             _streamFunc = streamFunc;
@@ -37,7 +37,7 @@ namespace Qart.Core.DataStore
             string func = GetItemFunc(itemId);
             if (_dataStore.Contains(func))
             {
-                return _streamFunc(_dataStore.GetContent(func), this);
+                return _streamFunc(_dataStore, func, this);
             }
 
             itemRef = GetRedirectedItemId(itemId);
