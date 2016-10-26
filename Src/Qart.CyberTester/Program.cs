@@ -55,12 +55,10 @@ namespace Qart.CyberTester
 
             var testSystem = container.Resolve<ITestSystem>();
 
-            var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
-
             var tester = new Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorFactory>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
 
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
-            var results = tester.RunTests(customSession, parsedOptions).ToList();
+            var results = tester.RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
 
             var failedTestsCount = results.Count(_ => _.Exception != null);
             var nonMutedfailedTestsCount = results.Count(_ => _.Exception != null && !_.IsMuted);

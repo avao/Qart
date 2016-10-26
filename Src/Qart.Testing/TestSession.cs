@@ -9,7 +9,7 @@ namespace Qart.Testing
 {
     public class TestSession : IDisposable
     {
-        private readonly ITestSession _customTestSession;
+        private readonly IEnumerable<ITestSession> _customTestSessions;
         private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
         private readonly ILog _logger;
@@ -19,10 +19,10 @@ namespace Qart.Testing
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(ITestSession customTestSession, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options)
         {
             _results = new List<TestCaseResult>();
-            _customTestSession = customTestSession;
+            _customTestSessions = customTestSessions;
             _testCaseProcessorFactory = testCaseProcessorFactory;
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _logger = logManager.GetLogger("");
@@ -43,9 +43,10 @@ namespace Qart.Testing
             {
                 var descriptionWriter = new XDocumentDescriptionWriter();
                 var testCaseContext = new TestCaseContext(this, testCase, logger, descriptionWriter);
-                if (_customTestSession != null)
+                if (_customTestSessions != null)
                 {
-                    _customTestSession.OnBegin(testCaseContext);
+                    foreach (var session in _customTestSessions)
+                        session.OnBegin(testCaseContext);
                 }
 
                 ITestCaseProcessor processor = null;
@@ -76,9 +77,10 @@ namespace Qart.Testing
                     logger.Error("an error occured while getting test case description", ex);
                 }
 
-                if (_customTestSession != null)
+                if (_customTestSessions != null)
                 {
-                    _customTestSession.OnFinish(testResult, logger);
+                    foreach (var session in _customTestSessions)
+                        session.OnFinish(testResult, logger);
                 }
             }
             _logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
@@ -87,9 +89,9 @@ namespace Qart.Testing
 
         public void Dispose()
         {
-            if (_customTestSession != null)
+            foreach (var session in _customTestSessions)
             {
-                _customTestSession.Dispose();
+                session.Dispose();
             }
         }
     }
