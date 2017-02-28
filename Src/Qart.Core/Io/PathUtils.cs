@@ -1,25 +1,41 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Qart.Core.Io
 {
     public static class PathUtils
     {
+        [Obsolete("Use one of the ResolveRelativeToCurrentDirectory/ResolveRelativeToAssmeblyLocation instead.")]
         public static string ResolveRelative(string path)
         {
-            if (Path.IsPathRooted(path))
-                return path;
+            return ResolveRelativeToCurrentDirectory(path);
+        }
 
-            string curDir = Directory.GetCurrentDirectory();
-            while (curDir != null)
+        public static string ResolveRelativeToCurrentDirectory(string path)
+        {
+            return ResolveRelative(path, Directory.GetCurrentDirectory());
+        }
+
+        public static string ResolveRelativeToAssmeblyLocation(string path)
+        {
+            return ResolveRelative(path, FileUtils.GetAssemblyDirectory());
+        }
+
+        public static string ResolveRelative(string relativePath, string startingPath)
+        {
+            if (Path.IsPathRooted(relativePath))
+                return relativePath;
+
+            while (startingPath != null)
             {
-                string fullPath = Path.Combine(curDir, path);
+                string fullPath = Path.Combine(startingPath, relativePath);
                 if (File.Exists(fullPath) || Directory.Exists(fullPath))
                 {
                     return fullPath;
                 }
-                curDir = Path.GetDirectoryName(curDir);
+                startingPath = Path.GetDirectoryName(startingPath);
             }
-            throw new IOException("Cannot resolve path.");
+            throw new IOException(string.Format("Cannot resolve path [{0}] with starting point [{1}]", relativePath, startingPath));
         }
     }
 }
