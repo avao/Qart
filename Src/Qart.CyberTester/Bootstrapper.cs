@@ -10,6 +10,7 @@ using System.IO;
 using Castle.Facilities.TypedFactory;
 using Qart.Testing.Extensions.Windsor;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
+using System;
 
 namespace Qart.CyberTester
 {
@@ -30,8 +31,11 @@ namespace Qart.CyberTester
             
             kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory( c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
 
+            //Tests selection
+            kernel.Register(Component.For<Func<IDataStore, bool>>().Instance((dataStore) => dataStore.Contains(".test")));
+
             //content/stream transformation
-            kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory());
+            kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
             kernel.Register(Component.For<IContentProcessor>().ImplementedBy<ContentProcessor>());
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatStreamTransformer>().Named("concat"));
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));

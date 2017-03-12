@@ -89,7 +89,7 @@ namespace Qart.Core.Io.FileRolling
 
         private static IEnumerable<string> GetFileNamesForBaseName(string baseFileName)
         {
-            string fullPath = PathUtils.ResolveRelative(baseFileName);
+            string fullPath = PathUtils.ResolveRelativeToCurrentDirectory(baseFileName);
             return Directory.GetFiles(Path.GetDirectoryName(fullPath), Path.GetFileName(fullPath) + ".*", SearchOption.TopDirectoryOnly);
         }
 

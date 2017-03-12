@@ -8,7 +8,9 @@ namespace Qart.Core.Io
     {
         public static void EnsureCanBeWritten(string path)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            var dirName = Path.GetDirectoryName(path);
+            if(!string.IsNullOrEmpty(dirName))
+                Directory.CreateDirectory(dirName);
         }
 
         public static FileStream OpenFileStreamForReading(string path)

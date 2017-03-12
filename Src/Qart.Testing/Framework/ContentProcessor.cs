@@ -23,6 +23,7 @@ namespace Qart.Testing.Framework
                 var kvp = action.Single();
                 var transformer = _streamTransformerResolver.GetTransformer(kvp.Key);
                 strm = transformer.Transform(strm, dataStore, kvp.Value);
+                _streamTransformerResolver.Release(transformer);
             }
             return strm;
         }

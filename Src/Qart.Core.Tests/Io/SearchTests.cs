@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Qart.Core.Io;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Qart.Core.Tests.Io
@@ -9,7 +8,7 @@ namespace Qart.Core.Tests.Io
     [TestFixture]
     public class SearchTests
     {
-        static readonly string TestDataDir = PathUtils.ResolveRelative("TestData");
+        static readonly string TestDataDir = PathUtils.ResolveRelativeToAssmeblyLocation("TestData");
 
         [Test]
         static public void FindExact()

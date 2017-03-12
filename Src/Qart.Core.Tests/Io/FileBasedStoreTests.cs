@@ -8,7 +8,7 @@ namespace Qart.Core.Tests.Io
     [TestFixture]
     public class FileBasedStoreTests
     {
-        static readonly string BaseDir = PathUtils.ResolveRelative(Path.Combine("TestData", "FileBasedStore"));
+        static readonly string BaseDir = PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "FileBasedStore"));
 
         [Test]
         public void NonExistingFileDoesNotThrow()

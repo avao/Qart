@@ -2,7 +2,6 @@
 using Qart.Core.DataStore;
 using Qart.Core.Io;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
 using Qart.Testing.Framework;
 
@@ -10,7 +9,7 @@ namespace Qart.Testing.Tests
 {
     class TestSystemTests
     {
-        private readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelative(Path.Combine("TestData", "TestCases"))));
+        private readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "TestCases"))));
 
         [Test]
         public void GetTestCases()

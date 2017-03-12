@@ -11,7 +11,7 @@ namespace Qart.Core.Tests.Io.FileRolling
     [TestFixture]
     public class RollingFileReaderTests
     {
-        readonly string BaseDir = PathUtils.ResolveRelative(Path.Combine("TestData", "RollingFileReader"));
+        readonly string BaseDir = PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "RollingFileReader"));
 
         [Test, Ignore("TODO")]
         public void RolledFilesNoPosition()
