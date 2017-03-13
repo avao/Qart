@@ -1,5 +1,4 @@
 ﻿using Common.Logging;
-using Qart.Core.Collections;
 using Qart.Testing.Framework;
 using System;
 using System.Collections.Concurrent;
@@ -138,11 +137,4 @@ namespace Qart.Testing
         }
     }
 
-    public static class TestSessionExtensions
-    {
-        public static bool IsRebaseline(this TestSession testSession)
-        {
-            return testSession.Options.GetOptionalValue("rebase", false, bool.Parse);
-        }
-    }
 }

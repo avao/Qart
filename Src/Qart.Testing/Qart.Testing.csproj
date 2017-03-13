@@ -58,7 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionPipeline\IActionPipelineProcessor.cs" />
+    <Compile Include="ActionPipeline\IPipelineActionFactory.cs" />
+    <Compile Include="ActionPipeline\IPipelineContextFactory.cs" />
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="Framework\TestCaseContextExtensions.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
     <Compile Include="Framework\ErrorMessageCapturingTestSession.cs" />
@@ -86,7 +90,7 @@
     <Compile Include="TestCase.cs" />
     <Compile Include="Framework\TestCaseLoggerFactory.cs" />
     <Compile Include="Framework\TestCaseProcessorInfoExtractor.cs" />
-    <Compile Include="TestCaseProcessors\ActionPipelineProcessor.cs" />
+    <Compile Include="ActionPipeline\UrlBasedActionPipelineProcessor.cs" />
     <Compile Include="TestCaseResult.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="Framework\TestSystem.cs" />

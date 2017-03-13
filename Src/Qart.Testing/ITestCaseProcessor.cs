@@ -1,6 +1,4 @@
-﻿using Common.Logging;
-using Qart.Testing.Framework;
-using System.Xml.Linq;
+﻿using Qart.Testing.Framework;
 
 namespace Qart.Testing
 {

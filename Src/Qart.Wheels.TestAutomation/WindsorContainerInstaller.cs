@@ -2,8 +2,8 @@
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Qart.Testing;
+using Qart.Testing.ActionPipeline;
 using Qart.Testing.Extensions.Windsor;
-using Qart.Testing.TestCaseProcessors;
 using Qart.Wheels.TestAutomation.PipelineActions;
 using Qart.Wheels.TestAutomation.TestCaseProcessors;
 
@@ -29,7 +29,7 @@ namespace Qart.Wheels.TestAutomation
             kernel.Register(Component.For<IPipelineActionFactory<ActionContextExample>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
             kernel.Register(Component.For<ActionContextExample>().ImplementedBy<ActionContextExample>().LifeStyle.Transient);
             kernel.Register(Component.For<IPipelineContextFactory<ActionContextExample>>().AsFactory());
-            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ActionPipelineProcessor<ActionContextExample>>().Named("piper").LifeStyle.Transient);
+            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<UrlBasedActionPipelineProcessor<ActionContextExample>>().Named("piper").LifeStyle.Transient);
             kernel.Register(Component.For<IPipelineAction<ActionContextExample>>().ImplementedBy<LogLineAction<ActionContextExample>>().Named("anAction").LifeStyle.Transient);
         }
     }
