@@ -5,7 +5,7 @@ namespace Qart.Core.Collections
 {
     public static class DictionaryExtensions
     {
-        public static T GetValue<K,T>(this IDictionary<K,T> dictionary, K key, T defaultValue)
+        public static T GetOptionalValue<K,T>(this IDictionary<K,T> dictionary, K key, T defaultValue)
         {
             T result;
             if(!dictionary.TryGetValue(key, out result))
@@ -15,7 +15,7 @@ namespace Qart.Core.Collections
             return result;
         }
 
-        public static V GetValue<K,T,V>(this IDictionary<K,T> dictionary, K key, V defaultValue, Func<T,V> convert)
+        public static V GetOptionalValue<K,T,V>(this IDictionary<K,T> dictionary, K key, V defaultValue, Func<T,V> convert)
         {
             T result;
             if (!dictionary.TryGetValue(key, out result))

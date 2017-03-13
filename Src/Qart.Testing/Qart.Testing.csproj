@@ -62,6 +62,8 @@
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
     <Compile Include="Framework\ErrorMessageCapturingTestSession.cs" />
+    <Compile Include="Framework\Schedule.cs" />
+    <Compile Include="Framework\SequentialCriticalSectionTokensProvider.cs" />
     <Compile Include="Framework\TestCaseContext.cs" />
     <Compile Include="Framework\ResolvableItemDescription.cs" />
     <Compile Include="Framework\UrlBasedParameterExtraction.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="IStreamTransformerResolver.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorFactory.cs" />
+    <Compile Include="ICriticalSectionTokensProvider.cs" />
     <Compile Include="ITestSession.cs" />
     <Compile Include="ITestCaseProcessor.cs" />
     <Compile Include="ITestSystem.cs" />
@@ -96,6 +99,9 @@
       <Project>{2444bc84-514f-41d8-80d5-ef171f514c91}</Project>
       <Name>Qart.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestExecutionSchedulers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

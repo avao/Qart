@@ -1,25 +1,28 @@
 ﻿using Common.Logging;
+using Qart.Core.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Testing.Framework
 {
-    public class TestCaseContext
+    public class TestCaseContext : IDisposable
     {
-        public TestSession TestSession { get; private set; }
         public TestCase TestCase { get; private set; }
-        public ILog Logger { get; private set; }
+        public IDisposableLogger Logger { get; private set; }
         public IDescriptionWriter DescriptionWriter { get; private set; }
+        public IDictionary<string, string> Options {get; private set;}
 
-        public TestCaseContext(TestSession testSession, TestCase testCase, ILog logger, IDescriptionWriter descriptionWriter)
+        public TestCaseContext(IDictionary<string, string> options, TestCase testCase, IDisposableLogger logger, IDescriptionWriter descriptionWriter)
         {
-            TestSession = testSession;
+            Options = options;
             TestCase = testCase;
             Logger = logger;
             DescriptionWriter = descriptionWriter;
+        }
+
+        public void Dispose()
+        {
+            Logger.Dispose();
         }
     }
 }
