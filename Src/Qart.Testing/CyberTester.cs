@@ -10,26 +10,26 @@ namespace Qart.Testing
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
         private readonly ITestCaseProcessorFactory _processorResolver;
         private readonly ILogManager _logManager;
+        private readonly ICriticalSectionTokensProvider<TestCase> _csTokensProvider;
+        private readonly ISchedule<TestCase> _testCase;
 
-        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager)
+        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> testCase)
         {
             _testSystem = testSystem;
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _processorResolver = processorResolver;
             _logManager = logManager;
+            _csTokensProvider = csTokensProvider;
+            _testCase = testCase;
         }
 
         public IEnumerable<TestCaseResult> RunTests(IEnumerable<ITestSession> customSessions, IDictionary<string, string> options)
         {
             //_logger.Debug("Looking for test cases.");
             var testCases = _testSystem.GetTestCaseIds().Select(_ => _testSystem.GetTestCase(_));
-            using (var testSession = new TestSession(customSessions, _processorResolver, _testCaseLoggerFactory, _logManager, options))
+            using (var testSession = new TestSession(customSessions, _processorResolver, _testCaseLoggerFactory, _logManager, options, _csTokensProvider, _testCase))
             {
-                foreach (var testCase in testCases)
-                {
-                    testSession.OnTestCase(testCase);
-                }
-
+                testSession.Schedule(testCases, 4);//TODO get worker count from options
                 return testSession.Results;
             }
         }

@@ -55,7 +55,9 @@ namespace Qart.CyberTester
 
             var testSystem = container.Resolve<ITestSystem>();
 
-            var tester = new Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorFactory>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>());
+            var customSession = container.Kernel.HasComponent(typeof(ITestSession)) ? container.Resolve<ITestSession>() : null;
+
+            var tester = new Testing.CyberTester(testSystem, container.Resolve<ITestCaseProcessorFactory>(), container.Resolve<ITestCaseLoggerFactory>(), container.Resolve<ILogManager>(), container.Resolve<ICriticalSectionTokensProvider<TestCase>>(), container.Resolve<ISchedule<TestCase>>());
 
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
             var results = tester.RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
