@@ -12,11 +12,11 @@ namespace Qart.Testing.ActionPipeline
         
         public IEnumerable<ResolvableItemDescription> ActionDecsriptions { get; private set; }
 
-        public UrlBasedActionPipelineProcessor(IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actionDescriptions)
+        public UrlBasedActionPipelineProcessor(IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
         {
             _pipelineContextFactory = pipelineContextFactory;
             _actionFactory = actionFactory;
-            ActionDecsriptions = actionDescriptions.Select(Convert).ToList();
+            ActionDecsriptions = actions.Select(Convert).ToList();
         }
 
         public void Process(TestCaseContext c)
