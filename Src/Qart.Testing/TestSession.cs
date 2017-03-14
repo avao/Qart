@@ -19,6 +19,7 @@ namespace Qart.Testing
         private readonly ISchedule<TestCase> _schedule;
         private readonly IList<Task> _tasks;
         private readonly CancellationToken _cancellationToken;
+        private readonly ITestCaseFilter _testCaseFilter;
 
         private readonly ConcurrentBag<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results
@@ -35,7 +36,7 @@ namespace Qart.Testing
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule, ITestCaseFilter testCaseFilter)
         {
             _results = new ConcurrentBag<TestCaseResult>();
             _customTestSessions = customTestSessions;
@@ -47,6 +48,7 @@ namespace Qart.Testing
             _schedule = schedule;
             _tasks = new List<Task>();
             _cancellationToken = Task.Factory.CancellationToken;
+            _testCaseFilter = testCaseFilter;
         }
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
@@ -76,6 +78,12 @@ namespace Qart.Testing
             var isMuted = testCase.Contains(".muted");
             if (isMuted)
                 _logger.Debug("Test is muted.");
+
+            if (!_testCaseFilter.ShouldProcess(testCase))
+            {
+                _logger.Debug("Test is filtered out");
+                return;
+            }
 
             TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
