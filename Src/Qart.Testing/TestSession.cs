@@ -54,7 +54,7 @@ namespace Qart.Testing
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
         {
-            _schedule.Enqueue(testCases.Where(_testCaseFilter.ShouldProcess));
+            _schedule.Enqueue(testCases.Where(testCase => _testCaseFilter.ShouldProcess(testCase, Options)));
             for (int i = 0; i < workerCount; ++i)
             {
                 _tasks.Add(Task.Factory.StartNew(() => WorkerAction(this, _schedule), _cancellationToken));
