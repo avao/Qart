@@ -18,7 +18,7 @@ namespace Qart.Testing
 
         public bool ShouldProcess(TestCase testCase)
         {
-            IEnumerable<string> tags = _tagProvider.GetTags(testCase).ToList();
+            IEnumerable<string> tags = _tagProvider.GetTags(testCase).Select(t => t.ToLower()).ToList();
            
             var includeTags = GetTagsAsHashSet("includeTags");
             var excludeTags = GetTagsAsHashSet("excludeTags");
@@ -30,7 +30,7 @@ namespace Qart.Testing
 
         private HashSet<string> GetTagsAsHashSet(string tagName)
         {
-            return new HashSet<string>(_options.GetOptionalValue(tagName, Enumerable.Empty<string>(), t => t.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)));
+            return new HashSet<string>(_options.GetOptionalValue(tagName, Enumerable.Empty<string>(), t => t.ToLower().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)));
         }
     }
 }

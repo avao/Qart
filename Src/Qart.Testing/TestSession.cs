@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ namespace Qart.Testing
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
         {
-            _schedule.Enqueue(testCases);
+            _schedule.Enqueue(testCases.Where(_testCaseFilter.ShouldProcess));
             for (int i = 0; i < workerCount; ++i)
             {
                 _tasks.Add(Task.Factory.StartNew(() => WorkerAction(this, _schedule), _cancellationToken));
@@ -78,12 +79,6 @@ namespace Qart.Testing
             var isMuted = testCase.Contains(".muted");
             if (isMuted)
                 _logger.Debug("Test is muted.");
-
-            if (!_testCaseFilter.ShouldProcess(testCase))
-            {
-                _logger.Debug("Test is filtered out");
-                return;
-            }
 
             TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
