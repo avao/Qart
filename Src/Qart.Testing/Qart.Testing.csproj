@@ -74,6 +74,8 @@
     <Compile Include="IProvidePipelineActionDescription.cs" />
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
+    <Compile Include="ITagProvider.cs" />
+    <Compile Include="ITestCaseFilter.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorFactory.cs" />
     <Compile Include="ICriticalSectionTokensProvider.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamTransformers\ConcatStreamTransformer.cs" />
     <Compile Include="StreamTransformers\RefStreamTransformer.cs" />
+    <Compile Include="TagTestCaseFilter.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="Framework\TestCaseLoggerFactory.cs" />
     <Compile Include="Framework\TestCaseProcessorInfoExtractor.cs" />
