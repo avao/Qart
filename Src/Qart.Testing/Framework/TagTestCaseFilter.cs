@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Qart.Testing
+namespace Qart.Testing.Framework
 {
     public class TagTestCaseFilter : ITestCaseFilter
     {

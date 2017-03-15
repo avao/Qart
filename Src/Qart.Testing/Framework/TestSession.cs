@@ -8,19 +8,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Qart.Testing
+namespace Qart.Testing.Framework
 {
     public class TestSession : IDisposable
     {
         private readonly IEnumerable<ITestSession> _customTestSessions;
         private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
-        private readonly ICriticalSectionTokensProvider<TestCase> _csTokensProvider;
         private readonly ILog _logger;
         private readonly ISchedule<TestCase> _schedule;
         private readonly IList<Task> _tasks;
         private readonly CancellationToken _cancellationToken;
-        private readonly ITestCaseFilter _testCaseFilter;
 
         private readonly ConcurrentBag<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results
@@ -37,7 +35,7 @@ namespace Qart.Testing
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule, ITestCaseFilter testCaseFilter)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule)
         {
             _results = new ConcurrentBag<TestCaseResult>();
             _customTestSessions = customTestSessions;
@@ -49,12 +47,11 @@ namespace Qart.Testing
             _schedule = schedule;
             _tasks = new List<Task>();
             _cancellationToken = Task.Factory.CancellationToken;
-            _testCaseFilter = testCaseFilter;
         }
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
         {
-            _schedule.Enqueue(testCases.Where(testCase => _testCaseFilter.ShouldProcess(testCase, Options)));
+            _schedule.Enqueue(testCases);
             for (int i = 0; i < workerCount; ++i)
             {
                 _tasks.Add(Task.Factory.StartNew(() => WorkerAction(this, _schedule), _cancellationToken));
