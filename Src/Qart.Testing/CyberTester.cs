@@ -32,7 +32,7 @@ namespace Qart.Testing
             IEnumerable<TestCase> testCases = _testSystem.GetTestCaseIds().Select(_ => _testSystem.GetTestCase(_));
             if (_testCaseFilter != null)
             {
-                testCases.Where(_ => _testCaseFilter.ShouldProcess(_, options));
+                testCases = testCases.Where(_ => _testCaseFilter.ShouldProcess(_, options));
             }
 
             using (var testSession = new TestSession(customSessions, _processorResolver, _testCaseLoggerFactory, _logManager, options, _csTokensProvider, _schedule))
