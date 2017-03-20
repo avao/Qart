@@ -31,11 +31,6 @@ namespace Qart.Testing.Framework
             {
                 pipelineContextFactory.Release(pipelineContext);
             }
-        }
-
-        public static bool IsRebaseline(this TestCaseContext testCaseContext)
-        {
-            return testCaseContext.Options.GetOptionalValue("rebase", false, bool.Parse);
-        }
+        }        
     }
 }
