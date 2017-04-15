@@ -62,6 +62,7 @@
     <Compile Include="ActionPipeline\IPipelineActionFactory.cs" />
     <Compile Include="ActionPipeline\IPipelineContextFactory.cs" />
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="DummyTagProvider.cs" />
     <Compile Include="Framework\TestCaseContextExtensions.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
