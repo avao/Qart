@@ -32,7 +32,8 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
             kernel.Register(Component.For<ICriticalSectionTokensProvider<TestCase>>().ImplementedBy<SequentialCriticalSectionTokensProvider<TestCase>>());
             kernel.Register(Component.For<ITestCaseFilter>().ImplementedBy<TagTestCaseFilter>());
-            
+            kernel.Register(Component.For<ITagProvider>().ImplementedBy<DummyTagProvider>());
+
             kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory( c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
 
             //Tests selection
