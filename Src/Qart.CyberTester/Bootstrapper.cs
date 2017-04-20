@@ -28,6 +28,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
             kernel.Register(Component.For<IDataStore>().Instance(testsDataStore).Named("testsDataStore"));
             kernel.Register(Component.For<ITestSystem>().ImplementedBy<TestSystem>());
+            kernel.Register(Component.For<Testing.CyberTester>().ImplementedBy<Testing.CyberTester>());
 
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
             kernel.Register(Component.For<ICriticalSectionTokensProvider<TestCase>>().ImplementedBy<SequentialCriticalSectionTokensProvider<TestCase>>());
