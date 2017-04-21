@@ -24,9 +24,10 @@ namespace Qart.CyberTester
             kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
             kernel.AddFacility<TypedFactoryFacility>();
 
+            kernel.Register(Component.For<Testing.CyberTester>());
+
             kernel.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
             kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
-            kernel.Register(Component.For<IDataStore>().Instance(testsDataStore).Named("testsDataStore"));
             kernel.Register(Component.For<ITestSystem>().ImplementedBy<TestSystem>());
 
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
@@ -34,13 +35,17 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<ITestCaseFilter>().ImplementedBy<TagTestCaseFilter>());
             kernel.Register(Component.For<ITagProvider>().ImplementedBy<DummyTagProvider>());
 
+            //DataStores. unnamed one is the default
+            kernel.Register(Component.For<IDataStoreProvider>().ImplementedBy<DataStoreProvider>());
+            kernel.Register(Component.For<IDataStore>().Instance(testsDataStore));
+
             kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory( c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
 
             //Tests selection
             kernel.Register(Component.For<Func<IDataStore, bool>>().Instance((dataStore) => dataStore.Contains(".test")));
 
             //content/stream transformation
-            kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
+            kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
             kernel.Register(Component.For<IContentProcessor>().ImplementedBy<ContentProcessor>());
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatStreamTransformer>().Named("concat"));
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));

@@ -13,28 +13,20 @@ namespace Qart.Testing.Framework
         public IContentProcessor ContentProcessor { get; private set; }
 
         private readonly Func<IDataStore, bool> _isTestCasePredicate;
+        private readonly IDataStoreProvider _dataStoreProvider;
 
-        public TestSystem(IDataStore dataStorage)
-            : this(dataStorage, _ => _.Contains(".test"))
-        {
-        }
-
-        public TestSystem(IDataStore dataStorage, Func<IDataStore, bool> isTestCasePredicate)
-            : this(dataStorage, isTestCasePredicate, null)
-        {
-        }
-
-        public TestSystem(IDataStore dataStorage, Func<IDataStore, bool> isTestCasePredicate, IContentProcessor processor)
+        public TestSystem(IDataStore dataStorage, Func<IDataStore, bool> isTestCasePredicate, IContentProcessor processor, IDataStoreProvider dataStoreProvider)
         {
             _isTestCasePredicate = isTestCasePredicate;
             ContentProcessor = processor;
             DataStorage = dataStorage;
+            _dataStoreProvider = dataStoreProvider;
         }
 
         public TestCase GetTestCase(string id)
         {
             var testCaseDataStore = new ExtendedDataStore(new ScopedDataStore(DataStorage, id), (ds, transform, dataStore) => ContentProcessor.Process(ds.GetContent(transform), new ScopedDataStore(dataStore, Path.GetDirectoryName(transform))));
-            return new TestCase(id, this, testCaseDataStore);
+            return new TestCase(id, this, testCaseDataStore, _dataStoreProvider);
         }
 
         public IEnumerable<string> GetTestCaseIds()

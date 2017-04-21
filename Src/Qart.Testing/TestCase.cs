@@ -17,16 +17,34 @@ namespace Qart.Testing
         public IDataStore DataStorage { get; private set; }
         public string Id { get; private set; }
 
-        internal TestCase(string id, ITestSystem testSystem, IDataStore dataStore)
+        private readonly IDataStoreProvider _dataStoreProvider;
+
+        internal TestCase(string id, ITestSystem testSystem, IDataStore dataStore, IDataStoreProvider dataStoreProvider)
         {
             TestSystem = testSystem;
             DataStorage = dataStore;
             Id = id;
+            _dataStoreProvider = dataStoreProvider;
         }
 
         public Stream GetReadStream(string id)
         {
-            return DataStorage.GetReadStream(id);
+            var ds = DataStorage;
+            Uri uri;
+            if (Uri.TryCreate(id, UriKind.Absolute, out uri))
+            {
+                if (uri.Scheme == "ds")
+                {
+                    ds = _dataStoreProvider.GetDataStore(uri.Host);
+                    id = uri.PathAndQuery.Substring(1);
+                }
+                else
+                {
+                    throw new NotSupportedException(string.Format("Not supported uri scheme [{0}]", uri.Scheme));
+                }
+            }
+
+            return ds.GetReadStream(id);
         }
 
         public Stream GetWriteStream(string id)
@@ -82,8 +100,8 @@ namespace Qart.Testing
             var xmlDocument = new XmlDocument();
             testCase.UsingXmlReader(id, xmlDocument.Load);
 
-            string overrideId = id+".override";
-            if(testCase.Contains(overrideId))
+            string overrideId = id + ".override";
+            if (testCase.Contains(overrideId))
             {
                 xmlDocument.OverrideWith(testCase.GetXmlDocument(overrideId));
             }
@@ -122,7 +140,7 @@ namespace Qart.Testing
         public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
         {
             string exclusionListFileName = resultName + ".exclude.xpath";
-            if(testCase.Contains(exclusionListFileName))
+            if (testCase.Contains(exclusionListFileName))
             {
                 doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)));
             }

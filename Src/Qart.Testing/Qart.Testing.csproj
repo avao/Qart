@@ -62,6 +62,7 @@
     <Compile Include="ActionPipeline\IPipelineActionFactory.cs" />
     <Compile Include="ActionPipeline\IPipelineContextFactory.cs" />
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="Framework\DataStoreProvider.cs" />
     <Compile Include="Framework\OptionsExtensions.cs" />
     <Compile Include="DummyTagProvider.cs" />
     <Compile Include="Framework\TestCaseContextExtensions.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Framework\UrlBasedParameterExtraction.cs" />
     <Compile Include="Framework\XDocumentDescriptionWriter.cs" />
     <Compile Include="IContentProcessor.cs" />
+    <Compile Include="IDataStoreProvider.cs" />
     <Compile Include="IDescriptionWriter.cs" />
     <Compile Include="IPipelineAction.cs" />
     <Compile Include="IProvidePipelineActionDescription.cs" />

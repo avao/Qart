@@ -15,7 +15,12 @@ namespace Qart.Testing
         private readonly ISchedule<TestCase> _schedule;
         private readonly ITestCaseFilter _testCaseFilter;
 
-        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule, ITestCaseFilter testCaseFilter = null)
+        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule)
+            : this(testSystem, processorResolver, testCaseLoggerFactory, logManager, csTokensProvider, schedule, null)
+        {
+        }
+
+        public CyberTester(ITestSystem testSystem, ITestCaseProcessorFactory processorResolver, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule, ITestCaseFilter testCaseFilter)
         {
             _testSystem = testSystem;
             _testCaseLoggerFactory = testCaseLoggerFactory;
