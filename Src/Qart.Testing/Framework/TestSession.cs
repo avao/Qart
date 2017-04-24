@@ -35,7 +35,7 @@ namespace Qart.Testing.Framework
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> csTokensProvider, ISchedule<TestCase> schedule)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ISchedule<TestCase> schedule)
         {
             _results = new ConcurrentBag<TestCaseResult>();
             _customTestSessions = customTestSessions;

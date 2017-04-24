@@ -22,6 +22,11 @@ namespace Qart.Testing.Framework
             return GetCsv(options, "excludeTags");
         }
 
+        public static int GetWorkersCount(this IDictionary<string, string> options)
+        {
+            return options.GetOptionalValue("workersCount", 1, int.Parse);
+        }
+
         private static IEnumerable<string> GetCsv(IDictionary<string, string> options, string tagName)
         {
             return options.GetOptionalValue(tagName, Enumerable.Empty<string>(), t => t.ToLower().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));

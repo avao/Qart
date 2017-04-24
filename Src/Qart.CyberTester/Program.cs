@@ -4,11 +4,8 @@ using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Testing;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Qart.CyberTester
@@ -17,9 +14,6 @@ namespace Qart.CyberTester
     {
         [Option('d', "dir", Required = false, HelpText = "Path to the directory(s) with testcase(s).")]
         public string Dir { get; set; }
-
-        [Option('r', "rebaseline", Required = false, HelpText = "Overwrites expected results")]
-        public bool Rebaseline { get; set; }
 
         [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'", DefaultValue = "")]
         public string Options { get; set; }
@@ -49,14 +43,12 @@ namespace Qart.CyberTester
 
         static int Execute(CommandlineOptions options)
         {
-            Logger.DebugFormat("Rebaseline [{0}], TestCases [{1}]", options.Rebaseline, options.Dir);
+            Logger.DebugFormat("TestCases [{0}]", options.Dir);
 
             var container = Bootstrapper.CreateContainer(new FileBasedDataStore(options.Dir));
 
-            var tester = container.Resolve<Testing.CyberTester>();
-
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
-            var results = tester.RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
+            var results = container.Resolve<Testing.CyberTester>().RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
 
             var failedTestsCount = results.Count(_ => _.Exception != null);
             var nonMutedfailedTestsCount = results.Count(_ => _.Exception != null && !_.IsMuted);
