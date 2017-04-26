@@ -13,7 +13,7 @@ namespace Qart.Core.Tests.Xml
 {
     class XmlDocumentExtensionsTest
     {
-        readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true, null, null);
+        readonly ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true, null, null);
 
         [TestCase("Override/RepeatedElements")]
         public void Override(string testId)

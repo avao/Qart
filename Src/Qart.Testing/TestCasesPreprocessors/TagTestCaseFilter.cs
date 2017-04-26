@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Qart.Testing.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Qart.Testing.Framework
+namespace Qart.Testing.TestSystem
 {
-    public class TagTestCaseFilter : ITestCaseFilter
+    public class TagTestCaseFilter : ITestCasesPreprocessor
     {
         private readonly ITagProvider _tagProvider;
 
@@ -13,7 +14,12 @@ namespace Qart.Testing.Framework
             _tagProvider = tagProvider;
         }
 
-        public bool ShouldProcess(TestCase testCase, IDictionary<string, string> options)
+        public IEnumerable<TestCase> Execute(IEnumerable<TestCase> testCases, IDictionary<string, string> options)
+        {
+            return testCases.Where(_ => ShouldProcess(_, options));
+        }
+
+        private bool ShouldProcess(TestCase testCase, IDictionary<string, string> options)
         {
             IEnumerable<string> tags = _tagProvider.GetTags(testCase).Select(t => t.ToLower()).ToList();
 
@@ -24,8 +30,5 @@ namespace Qart.Testing.Framework
                 ? tags.All(t => !excludeTags.Contains(t))
                 : tags.Any(t => includeTags.Contains(t) && !excludeTags.Contains(t));           
         }
-
-
-
     }
 }

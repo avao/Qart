@@ -73,6 +73,7 @@
     <Compile Include="Framework\SequentialCriticalSectionTokensProvider.cs" />
     <Compile Include="Framework\TestCaseContext.cs" />
     <Compile Include="Framework\ResolvableItemDescription.cs" />
+    <Compile Include="Framework\TestStorage.cs" />
     <Compile Include="Framework\UrlBasedParameterExtraction.cs" />
     <Compile Include="Framework\XDocumentDescriptionWriter.cs" />
     <Compile Include="IContentProcessor.cs" />
@@ -83,24 +84,24 @@
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
     <Compile Include="ITagProvider.cs" />
-    <Compile Include="ITestCaseFilter.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorFactory.cs" />
     <Compile Include="ICriticalSectionTokensProvider.cs" />
     <Compile Include="ITestSession.cs" />
     <Compile Include="ITestCaseProcessor.cs" />
+    <Compile Include="ITestStorage.cs" />
     <Compile Include="ITestSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamTransformers\ConcatStreamTransformer.cs" />
     <Compile Include="StreamTransformers\RefStreamTransformer.cs" />
-    <Compile Include="Framework\TagTestCaseFilter.cs" />
+    <Compile Include="ITestCasesPreprocessor.cs" />
+    <Compile Include="TestCasesPreprocessors\TagTestCaseFilter.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="Framework\TestCaseLoggerFactory.cs" />
     <Compile Include="Framework\TestCaseProcessorInfoExtractor.cs" />
     <Compile Include="ActionPipeline\UrlBasedActionPipelineProcessor.cs" />
     <Compile Include="TestCaseResult.cs" />
     <Compile Include="Framework\TestSession.cs" />
-    <Compile Include="Framework\TestSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

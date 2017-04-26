@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Qart.Testing
 {
     public interface ITestSystem
     {
-        TestCase GetTestCase(string id);
-        IEnumerable<string> GetTestCaseIds();
+        IEnumerable<TestCase> GetTestCases(IDictionary<string, string> options);
     }
 }

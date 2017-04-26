@@ -11,6 +11,7 @@ using Castle.Facilities.TypedFactory;
 using Qart.Testing.Extensions.Windsor;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using System;
+using Qart.Testing.TestSystem;
 
 namespace Qart.CyberTester
 {
@@ -28,13 +29,13 @@ namespace Qart.CyberTester
 
             kernel.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
             kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
-            kernel.Register(Component.For<ITestSystem>().ImplementedBy<TestSystem>());
-            kernel.Register(Component.For<Testing.CyberTester>().ImplementedBy<Testing.CyberTester>());
+            kernel.Register(Component.For<ITestStorage>().ImplementedBy<TestStorage>());
 
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
             kernel.Register(Component.For<ICriticalSectionTokensProvider<TestCase>>().ImplementedBy<SequentialCriticalSectionTokensProvider<TestCase>>());
-            kernel.Register(Component.For<ITestCaseFilter>().ImplementedBy<TagTestCaseFilter>());
+
             kernel.Register(Component.For<ITagProvider>().ImplementedBy<DummyTagProvider>());
+            kernel.Register(Component.For<ITestCasesPreprocessor>().ImplementedBy<TagTestCaseFilter>());
 
             //DataStores. unnamed one is the default
             kernel.Register(Component.For<IDataStoreProvider>().ImplementedBy<DataStoreProvider>());

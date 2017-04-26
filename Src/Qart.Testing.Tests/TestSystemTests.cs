@@ -9,7 +9,7 @@ namespace Qart.Testing.Tests
 {
     class TestSystemTests
     {
-        private readonly ITestSystem TestSystem = new TestSystem(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "TestCases"))), _ => _.Contains(".test"), null, null);
+        private readonly ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "TestCases"))), _ => _.Contains(".test"), null, null);
 
         [Test]
         public void GetTestCases()

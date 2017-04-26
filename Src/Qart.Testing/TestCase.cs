@@ -13,15 +13,15 @@ namespace Qart.Testing
 {
     public class TestCase : IDataStore
     {
-        public ITestSystem TestSystem { get; private set; }
+        public ITestStorage TestStorage { get; private set; }
         public IDataStore DataStorage { get; private set; }
         public string Id { get; private set; }
 
         private readonly IDataStoreProvider _dataStoreProvider;
 
-        internal TestCase(string id, ITestSystem testSystem, IDataStore dataStore, IDataStoreProvider dataStoreProvider)
+        internal TestCase(string id, ITestStorage testStorage, IDataStore dataStore, IDataStoreProvider dataStoreProvider)
         {
-            TestSystem = testSystem;
+            TestStorage = testStorage;
             DataStorage = dataStore;
             Id = id;
             _dataStoreProvider = dataStoreProvider;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Testing.Framework
 {
-    public class TestSession : IDisposable
+    internal class TestSession : IDisposable
     {
         private readonly IEnumerable<ITestSession> _customTestSessions;
         private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;

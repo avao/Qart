@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Qart.Testing.Framework
 {
-    public class TestSystem : ITestSystem
+    public class TestStorage : ITestStorage
     {
         public IDataStore DataStorage { get; private set; }
 
@@ -15,7 +15,7 @@ namespace Qart.Testing.Framework
         private readonly Func<IDataStore, bool> _isTestCasePredicate;
         private readonly IDataStoreProvider _dataStoreProvider;
 
-        public TestSystem(IDataStore dataStorage, Func<IDataStore, bool> isTestCasePredicate, IContentProcessor processor, IDataStoreProvider dataStoreProvider)
+        public TestStorage(IDataStore dataStorage, Func<IDataStore, bool> isTestCasePredicate, IContentProcessor processor, IDataStoreProvider dataStoreProvider)
         {
             _isTestCasePredicate = isTestCasePredicate;
             ContentProcessor = processor;
