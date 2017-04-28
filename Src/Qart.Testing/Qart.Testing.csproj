@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionPipeline\Actions\SleepAction.cs" />
     <Compile Include="ActionPipeline\IActionPipelineProcessor.cs" />
     <Compile Include="ActionPipeline\IPipelineActionFactory.cs" />
     <Compile Include="ActionPipeline\IPipelineContextFactory.cs" />
