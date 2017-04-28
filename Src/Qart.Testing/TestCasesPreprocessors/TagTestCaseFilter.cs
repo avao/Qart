@@ -3,20 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Qart.Testing.TestSystem
+namespace Qart.Testing.TestCasesPreprocessors
 {
     public class TagTestCaseFilter : ITestCasesPreprocessor
     {
         private readonly ITagProvider _tagProvider;
 
-        public TagTestCaseFilter(ITagProvider tagProvider)
+        public TagTestCaseFilter(ITagProvider tagProvider = null)
         {
             _tagProvider = tagProvider;
         }
 
         public IEnumerable<TestCase> Execute(IEnumerable<TestCase> testCases, IDictionary<string, string> options)
         {
-            return testCases.Where(_ => ShouldProcess(_, options));
+            if (_tagProvider != null)
+                testCases = testCases.Where(_ => ShouldProcess(_, options));
+            return testCases;
         }
 
         private bool ShouldProcess(TestCase testCase, IDictionary<string, string> options)
@@ -28,7 +30,7 @@ namespace Qart.Testing.TestSystem
 
             return !includeTags.Any()
                 ? tags.All(t => !excludeTags.Contains(t))
-                : tags.Any(t => includeTags.Contains(t) && !excludeTags.Contains(t));           
+                : tags.Any(t => includeTags.Contains(t) && !excludeTags.Contains(t));
         }
     }
 }

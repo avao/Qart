@@ -11,7 +11,7 @@ using Castle.Facilities.TypedFactory;
 using Qart.Testing.Extensions.Windsor;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using System;
-using Qart.Testing.TestSystem;
+using Qart.Testing.TestCasesPreprocessors;
 
 namespace Qart.CyberTester
 {
@@ -34,7 +34,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
             kernel.Register(Component.For<ICriticalSectionTokensProvider<TestCase>>().ImplementedBy<SequentialCriticalSectionTokensProvider<TestCase>>());
 
-            kernel.Register(Component.For<ITagProvider>().ImplementedBy<DummyTagProvider>());
+            kernel.Register(Component.For<ITestCasesPreprocessor>().ImplementedBy<TagTestCaseFilter>());
             kernel.Register(Component.For<ITestCasesPreprocessor>().ImplementedBy<TagTestCaseFilter>());
 
             //DataStores. unnamed one is the default

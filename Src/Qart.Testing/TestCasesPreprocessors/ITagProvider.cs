@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Qart.Testing
+namespace Qart.Testing.TestCasesPreprocessors
 {
     public interface ITagProvider
     {

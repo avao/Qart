@@ -64,7 +64,6 @@
     <Compile Include="BaseLineAssert.cs" />
     <Compile Include="Framework\DataStoreProvider.cs" />
     <Compile Include="Framework\OptionsExtensions.cs" />
-    <Compile Include="DummyTagProvider.cs" />
     <Compile Include="Framework\TestCaseContextExtensions.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />
     <Compile Include="CyberTester.cs" />
@@ -83,7 +82,8 @@
     <Compile Include="IProvidePipelineActionDescription.cs" />
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
-    <Compile Include="ITagProvider.cs" />
+    <Compile Include="TestCasesPreprocessors\FuncBasedTestCasesPreprocessor.cs" />
+    <Compile Include="TestCasesPreprocessors\ITagProvider.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
     <Compile Include="ITestCaseProcessorFactory.cs" />
     <Compile Include="ICriticalSectionTokensProvider.cs" />
