@@ -35,7 +35,6 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<ICriticalSectionTokensProvider<TestCase>>().ImplementedBy<SequentialCriticalSectionTokensProvider<TestCase>>());
 
             kernel.Register(Component.For<ITestCasesPreprocessor>().ImplementedBy<TagTestCaseFilter>());
-            kernel.Register(Component.For<ITestCasesPreprocessor>().ImplementedBy<TagTestCaseFilter>());
 
             //DataStores. unnamed one is the default
             kernel.Register(Component.For<IDataStoreProvider>().ImplementedBy<DataStoreProvider>());
