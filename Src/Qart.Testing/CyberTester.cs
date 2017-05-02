@@ -28,7 +28,7 @@ namespace Qart.Testing
         {
             //_logger.Debug("Looking for test cases.");
             var testCases = _testStorage.GetTestCaseIds().Select(_ => _testStorage.GetTestCase(_));
-            _testCasesPreProcessors.Aggregate(testCases, (acc, p) => p.Execute(acc, options));
+            testCases = _testCasesPreProcessors.Aggregate(testCases, (acc, p) => p.Execute(acc, options));
             using (var testSession = new TestSession(customSessions, _processorResolver, _testCaseLoggerFactory, _logManager, options, _schedule))
             {
                 testSession.Schedule(testCases, options.GetWorkersCount());
