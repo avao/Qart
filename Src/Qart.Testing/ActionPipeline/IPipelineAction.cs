@@ -1,6 +1,6 @@
 ﻿using Qart.Testing.Framework;
 
-namespace Qart.Testing
+namespace Qart.Testing.ActionPipeline
 {
     public interface IPipelineAction<T>
     {

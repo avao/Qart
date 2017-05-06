@@ -1,5 +1,6 @@
 ﻿using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
+using Qart.Testing.ActionPipeline;
 
 namespace Qart.Testing.Extensions.Windsor
 {

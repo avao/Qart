@@ -1,4 +1,4 @@
-﻿using Qart.Testing;
+﻿using Qart.Testing.ActionPipeline;
 using Qart.Testing.Framework;
 
 namespace Qart.Wheels.TestAutomation.PipelineActions
