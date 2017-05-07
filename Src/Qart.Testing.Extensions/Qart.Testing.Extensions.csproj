@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestClient\HttpClientExtensions.cs" />
     <Compile Include="TeamCity\TeamCityTestSession.cs" />
     <Compile Include="Windsor\ContainerExtensions.cs" />
     <Compile Include="Windsor\TestCaseProcessorTypedFactoryComponentSelector.cs" />

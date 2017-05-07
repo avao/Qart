@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,8 +64,11 @@
     <Compile Include="ActionPipeline\IPipelineActionFactory.cs" />
     <Compile Include="ActionPipeline\IPipelineContextFactory.cs" />
     <Compile Include="ActionPipeline\TestCaseExtensions.cs" />
+    <Compile Include="AssertException.cs" />
     <Compile Include="BaseLineAssert.cs" />
     <Compile Include="Framework\DataStoreProvider.cs" />
+    <Compile Include="Framework\Http\HttpClientExtensions.cs" />
+    <Compile Include="Framework\Http\HttpTaskExtensions.cs" />
     <Compile Include="Framework\OptionsExtensions.cs" />
     <Compile Include="Framework\TestCaseContextExtensions.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />
