@@ -16,7 +16,7 @@ namespace Qart.Testing.Framework.Http
             if (!task.Result.IsSuccessStatusCode)
             {
                 var exception = new AssertException("Response code does not indicate success.");
-                exception.Data.Add("response", task.Result);
+                exception.Data.Add("content", task.Result.Content.ReadAsStringAsync().Result);
                 throw exception;
             }
 
