@@ -38,6 +38,9 @@ namespace Qart.Testing
                     ds = _dataStoreProvider.GetDataStore(uri.Host);
                     id = uri.PathAndQuery.Substring(1);
                 }
+                else if (uri.Scheme == "file")
+                {
+                }
                 else
                 {
                     throw new NotSupportedException(string.Format("Not supported uri scheme [{0}]", uri.Scheme));
