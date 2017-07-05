@@ -49,6 +49,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<IStreamTransformerResolver>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
             kernel.Register(Component.For<IContentProcessor>().ImplementedBy<ContentProcessor>());
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatStreamTransformer>().Named("concat"));
+            kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatJsonArrayStreamTransformer>().Named("concatArray"));
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));
                         
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));

@@ -11,9 +11,9 @@ namespace Qart.Core.Io
             stream.UsingStreamReader(reader => { action(reader); return true; });
         }
 
-        public static T UsingStreamReader<T>(this Stream stream, Func<StreamReader,T> action)
+        public static T UsingStreamReader<T>(this Stream stream, Func<StreamReader, T> action)
         {
-            using(var reader = new StreamReader(stream))
+            using (var reader = new StreamReader(stream))
             {
                 return action(reader);
             }
@@ -27,6 +27,12 @@ namespace Qart.Core.Io
                 var bytes = Encoding.UTF8.GetBytes(content);
                 dst.Write(bytes, 0, bytes.Length);
             }
+        }
+
+        public static void WriteUtf(this Stream dst, string content)
+        {
+            var bytes = UTF8Encoding.UTF8.GetBytes(content);
+            dst.Write(bytes, 0, bytes.Length);
         }
     }
 }

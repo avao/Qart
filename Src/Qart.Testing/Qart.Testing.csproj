@@ -88,6 +88,7 @@
     <Compile Include="IProvidePipelineActionDescription.cs" />
     <Compile Include="IStreamTransformer.cs" />
     <Compile Include="IStreamTransformerResolver.cs" />
+    <Compile Include="StreamTransformers\ConcatJsonArrayStreamTransformer.cs" />
     <Compile Include="TestCasesPreprocessors\FuncBasedTestCasesPreprocessor.cs" />
     <Compile Include="TestCasesPreprocessors\ITagProvider.cs" />
     <Compile Include="ITestCaseLoggerFactory.cs" />
