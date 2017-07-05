@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Qart.Core.Io;
 using Qart.Core.DataStore;
-using System.Text;
 using Qart.Core.Text;
 
 namespace Qart.Testing.StreamTransformers
@@ -25,6 +24,7 @@ namespace Qart.Testing.StreamTransformers
             var resultStream = new MemoryStream();
 
             resultStream.WriteUtf(currentContent);
+            resultStream.WriteUtf(",");
             resultStream.WriteUtf(dataStore.GetContent((string)param).RightOf("["));
 
             resultStream.Seek(0, SeekOrigin.Begin);
