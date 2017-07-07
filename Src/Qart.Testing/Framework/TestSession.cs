@@ -51,6 +51,12 @@ namespace Qart.Testing.Framework
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
         {
+            if (_customTestSessions != null)
+            {
+                foreach (var session in _customTestSessions)
+                    session.OnSessionStart(Options);
+            }
+
             _schedule.Enqueue(testCases);
             for (int i = 0; i < workerCount; ++i)
             {

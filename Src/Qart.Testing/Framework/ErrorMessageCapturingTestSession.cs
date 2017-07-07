@@ -2,10 +2,16 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using System.Collections.Generic;
+
 namespace Qart.Testing.Framework
 {
     public class ErrorMessageCapturingTestSession : ITestSession
     {
+        public void OnSessionStart(IDictionary<string, string> options)
+        {
+        }
+
         public void OnBegin(TestCaseContext ctx)
         {
         }

@@ -1,12 +1,17 @@
 ﻿using JetBrains.TeamCity.ServiceMessages.Write;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Qart.Testing.Extensions.TeamCity
 {
     public class TeamCityTestSession : ITestSession
     {
         private readonly ServiceMessageFormatter _formatter = new ServiceMessageFormatter();
+
+        public void OnSessionStart(IDictionary<string, string> options)
+        {
+        }
 
         public void OnBegin(Framework.TestCaseContext ctx)
         {

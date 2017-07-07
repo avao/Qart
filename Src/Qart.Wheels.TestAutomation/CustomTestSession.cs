@@ -1,8 +1,7 @@
-﻿using System;
-using System.Xml.Linq;
-using Common.Logging;
+﻿using Common.Logging;
 using Qart.Testing;
 using Qart.Testing.Framework;
+using System.Collections.Generic;
 
 namespace Qart.Wheels.TestAutomation
 {
@@ -13,6 +12,10 @@ namespace Qart.Wheels.TestAutomation
         {
             _logger = logManager.GetLogger<CustomTestSession>();
             _logger.InfoFormat("Ctor");
+        }
+
+        public void OnSessionStart(IDictionary<string, string> options)
+        {
         }
 
         public void OnBegin(TestCaseContext ctx)
