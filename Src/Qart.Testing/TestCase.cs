@@ -29,6 +29,34 @@ namespace Qart.Testing
 
         public Stream GetReadStream(string id)
         {
+            var targetInfo = GetTargetInfo(id);
+            return targetInfo.Item1.GetReadStream(targetInfo.Item2);
+        }
+
+        public Stream GetWriteStream(string id)
+        {
+            var targetInfo = GetTargetInfo(id);
+            return targetInfo.Item1.GetWriteStream(targetInfo.Item2);
+        }
+
+        public bool Contains(string id)
+        {
+            var targetInfo = GetTargetInfo(id);
+            return targetInfo.Item1.Contains(targetInfo.Item2);
+        }
+
+        public IEnumerable<string> GetItemIds(string tag)
+        {
+            return DataStorage.GetItemIds(tag);
+        }
+
+        public IEnumerable<string> GetItemGroups(string group)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Tuple<IDataStore, string> GetTargetInfo(string id)
+        {
             var ds = DataStorage;
             Uri uri;
             if (Uri.TryCreate(id, UriKind.Absolute, out uri))
@@ -47,27 +75,7 @@ namespace Qart.Testing
                 }
             }
 
-            return ds.GetReadStream(id);
-        }
-
-        public Stream GetWriteStream(string id)
-        {
-            return DataStorage.GetWriteStream(id);
-        }
-
-        public bool Contains(string id)
-        {
-            return DataStorage.Contains(id);
-        }
-
-        public IEnumerable<string> GetItemIds(string tag)
-        {
-            return DataStorage.GetItemIds(tag);
-        }
-
-        public IEnumerable<string> GetItemGroups(string group)
-        {
-            throw new NotImplementedException();
+            return new Tuple<IDataStore, string>(ds, id);
         }
     }
 
