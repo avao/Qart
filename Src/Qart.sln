@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core", "Qart.Core\Qart.Core.csproj", "{2444BC84-514F-41D8-80D5-EF171F514C91}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Qart.Wheels.SystemTests", "Qart.Wheels.SystemTests\Qart.Wheels.SystemTests.mdproj", "{E663D521-82C5-4F21-A745-A3811F41C0EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Extensions", "Qart.Testing.Extensions\Qart.Testing.Extensions.csproj", "{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Rest.Core", "Qart.Rest.Core\Qart.Rest.Core.csproj", "{ED10DA42-EECC-42A9-B041-3408750C8C2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
