@@ -9,7 +9,12 @@ namespace Qart.Testing.Framework
     {
         public static bool IsRebaseline(this IDictionary<string, string> options)
         {
-            return options.GetOptionalValue("rebase", false, bool.Parse);
+            return options.GetOptionalValue("ct.rebase", false, bool.Parse);
+        }
+
+        public static string GetDirectory(this IDictionary<string, string> options)
+        {
+            return options.GetOptionalValue("ct.dir", null);
         }
 
         public static IEnumerable<string> GetIncludeTags(this IDictionary<string, string> options)

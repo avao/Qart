@@ -15,6 +15,9 @@ namespace Qart.CyberTester
         [Option('d', "dir", Required = false, HelpText = "Path to the directory(s) with testcase(s).")]
         public string Dir { get; set; }
 
+        [Option('r', "rebase", Required = false, HelpText = "Specifies whether to update expectations with actual data or not.")]
+        public bool Rebase { get; set; }
+
         [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'", DefaultValue = "")]
         public string Options { get; set; }
 
@@ -48,6 +51,9 @@ namespace Qart.CyberTester
             var container = Bootstrapper.CreateContainer(new FileBasedDataStore(options.Dir));
 
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
+            parsedOptions.Add("ct.dir", options.Dir);
+            parsedOptions.Add("ct.rebase", options.Rebase ? bool.TrueString : bool.FalseString);
+
             var results = container.Resolve<Testing.CyberTester>().RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
 
             var failedTestsCount = results.Count(_ => _.Exception != null);
