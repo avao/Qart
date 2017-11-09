@@ -1,7 +1,9 @@
-﻿using Qart.Core.Collections;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Qart.Testing.ActionPipeline;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Qart.Testing.Framework
@@ -31,6 +33,52 @@ namespace Qart.Testing.Framework
             {
                 pipelineContextFactory.Release(pipelineContext);
             }
-        }        
+        }
+
+
+        public static void AssertContent(this TestCaseContext testCaseContext, JToken item, string path)
+        {
+            testCaseContext.AssertContent(SerialiseIndented(item), path);
+        }
+
+        public static void AssertContent(this TestCaseContext testCaseContext, string content, string path)
+        {
+            testCaseContext.TestCase.AssertContent(content, path, testCaseContext.Options.IsRebaseline());
+        }
+
+        public static void AssertContentJson(this TestCaseContext testCaseContext, string content, string path)
+        {
+            testCaseContext.AssertContent(JsonConvert.DeserializeObject<JToken>(content), path);
+        }
+
+        private static string SerialiseIndented(object o)
+        {
+            return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Formatting.Indented });
+        }
+
+        public static void AssertContentJsonMany(this TestCaseContext testCaseContext, string content, string dir, Func<JToken, string> itemNameFunc)
+        {
+            var exceptions = new List<Exception>();
+            //TODO check all is present
+            var items = JsonConvert.DeserializeObject<IEnumerable<JToken>>(content);
+            foreach (var item in items)
+            {
+                var path = Path.Combine(dir, itemNameFunc(item));
+
+                try
+                {
+                    testCaseContext.AssertContent(item, path);
+                }
+                catch (Exception e)
+                {
+                    exceptions.Add(e);
+                }
+            }
+
+            if (exceptions.Count > 0)
+            {
+                throw new AggregateException(exceptions);
+            }
+        }
     }
 }
