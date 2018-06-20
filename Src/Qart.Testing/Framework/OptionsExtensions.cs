@@ -17,6 +17,11 @@ namespace Qart.Testing.Framework
             return options.GetOptionalValue("ct.dir", null);
         }
 
+        public static bool GetDeferExceptions(this IDictionary<string, string> options)
+        {
+            return options.GetOptionalValue("ct.deferExceptions", false, bool.Parse);
+        }
+
         public static IEnumerable<string> GetIncludeTags(this IDictionary<string, string> options)
         {
             return GetCsv(options, "includeTags");

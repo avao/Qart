@@ -21,7 +21,7 @@ namespace Qart.Testing.ActionPipeline
 
         public void Process(TestCaseContext c)
         {
-            c.ExecuteActions(_pipelineContextFactory, _actionFactory, ActionDecsriptions);
+            c.ExecuteActions(_pipelineContextFactory, _actionFactory, ActionDecsriptions, c.Options.GetDeferExceptions());
         }
 
         private static ResolvableItemDescription Convert(object actionDescription)

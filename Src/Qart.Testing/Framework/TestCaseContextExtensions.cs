@@ -10,11 +10,12 @@ namespace Qart.Testing.Framework
 {
     public static class TestCaseContextExtensions
     {
-        public static void ExecuteActions<T>(this TestCaseContext c, IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions)
+        public static void ExecuteActions<T>(this TestCaseContext c, IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd)
         {
             var pipelineContext = pipelineContextFactory.CreateContext(c);
             try
             {
+                IList<Exception> exceptions = null;
                 foreach (var actionDescription in actionDescriptions)
                 {
                     c.Logger.DebugFormat("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + _.Value)));
@@ -23,11 +24,29 @@ namespace Qart.Testing.Framework
                     {
                         action.Execute(c, pipelineContext);
                     }
+                    catch (Exception ex)
+                    {
+                        if(suppressExceptionsTilltheEnd)
+                        {
+                            if(exceptions == null)
+                            {
+                                exceptions = new List<Exception>();
+                            }
+                            exceptions.Add(ex);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                     finally
                     {
                         actionFactory.Release(action);
                     }
                 }
+
+                if (exceptions != null)
+                    throw new AggregateException(exceptions);
             }
             finally
             {

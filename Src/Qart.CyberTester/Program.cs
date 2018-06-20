@@ -18,6 +18,9 @@ namespace Qart.CyberTester
         [Option('r', "rebase", Required = false, HelpText = "Specifies whether to update expectations with actual data or not.")]
         public bool Rebase { get; set; }
 
+        [Option('s', "suppressExceptions", Required = false, HelpText = "Specifies whether to defer exceptions while executing actions to the end.")]
+        public bool SuppressExceptions { get; set; }
+
         [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'", DefaultValue = "")]
         public string Options { get; set; }
 
@@ -53,6 +56,7 @@ namespace Qart.CyberTester
             var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
             parsedOptions.Add("ct.dir", options.Dir);
             parsedOptions.Add("ct.rebase", options.Rebase ? bool.TrueString : bool.FalseString);
+            parsedOptions.Add("ct.deferExceptions", options.SuppressExceptions ? bool.TrueString : bool.FalseString);
 
             var results = container.Resolve<Testing.CyberTester>().RunTests(container.ResolveAll<ITestSession>(), parsedOptions).ToList();
 
