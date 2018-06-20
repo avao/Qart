@@ -148,6 +148,11 @@ namespace Qart.Testing
             testCase.AssertContent(actualContent, resultName, (actual, expected) => { }, rebaseline);
         }
 
+        public static void AssertContentJson(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
+        {
+            JsonConvert.SerializeObject(JsonConvert.DeserializeObject(actualContent), new JsonSerializerSettings { Formatting=Newtonsoft.Json.Formatting.Indented});
+        }
+
         public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
         {
             string exclusionListFileName = resultName + ".exclude.xpath";

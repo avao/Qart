@@ -75,6 +75,8 @@
     <Compile Include="Framework\Http\HttpClientExtensions.cs" />
     <Compile Include="Framework\Http\HttpClientLoggingExtensions.cs" />
     <Compile Include="Framework\Http\HttpTaskExtensions.cs" />
+    <Compile Include="Framework\Json\IDataStoreJsonExtensions.cs" />
+    <Compile Include="Framework\Json\JsonObjectExtensions.cs" />
     <Compile Include="Framework\OptionsExtensions.cs" />
     <Compile Include="Framework\TestCaseContextExtensions.cs" />
     <Compile Include="Framework\ContentProcessor.cs" />

@@ -11,6 +11,11 @@ namespace Qart.Testing.Framework.Http
             return client.GetAsync(relativeUri).GetContentEnsureSuccess();
         }
 
+        public static string DeleteEnsureSuccess(this HttpClient client, string relativeUri)
+        {
+            return client.DeleteAsync(relativeUri).GetContentEnsureSuccess();
+        }
+
         public static string PostEnsureSuccess(this HttpClient client, string relativeUri, string content)
         {
             if (content.StartsWith("<?xml"))
