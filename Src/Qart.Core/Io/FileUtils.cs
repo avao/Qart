@@ -35,7 +35,7 @@ namespace Qart.Core.Io
             {
                 return new FileStream(path, fileMode, fileAccess);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 //TODO more specific exception
             }

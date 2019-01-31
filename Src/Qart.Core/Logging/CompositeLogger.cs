@@ -9,8 +9,8 @@ namespace Qart.Core.Logging
     {
         public class LoggerInfo
         {
-            public ILog Logger { get; private set; }
-            public bool Reusable { get; private set; }
+            public ILog Logger { get; }
+            public bool Reusable { get; }
 
             public LoggerInfo(ILog logger, bool reusable)
             {
@@ -28,49 +28,15 @@ namespace Qart.Core.Logging
             _loggers = _loggerInfos.Select(_ => _.Logger).ToList();
         }
 
-
-        public IVariablesContext GlobalVariablesContext
-        {
-            get { return _loggers.First().GlobalVariablesContext; }
-        }
-
-
-
-        public bool IsDebugEnabled
-        {
-            get { return _loggers.Any(_ => _.IsDebugEnabled); }
-        }
-
-        public bool IsErrorEnabled
-        {
-            get { return _loggers.Any(_ => _.IsErrorEnabled); }
-        }
-
-        public bool IsFatalEnabled
-        {
-            get { return _loggers.Any(_ => _.IsFatalEnabled); }
-        }
-
-        public bool IsInfoEnabled
-        {
-            get { return _loggers.Any(_ => _.IsInfoEnabled); }
-        }
-
-        public bool IsTraceEnabled
-        {
-            get { return _loggers.Any(_ => _.IsTraceEnabled); }
-        }
-
-        public bool IsWarnEnabled
-        {
-            get { return _loggers.Any(_ => _.IsWarnEnabled); }
-        }
-
-        public IVariablesContext ThreadVariablesContext
-        {
-            get { return _loggers.First().ThreadVariablesContext; }
-        }
-
+        public bool IsDebugEnabled => _loggers.Any(_ => _.IsDebugEnabled);
+        public bool IsErrorEnabled => _loggers.Any(_ => _.IsErrorEnabled);
+        public bool IsFatalEnabled => _loggers.Any(_ => _.IsFatalEnabled);
+        public bool IsInfoEnabled => _loggers.Any(_ => _.IsInfoEnabled);
+        public bool IsTraceEnabled => _loggers.Any(_ => _.IsTraceEnabled);
+        public bool IsWarnEnabled => _loggers.Any(_ => _.IsWarnEnabled);
+        public IVariablesContext GlobalVariablesContext => _loggers.First().GlobalVariablesContext;
+        public IVariablesContext ThreadVariablesContext => _loggers.First().ThreadVariablesContext;
+        public INestedVariablesContext NestedThreadVariablesContext => _loggers.First().NestedThreadVariablesContext;
 
         public void Debug(IFormatProvider formatProvider, Action<FormatMessageHandler> formatMessageCallback, Exception exception)
         {

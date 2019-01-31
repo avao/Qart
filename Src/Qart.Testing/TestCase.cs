@@ -8,6 +8,7 @@ using System.Xml;
 using Qart.Core.Xml;
 using Qart.Core.DataStore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Qart.Testing
 {
@@ -121,12 +122,12 @@ namespace Qart.Testing
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, Action<string, string> failAction)
         {
-            string content = testCase.GetContent(resultName);
-            if (content != actualContent)
+            string expectedContent = testCase.GetContent(resultName);
+            if (expectedContent != actualContent)
             {
-                failAction(actualContent, content);
+                failAction(actualContent, expectedContent);
 
-                Assert.AreEqual(content, actualContent);
+                Assert.That(actualContent, Is.EqualTo(expectedContent));
                 Assert.Fail("Just in case...");
             }
         }
@@ -181,6 +182,21 @@ namespace Qart.Testing
                 Assert.AreEqual(expectedFormattedContent, actualFormattedContent);
                 Assert.Fail("Just in case...");
             }
+        }
+
+        public static void AssertContent(this TestCase testCase, JToken item, string path)
+        {
+            testCase.AssertContent(SerialiseIndented(item), path);
+        }
+
+        public static void AssertContentJson(this TestCase testCase, string content, string path)
+        {
+            testCase.AssertContent(JsonConvert.DeserializeObject<JToken>(content), path);
+        }
+
+        private static string SerialiseIndented(object o)
+        {
+            return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Newtonsoft.Json.Formatting.Indented });
         }
     }
 }

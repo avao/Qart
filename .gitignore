@@ -184,3 +184,4 @@ FakesAssemblies/
 
 # mono develop user preferences
 *.userprefs
+Src/.vs/
