@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\EnumerableExtensionsTests.cs" />
     <Compile Include="DataStore\ExtendedDataStoreTests.cs" />
     <Compile Include="Io\FileBasedStoreTests.cs" />
     <Compile Include="Io\SearchTests.cs" />
