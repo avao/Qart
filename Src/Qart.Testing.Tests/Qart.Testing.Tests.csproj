@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="DataStoreTests.cs" />
     <Compile Include="JsonExtensionTests.cs" />
+    <Compile Include="JsonPatchCreatorTests.cs" />
     <Compile Include="TestCaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSystemTests.cs" />

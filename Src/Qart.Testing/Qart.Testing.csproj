@@ -69,9 +69,10 @@
     <Compile Include="ActionPipeline\TestCaseExtensions.cs" />
     <Compile Include="AssertException.cs" />
     <Compile Include="BaseLineAssert.cs" />
+    <Compile Include="Diff\DiffItem.cs" />
     <Compile Include="Diff\IIdProvider.cs" />
-    <Compile Include="Diff\IDiffReporter.cs" />
     <Compile Include="Diff\JsonPatchCreator.cs" />
+    <Compile Include="Diff\PropertyBasedIdProvider.cs" />
     <Compile Include="Framework\DataStoreProvider.cs" />
     <Compile Include="Framework\Http\HttpClientExtensions.cs" />
     <Compile Include="Framework\Http\HttpClientLoggingExtensions.cs" />

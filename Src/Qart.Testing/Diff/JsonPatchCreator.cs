@@ -7,18 +7,20 @@ namespace Qart.Testing.Diff
 {
     public class JsonPatchCreator
     {
-        public static void Compare(JToken lhs, JToken rhs, IDiffReporter diffReporter, IIdProvider idProvider)
+        public static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, IIdProvider idProvider)
         {
-            Compare(lhs, rhs, Enumerable.Empty<string>(), diffReporter, idProvider);
+            return Compare(lhs, rhs, Enumerable.Empty<string>(), idProvider);
         }
 
-        public static void Compare(JToken lhs, JToken rhs, IEnumerable<string> path, IDiffReporter diffReporter, IIdProvider idProvider)
+        private static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, IEnumerable<string> path, IIdProvider idProvider)
         {
             if (rhs == null)
             {
                 if (lhs != null)
-                    diffReporter.OnRemoved(path, lhs);
-                return;
+                {
+                    yield return new DiffItem(path, lhs, null);
+                }
+                yield break;
             }
 
             switch (lhs)
@@ -26,100 +28,73 @@ namespace Qart.Testing.Diff
                 case null:
                     if (rhs != null)
                     {
-                        diffReporter.OnAdded(path, rhs);
+                        yield return new DiffItem(path, null, rhs);
                     }
                     break;
-
                 case JObject lhsJobj:
                     if (rhs is JObject rhsJobj)
                     {
-                        Compare(lhsJobj, rhsJobj, path, diffReporter, idProvider);
+                        var lhsOrderedKeys = lhsJobj.Properties().Select(p => p.Name);
+                        var rhsOrderedKeys = rhsJobj.Properties().Select(p => p.Name);
+                        foreach (var diff in CompareChildren(path, lhsOrderedKeys, rhsOrderedKeys, lhsJobj, rhsJobj, idProvider))
+                        {
+                            yield return diff;
+                        }
                     }
                     else
                     {
-                        diffReporter.OnChanged(path, lhs, rhs);
+                        yield return new DiffItem(path, lhs, rhs);
                     }
                     break;
                 case JArray lhsArray:
                     if (rhs is JArray rhsArray)
                     {
-                        Compare(lhsArray, rhsArray, path, diffReporter, idProvider);
+                        var lhsElements = IdentifyElements(lhsArray, path, idProvider);
+                        var rhsElements = IdentifyElements(rhsArray, path, idProvider);
+                        foreach (var diff in CompareChildren(path, lhsElements.Keys, rhsElements.Keys, lhsElements, rhsElements, idProvider))
+                        {
+                            yield return diff;
+                        }
                     }
                     else
                     {
-                        diffReporter.OnChanged(path, lhs, rhs);
+                        yield return new DiffItem(path, lhs, rhs);
                     }
                     break;
                 default:
-                    CompareAtomic(lhs, rhs, path, diffReporter, idProvider);
+                    if (lhs.Type != rhs.Type || lhs.ToString() != rhs.ToString()) //TODO compare type wise?
+                    {
+                        yield return new DiffItem(path, lhs, rhs);
+                    }
                     break;
             }
         }
 
-        private bool IsNull(JToken token)
+        private static IEnumerable<DiffItem> CompareChildren(IEnumerable<string> path, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, IIdProvider idProvider)
         {
-            return token == null || token.Type == JTokenType.Null;
-        }
-
-        private static void Compare(JObject lhs, JObject rhs, IEnumerable<string> path, IDiffReporter diffReporter, IIdProvider idProvider)
-        {
-            var lhsOrderedKeys = lhs.Properties().Select(p => p.Name).OrderBy(_ => _);
-            var rhsOrderedKeys = rhs.Properties().Select(p => p.Name).OrderBy(_ => _);
-
-            foreach (var pair in lhsOrderedKeys.JoinWithNulls(rhsOrderedKeys))
+            foreach ((string lhsKey, string rhsKey) in lhsKeys.OrderBy(_ => _).JoinWithNulls(rhsKeys.OrderBy(_ => _)))
             {
-                if (pair.Item1 == null)
+                if (lhsKey == null)
                 {
-                    diffReporter.OnAdded(path.Concat(new[] { pair.Item2 }), rhs[pair.Item2]);
+                    yield return new DiffItem(path.Concat(new[] { rhsKey }), null, rhsElements[rhsKey]);
                 }
-                else if (pair.Item2 == null)
+                else if (rhsKey == null)
                 {
-                    diffReporter.OnRemoved(path.Concat(new[] { pair.Item1 }), lhs[pair.Item1]);
+                    yield return new DiffItem(path.Concat(new[] { lhsKey }), lhsElements[lhsKey], null);
                 }
                 else
                 {
-                    Compare(lhs[pair.Item1], rhs[pair.Item2], path.Concat(new[] { pair.Item1 }), diffReporter, idProvider);
+                    foreach (var diff in Compare(lhsElements[lhsKey], rhsElements[rhsKey], path.Concat(new[] { lhsKey }), idProvider))
+                    {
+                        yield return diff;
+                    }
                 }
             }
         }
-
-        private static void Compare(JArray lhs, JArray rhs, IEnumerable<string> path, IDiffReporter diffReporter, IIdProvider idProvider)
-        {
-            var lhsElements = IdentifyElements(lhs, path, idProvider);
-            var rhsElements = IdentifyElements(rhs, path, idProvider);
-
-            var lhsOrderedKeys = lhsElements.Keys.OrderBy(_ => _).ToList();
-            var rhsOrderedKeys = rhsElements.Keys.OrderBy(_ => _).ToList();
-
-            foreach (var pair in lhsOrderedKeys.JoinWithNulls(rhsOrderedKeys))
-            {
-                if (pair.Item1 == null)
-                {
-                    diffReporter.OnAdded(path.Concat(new[] { pair.Item2 }), rhsElements[pair.Item2]);
-                }
-                else if (pair.Item2 == null)
-                {
-                    diffReporter.OnRemoved(path.Concat(new[] { pair.Item1 }), lhsElements[pair.Item1]);
-                }
-                else
-                {
-                    Compare(lhsElements[pair.Item1], rhsElements[pair.Item2], path.Concat(new[] { pair.Item1 }), diffReporter, idProvider);
-                }
-            }
-        }
-        
 
         private static IDictionary<string, JToken> IdentifyElements(JArray array, IEnumerable<string> path, IIdProvider idProvider)
         {
             return array.Select((item, index) => (idProvider.GetId(path, item, index), item)).ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
-        }
-
-        private static void CompareAtomic(JToken lhs, JToken rhs, IEnumerable<string> path, IDiffReporter diffReporter, IIdProvider idProvider)
-        {
-            if (lhs.Type != rhs.Type || lhs.ToString() != rhs.ToString()) //TODO compare type wise?
-            {
-                diffReporter.OnChanged(path, lhs, rhs);
-            }
         }
     }
 }
