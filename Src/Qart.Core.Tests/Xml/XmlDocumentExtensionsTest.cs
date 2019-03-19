@@ -25,7 +25,7 @@ namespace Qart.Core.Tests.Xml
 
             lhs.OverrideWith(rhs);
 
-            testCase.AssertContent(lhs.OuterXml, "Merged.xml", true);
+            testCase.AssertContent(lhs, "Merged.xml", true);
         }
 
         [TestCase("RemoveNodes/Element")]
@@ -39,7 +39,7 @@ namespace Qart.Core.Tests.Xml
 
             input.RemoveNodes(xpaths);
 
-            testCase.AssertContent(input.OuterXml, "output.xml", true);
+            testCase.AssertContent(input, "output.xml", true);
         }
     }
 }

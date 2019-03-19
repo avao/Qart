@@ -179,7 +179,7 @@ namespace Qart.Testing
             var expectedContent = testCase.GetContent(resultName);
             var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
             var diffContent = diffFormatterFunc(diffs);
-            AssertContent(testCase, diffContent, resultName);
+            AssertContent(testCase, diffContent, resultName, rebaseline);
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
@@ -192,9 +192,10 @@ namespace Qart.Testing
             testCase.AssertContent(SerialiseIndented(JsonConvert.DeserializeObject(actualContent)), resultName, rebaseline);
         }
 
-        public static void AssertContent(this TestCase testCase, JToken item, string path)
+        public static void AssertContent(this TestCase testCase, XmlDocument actual, string resultName, bool rebaseline)
         {
-            testCase.AssertContent(SerialiseIndented(item), path);
+            var actualContent = XmlWriterUtils.ToXmlString(writer => actual.WriteTo(writer));
+            testCase.AssertContent(actualContent, resultName, rebaseline);
         }
 
         private static string SerialiseIndented(object o)

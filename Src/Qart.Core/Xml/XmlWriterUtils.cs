@@ -15,7 +15,7 @@ namespace Qart.Core.Xml
         public static string ToXmlString(Action<XmlWriter> action, bool indent)
         {
             var sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = indent }))
+            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = indent, OmitXmlDeclaration = true }))
             {
                 action(writer);
             }
