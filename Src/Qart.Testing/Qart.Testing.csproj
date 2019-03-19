@@ -39,9 +39,8 @@
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
@@ -72,6 +71,7 @@
     <Compile Include="Diff\DiffItem.cs" />
     <Compile Include="Diff\IIdProvider.cs" />
     <Compile Include="Diff\JsonPatchCreator.cs" />
+    <Compile Include="Diff\JsonPathPropertyBasedIdProvider.cs" />
     <Compile Include="Diff\PropertyBasedIdProvider.cs" />
     <Compile Include="Framework\DataStoreProvider.cs" />
     <Compile Include="Framework\Http\HttpClientExtensions.cs" />

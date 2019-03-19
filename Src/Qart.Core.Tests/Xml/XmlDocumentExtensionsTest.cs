@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
+using Qart.Core.DataStore;
 using Qart.Core.Io;
+using Qart.Core.Xml;
 using Qart.Testing;
+using Qart.Testing.Framework;
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.IO;
-using Qart.Core.Xml;
-using Qart.Core.DataStore;
-using Qart.Testing.Framework;
+using System.Xml;
 
 namespace Qart.Core.Tests.Xml
 {
@@ -25,7 +25,7 @@ namespace Qart.Core.Tests.Xml
 
             lhs.OverrideWith(rhs);
 
-            testCase.AssertContent(lhs, "Merged.xml", true);
+            testCase.AssertContent(lhs.OuterXml, "Merged.xml", true);
         }
 
         [TestCase("RemoveNodes/Element")]
@@ -39,7 +39,7 @@ namespace Qart.Core.Tests.Xml
 
             input.RemoveNodes(xpaths);
 
-            testCase.AssertContent(input, "output.xml", true);
+            testCase.AssertContent(input.OuterXml, "output.xml", true);
         }
     }
 }

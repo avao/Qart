@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using Qart.Core.DataStore;
+using Qart.Core.Xml;
+using Qart.Testing.Diff;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using NUnit.Framework;
+using System.Text;
 using System.Xml;
-using Qart.Core.Xml;
-using Qart.Core.DataStore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Qart.Testing
 {
@@ -136,12 +137,49 @@ namespace Qart.Testing
         {
             testCase.AssertContent(actualContent, resultName, (actual, expected) =>
             {
-                failAction(actual, expected);
                 if (rebase)
                 {
                     testCase.PutContent(resultName, actualContent);
                 }
+                failAction(actual, expected);
             });
+        }
+
+        public static string JsonPathDiffFormatter(IEnumerable<DiffItem> diffs)
+        {
+            return SerialiseIndented(diffs.Select(diff => new { path = DiffPathToJsonPath(diff.Path), lhs = diff.Lhs, rhs = diff.Rhs }));
+        }
+
+        private static string DiffPathToJsonPath(IEnumerable<string> path)
+        {
+            var stringBuilder = new StringBuilder("$");
+            foreach (var item in path)
+            {
+                if (!item.StartsWith("["))
+                {
+                    stringBuilder.Append('.');
+                }
+                stringBuilder.Append(item);
+            }
+            return stringBuilder.ToString();
+        }
+
+        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, IIdProvider idProvider, Func<IEnumerable<DiffItem>, string> diffFormatterFunc, bool rebaseline)
+        {
+            AssertContentAsDiff(testCase, actual, JToken.Parse(testCase.GetRequiredContent(expectedName)), resultName, idProvider, diffFormatterFunc, rebaseline);
+        }
+
+        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, IIdProvider idProvider, bool rebaseline)
+        {
+            AssertContentAsDiff(testCase, actual, expectedName, resultName, idProvider, JsonPathDiffFormatter, rebaseline);
+        }
+
+        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, IIdProvider idProvider, Func<IEnumerable<DiffItem>, string> diffFormatterFunc, bool rebaseline)
+        {
+            var expectedContent = testCase.GetContent(resultName);
+            var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
+            var diffContent = diffFormatterFunc(diffs);
+            AssertContent(testCase, diffContent, resultName);
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
@@ -151,47 +189,12 @@ namespace Qart.Testing
 
         public static void AssertContentJson(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
         {
-            JsonConvert.SerializeObject(JsonConvert.DeserializeObject(actualContent), new JsonSerializerSettings { Formatting=Newtonsoft.Json.Formatting.Indented});
-        }
-
-        public static void AssertContent(this TestCase testCase, XmlDocument doc, string resultName, bool rebaseline)
-        {
-            string exclusionListFileName = resultName + ".exclude.xpath";
-            if (testCase.Contains(exclusionListFileName))
-            {
-                doc.RemoveNodes(testCase.GetContent(exclusionListFileName).Split('\n').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)));
-            }
-            testCase.AssertContentXml(doc.OuterXml, resultName, rebaseline);
-        }
-
-        public static void AssertContentXml(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
-        {
-            string actualFormattedContent = XDocument.Parse(actualContent).ToString();
-
-            string expectedContent = testCase.GetContent(resultName);
-
-            string expectedFormattedContent = string.IsNullOrEmpty(expectedContent) ? string.Empty : XDocument.Parse(expectedContent).ToString();
-
-            if (expectedFormattedContent != actualFormattedContent)
-            {
-                if (rebaseline)
-                {
-                    testCase.PutContent(resultName, actualFormattedContent);
-                }
-
-                Assert.AreEqual(expectedFormattedContent, actualFormattedContent);
-                Assert.Fail("Just in case...");
-            }
+            testCase.AssertContent(SerialiseIndented(JsonConvert.DeserializeObject(actualContent)), resultName, rebaseline);
         }
 
         public static void AssertContent(this TestCase testCase, JToken item, string path)
         {
             testCase.AssertContent(SerialiseIndented(item), path);
-        }
-
-        public static void AssertContentJson(this TestCase testCase, string content, string path)
-        {
-            testCase.AssertContent(JsonConvert.DeserializeObject<JToken>(content), path);
         }
 
         private static string SerialiseIndented(object o)
