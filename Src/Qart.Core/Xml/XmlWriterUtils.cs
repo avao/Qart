@@ -8,14 +8,27 @@ namespace Qart.Core.Xml
 {
     public static class XmlWriterUtils
     {
+        private class CustomEncodingStringWriter : StringWriter
+        {
+            private readonly Encoding _encoding;
+            public CustomEncodingStringWriter(StringBuilder stringBuilder, Encoding encoding)
+                : base(stringBuilder)
+            {
+                _encoding = encoding;
+            }
+            public override Encoding Encoding => _encoding;
+        }
+
         public static string ToXmlString(Action<XmlWriter> action)
         {
             return ToXmlString(action, true);
         }
+
         public static string ToXmlString(Action<XmlWriter> action, bool indent)
         {
             var sb = new StringBuilder();
-            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = indent, OmitXmlDeclaration = true }))
+            using (var stringWriter = new CustomEncodingStringWriter(sb, null))
+            using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings { Indent = indent }))
             {
                 action(writer);
             }
