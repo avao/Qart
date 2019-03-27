@@ -70,7 +70,8 @@ namespace Qart.Testing.Framework
             testCaseContext.AssertContent(JsonConvert.DeserializeObject<JToken>(content), path);
         }
 
-        private static string SerialiseIndented(object o)
+        //TODO relocate
+        public static string SerialiseIndented(object o)
         {
             return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }

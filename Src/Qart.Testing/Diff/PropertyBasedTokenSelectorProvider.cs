@@ -1,31 +1,31 @@
 ﻿using Newtonsoft.Json.Linq;
 using Qart.Core.Validation;
-using System.Collections.Generic;
+using Qart.Testing.Framework.Json;
 
 namespace Qart.Testing.Diff
 {
-    public class JsonPathPropertyBasedIdProvider : IIdProvider
+    public class PropertyBasedTokenSelectorProvider : ITokenSelectorProvider
     {
         private readonly string _propertyName;
 
-        public JsonPathPropertyBasedIdProvider(string propertyName)
+        public PropertyBasedTokenSelectorProvider(string propertyName)
         {
             Require.NotNullOrEmpty(propertyName);
 
             _propertyName = propertyName;
         }
 
-        public string GetId(IEnumerable<string> path, JToken token, int index)
+        public string GetTokenSelector(string jsonPath, JToken token, int index)
         {
             if (token is JObject jobj)
             {
                 var idToken = jobj.GetValue(_propertyName);
                 if (idToken != null)
                 {
-                    return $"[?(@.{_propertyName}=='{idToken.ToString()}')]";
+                    return JsonPathFormatter.FormatAndCondition(new[] { (_propertyName, idToken) });
                 }
             }
-            return $"[{index.ToString()}]";
+            return JsonPathFormatter.FormatIndex(index);
         }
     }
 }

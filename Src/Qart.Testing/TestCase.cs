@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace Qart.Testing
@@ -145,41 +144,46 @@ namespace Qart.Testing
             });
         }
 
-        public static string JsonPathDiffFormatter(IEnumerable<DiffItem> diffs)
+
+
+        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
-            return SerialiseIndented(diffs.Select(diff => new { path = DiffPathToJsonPath(diff.Path), lhs = diff.Lhs, rhs = diff.Rhs }));
+            AssertContentAsDiff(testCase, actual, JToken.Parse(testCase.GetRequiredContent(expectedName)), resultName, idProvider, rebaseline);
         }
 
-        private static string DiffPathToJsonPath(IEnumerable<string> path)
-        {
-            var stringBuilder = new StringBuilder("$");
-            foreach (var item in path)
-            {
-                if (!item.StartsWith("["))
-                {
-                    stringBuilder.Append('.');
-                }
-                stringBuilder.Append(item);
-            }
-            return stringBuilder.ToString();
-        }
-
-        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, IIdProvider idProvider, Func<IEnumerable<DiffItem>, string> diffFormatterFunc, bool rebaseline)
-        {
-            AssertContentAsDiff(testCase, actual, JToken.Parse(testCase.GetRequiredContent(expectedName)), resultName, idProvider, diffFormatterFunc, rebaseline);
-        }
-
-        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, IIdProvider idProvider, bool rebaseline)
-        {
-            AssertContentAsDiff(testCase, actual, expectedName, resultName, idProvider, JsonPathDiffFormatter, rebaseline);
-        }
-
-        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, IIdProvider idProvider, Func<IEnumerable<DiffItem>, string> diffFormatterFunc, bool rebaseline)
+        public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
             var expectedContent = testCase.GetContent(resultName);
             var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
-            var diffContent = diffFormatterFunc(diffs);
-            AssertContent(testCase, diffContent, resultName, rebaseline);
+            testCase.AssertDiffs(diffs, resultName, ReportDiffs, rebaseline);
+        }
+
+        public static void AssertDiffs(this TestCase testCase, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, bool rebaseline)
+        {
+            string expectedContent = testCase.GetContent(resultName);
+            var expectedDiffs = JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedContent);
+
+            var diffDiffs = Compare(diffs, expectedDiffs).ToList();
+            if (diffDiffs.Count > 0)
+            {
+                var diffContent = SerialiseIndented(diffs);
+                if (rebaseline)
+                {
+                    testCase.PutContent(resultName, diffContent);
+                }
+
+                reportFunc(diffDiffs);
+            }
+        }
+
+        private static void ReportDiffs(IEnumerable<DiffItem> diffs)
+        {
+            throw new Exception("Unexpected token changes:" + string.Join("\n", diffs.Select(d => d.JsonPath)));
+        }
+
+        private static IEnumerable<DiffItem> Compare(IEnumerable<DiffItem> actualDiffs, IEnumerable<DiffItem> expectedDiffs)
+        {
+            return JsonPatchCreator.Compare(JsonConvert.SerializeObject(actualDiffs), JsonConvert.SerializeObject(expectedDiffs), new PropertyBasedTokenSelectorProvider("path"));
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)

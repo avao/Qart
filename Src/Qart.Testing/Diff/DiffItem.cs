@@ -1,23 +1,16 @@
 ﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace Qart.Testing.Diff
 {
     public class DiffItem
     {
-        public IEnumerable<string> Path { get; }
-        public JToken Lhs { get; }
-        public JToken Rhs { get; }
+        public string JsonPath { get; }
+        public JToken Value { get; }
 
-        public DiffItem(IEnumerable<string> path, JToken lhs, JToken rhs)
+        public DiffItem(string jsonPath, JToken value)
         {
-            Path = path;
-            Lhs = lhs;
-            Rhs = rhs;
+            JsonPath = jsonPath;
+            Value = value;
         }
-
-        public bool IsInsert() => Lhs == null && Rhs != null;
-        public bool IsRemoval() => Lhs != null && Rhs == null;
-        public bool IsUpdate() => Lhs != null && Rhs != null;
     }
 }

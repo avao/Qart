@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Qart.Core.Collections;
+using Qart.Testing.Framework.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,18 +8,18 @@ namespace Qart.Testing.Diff
 {
     public class JsonPatchCreator
     {
-        public static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, IIdProvider idProvider)
+        public static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, ITokenSelectorProvider idProvider)
         {
-            return Compare(lhs, rhs, Enumerable.Empty<string>(), idProvider);
+            return Compare(lhs, rhs, "$", idProvider);
         }
 
-        private static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, IEnumerable<string> path, IIdProvider idProvider)
+        private static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, string jsonPath, ITokenSelectorProvider idProvider)
         {
             if (rhs == null)
             {
                 if (lhs != null)
                 {
-                    yield return new DiffItem(path, lhs, null);
+                    yield return new DiffItem(jsonPath, null);
                 }
                 yield break;
             }
@@ -28,7 +29,7 @@ namespace Qart.Testing.Diff
                 case null:
                     if (rhs != null)
                     {
-                        yield return new DiffItem(path, null, rhs);
+                        yield return new DiffItem(jsonPath, rhs);
                     }
                     break;
                 case JObject lhsJobj:
@@ -36,55 +37,55 @@ namespace Qart.Testing.Diff
                     {
                         var lhsOrderedKeys = lhsJobj.Properties().Select(p => p.Name);
                         var rhsOrderedKeys = rhsJobj.Properties().Select(p => p.Name);
-                        foreach (var diff in CompareChildren(path, lhsOrderedKeys, rhsOrderedKeys, lhsJobj, rhsJobj, idProvider))
+                        foreach (var diff in CompareChildren(jsonPath, lhsOrderedKeys, rhsOrderedKeys, lhsJobj, rhsJobj, idProvider))
                         {
                             yield return diff;
                         }
                     }
                     else
                     {
-                        yield return new DiffItem(path, lhs, rhs);
+                        yield return new DiffItem(jsonPath, rhs);
                     }
                     break;
                 case JArray lhsArray:
                     if (rhs is JArray rhsArray)
                     {
-                        var lhsElements = IdentifyElements(lhsArray, path, idProvider);
-                        var rhsElements = IdentifyElements(rhsArray, path, idProvider);
-                        foreach (var diff in CompareChildren(path, lhsElements.Keys, rhsElements.Keys, lhsElements, rhsElements, idProvider))
+                        var lhsElements = IdentifyElements(lhsArray, jsonPath, idProvider);
+                        var rhsElements = IdentifyElements(rhsArray, jsonPath, idProvider);
+                        foreach (var diff in CompareChildren(jsonPath, lhsElements.Keys, rhsElements.Keys, lhsElements, rhsElements, idProvider))
                         {
                             yield return diff;
                         }
                     }
                     else
                     {
-                        yield return new DiffItem(path, lhs, rhs);
+                        yield return new DiffItem(jsonPath, rhs);
                     }
                     break;
                 default:
                     if (lhs.Type != rhs.Type || lhs.ToString() != rhs.ToString()) //TODO compare type wise?
                     {
-                        yield return new DiffItem(path, lhs, rhs);
+                        yield return new DiffItem(jsonPath, rhs);
                     }
                     break;
             }
         }
 
-        private static IEnumerable<DiffItem> CompareChildren(IEnumerable<string> path, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, IIdProvider idProvider)
+        private static IEnumerable<DiffItem> CompareChildren(string jsonPath, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, ITokenSelectorProvider idProvider)
         {
             foreach ((string lhsKey, string rhsKey) in lhsKeys.OrderBy(_ => _).JoinWithNulls(rhsKeys.OrderBy(_ => _)))
             {
                 if (lhsKey == null)
                 {
-                    yield return new DiffItem(path.Concat(new[] { rhsKey }), null, rhsElements[rhsKey]);
+                    yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, rhsKey), rhsElements[rhsKey]);
                 }
                 else if (rhsKey == null)
                 {
-                    yield return new DiffItem(path.Concat(new[] { lhsKey }), lhsElements[lhsKey], null);
+                    yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, lhsKey), null);
                 }
                 else
                 {
-                    foreach (var diff in Compare(lhsElements[lhsKey], rhsElements[rhsKey], path.Concat(new[] { lhsKey }), idProvider))
+                    foreach (var diff in Compare(lhsElements[lhsKey], rhsElements[rhsKey], JsonPathFormatter.AddToken(jsonPath, lhsKey), idProvider))
                     {
                         yield return diff;
                     }
@@ -92,9 +93,9 @@ namespace Qart.Testing.Diff
             }
         }
 
-        private static IDictionary<string, JToken> IdentifyElements(JArray array, IEnumerable<string> path, IIdProvider idProvider)
+        private static IDictionary<string, JToken> IdentifyElements(JArray array, string jsonPath, ITokenSelectorProvider idProvider)
         {
-            return array.Select((item, index) => (idProvider.GetId(path, item, index), item)).ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+            return array.Select((item, index) => (idProvider.GetTokenSelector(jsonPath, item, index), item)).ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
         }
     }
 }

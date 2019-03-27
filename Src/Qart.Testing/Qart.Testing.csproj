@@ -69,10 +69,11 @@
     <Compile Include="AssertException.cs" />
     <Compile Include="BaseLineAssert.cs" />
     <Compile Include="Diff\DiffItem.cs" />
-    <Compile Include="Diff\IIdProvider.cs" />
+    <Compile Include="Diff\ITokenSelectorProvider.cs" />
     <Compile Include="Diff\JsonPatchCreator.cs" />
-    <Compile Include="Diff\JsonPathPropertyBasedIdProvider.cs" />
-    <Compile Include="Diff\PropertyBasedIdProvider.cs" />
+    <Compile Include="Framework\Json\JsonPathFormatter.cs" />
+    <Compile Include="Diff\PropertyBasedTokenSelectorProvider.cs" />
+    <Compile Include="Diff\Tracker.cs" />
     <Compile Include="Framework\DataStoreProvider.cs" />
     <Compile Include="Framework\Http\HttpClientExtensions.cs" />
     <Compile Include="Framework\Http\HttpClientLoggingExtensions.cs" />
