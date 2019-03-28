@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qart.Testing.ActionPipeline;
+using Qart.Testing.Framework.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,9 +27,9 @@ namespace Qart.Testing.Framework
                     }
                     catch (Exception ex)
                     {
-                        if(suppressExceptionsTilltheEnd)
+                        if (suppressExceptionsTilltheEnd)
                         {
-                            if(exceptions == null)
+                            if (exceptions == null)
                             {
                                 exceptions = new List<Exception>();
                             }
@@ -54,10 +55,9 @@ namespace Qart.Testing.Framework
             }
         }
 
-
         public static void AssertContent(this TestCaseContext testCaseContext, JToken item, string path)
         {
-            testCaseContext.AssertContent(SerialiseIndented(item), path);
+            testCaseContext.AssertContent(item.ToIndentedJson(), path);
         }
 
         public static void AssertContent(this TestCaseContext testCaseContext, string content, string path)
@@ -68,12 +68,6 @@ namespace Qart.Testing.Framework
         public static void AssertContentJson(this TestCaseContext testCaseContext, string content, string path)
         {
             testCaseContext.AssertContent(JsonConvert.DeserializeObject<JToken>(content), path);
-        }
-
-        //TODO relocate
-        public static string SerialiseIndented(object o)
-        {
-            return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
 
         public static void AssertContentJsonMany(this TestCaseContext testCaseContext, string content, string dir, Func<JToken, string> itemNameFunc)

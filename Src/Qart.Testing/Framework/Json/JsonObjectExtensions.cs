@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Qart.Testing.Framework.Json
 
         public static void Order(this JObject obj, string path, IReadOnlyCollection<string> keyPaths)
         {
-            if(keyPaths.Count == 1)
+            if (keyPaths.Count == 1)
             {
                 obj.Order(path, token => token.SelectToken(keyPaths.First()));
             }
@@ -40,6 +41,11 @@ namespace Qart.Testing.Framework.Json
             {
                 obj.Order(path, token => keyPaths.Select(_ => token.SelectToken(_)).ToArray());//TODO check comparison, what if many Tokens?
             }
+        }
+
+        public static string ToIndentedJson(this object o)
+        {
+            return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Formatting.Indented });
         }
     }
 }

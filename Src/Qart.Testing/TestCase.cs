@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Xml;
 using Qart.Testing.Diff;
+using Qart.Testing.Framework.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,14 +17,16 @@ namespace Qart.Testing
     {
         public ITestStorage TestStorage { get; private set; }
         public IDataStore DataStorage { get; private set; }
+        public IDataStore TmpDataStore { get; private set; }
         public string Id { get; private set; }
 
         private readonly IDataStoreProvider _dataStoreProvider;
 
-        internal TestCase(string id, ITestStorage testStorage, IDataStore dataStore, IDataStoreProvider dataStoreProvider)
+        internal TestCase(string id, ITestStorage testStorage, IDataStore dataStore, IDataStore tmpDataStore, IDataStoreProvider dataStoreProvider)
         {
             TestStorage = testStorage;
             DataStorage = dataStore;
+            TmpDataStore = tmpDataStore;
             Id = id;
             _dataStoreProvider = dataStoreProvider;
         }
@@ -136,15 +139,10 @@ namespace Qart.Testing
         {
             testCase.AssertContent(actualContent, resultName, (actual, expected) =>
             {
-                if (rebase)
-                {
-                    testCase.PutContent(resultName, actualContent);
-                }
+                testCase.RebaseContentOrStoreTmp(resultName, actualContent, rebase);
                 failAction(actual, expected);
             });
         }
-
-
 
         public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
@@ -153,25 +151,22 @@ namespace Qart.Testing
 
         public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
-            var expectedContent = testCase.GetContent(resultName);
             var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
-            testCase.AssertDiffs(diffs, resultName, ReportDiffs, rebaseline);
+            testCase.AssertDiffs(actual, diffs, resultName, ReportDiffs, rebaseline);
         }
 
-        public static void AssertDiffs(this TestCase testCase, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, bool rebaseline)
+        public static void AssertDiffs(this TestCase testCase, JToken actual, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, bool rebaseline)
         {
             string expectedContent = testCase.GetContent(resultName);
-            var expectedDiffs = JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedContent);
+            var expectedDiffs = expectedContent == null
+                ? Enumerable.Empty<DiffItem>()
+                : JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedContent);
 
             var diffDiffs = Compare(diffs, expectedDiffs).ToList();
             if (diffDiffs.Count > 0)
             {
-                var diffContent = SerialiseIndented(diffs);
-                if (rebaseline)
-                {
-                    testCase.PutContent(resultName, diffContent);
-                }
-
+                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);
+                testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());
                 reportFunc(diffDiffs);
             }
         }
@@ -183,7 +178,7 @@ namespace Qart.Testing
 
         private static IEnumerable<DiffItem> Compare(IEnumerable<DiffItem> actualDiffs, IEnumerable<DiffItem> expectedDiffs)
         {
-            return JsonPatchCreator.Compare(JsonConvert.SerializeObject(actualDiffs), JsonConvert.SerializeObject(expectedDiffs), new PropertyBasedTokenSelectorProvider("path"));
+            return JsonPatchCreator.Compare(JsonConvert.SerializeObject(actualDiffs), JsonConvert.SerializeObject(expectedDiffs), new PropertyBasedTokenSelectorProvider("JsonPath"));
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
@@ -193,7 +188,7 @@ namespace Qart.Testing
 
         public static void AssertContentJson(this TestCase testCase, string actualContent, string resultName, bool rebaseline)
         {
-            testCase.AssertContent(SerialiseIndented(JsonConvert.DeserializeObject(actualContent)), resultName, rebaseline);
+            testCase.AssertContent(JsonConvert.DeserializeObject(actualContent).ToIndentedJson(), resultName, rebaseline);
         }
 
         public static void AssertContent(this TestCase testCase, XmlDocument actual, string resultName, bool rebaseline)
@@ -202,9 +197,15 @@ namespace Qart.Testing
             testCase.AssertContent(actualContent, resultName, rebaseline);
         }
 
-        private static string SerialiseIndented(object o)
+        public static void AddTmpItem(this TestCase testCase, string itemId, string content)
         {
-            return JsonConvert.SerializeObject(o, new JsonSerializerSettings { Formatting = Newtonsoft.Json.Formatting.Indented });
+            testCase.TmpDataStore.PutContent(itemId, content);
+        }
+
+        public static void RebaseContentOrStoreTmp(this TestCase testCase, string itemId, string content, bool rebaseline)
+        {
+            var store = rebaseline ? testCase : testCase.TmpDataStore;
+            testCase.PutContent(itemId, content);
         }
     }
 }

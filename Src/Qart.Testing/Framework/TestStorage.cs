@@ -25,8 +25,10 @@ namespace Qart.Testing.Framework
 
         public TestCase GetTestCase(string id)
         {
-            var testCaseDataStore = new ExtendedDataStore(new ScopedDataStore(DataStorage, id), (ds, transform, dataStore) => ContentProcessor.Process(ds.GetContent(transform), new ScopedDataStore(dataStore, Path.GetDirectoryName(transform))));
-            return new TestCase(id, this, testCaseDataStore, _dataStoreProvider);
+            var scopedTestCaseDataStore = new ScopedDataStore(DataStorage, id);
+            var testCaseDataStore = new ExtendedDataStore(scopedTestCaseDataStore, (ds, transform, dataStore) => ContentProcessor.Process(ds.GetContent(transform), new ScopedDataStore(dataStore, Path.GetDirectoryName(transform))));
+            var tmpDataStore = new ScopedDataStore(scopedTestCaseDataStore, ".tmp");
+            return new TestCase(id, this, testCaseDataStore, tmpDataStore, _dataStoreProvider);
         }
 
         public IEnumerable<string> GetTestCaseIds()
