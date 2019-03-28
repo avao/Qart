@@ -165,10 +165,10 @@ namespace Qart.Testing
             var diffDiffs = Compare(diffs, expectedDiffs).ToList();
             if (diffDiffs.Count > 0)
             {
-                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);
-                testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());
+                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);                
                 reportFunc(diffDiffs);
             }
+            testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());
         }
 
         private static void ReportDiffs(IEnumerable<DiffItem> diffs)

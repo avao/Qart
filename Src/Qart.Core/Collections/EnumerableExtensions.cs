@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Qart.Core.Collections
 {
@@ -52,6 +53,11 @@ namespace Qart.Core.Collections
                     } while (rhsMoved);
                 }
             }
+        }
+
+        public static IEnumerable<T> ToEmptyIfNull<T>(this IEnumerable<T> items)
+        {
+            return items ?? Enumerable.Empty<T>();
         }
     }
 }
