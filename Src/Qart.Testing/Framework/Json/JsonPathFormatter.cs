@@ -20,7 +20,7 @@ namespace Qart.Testing.Framework.Json
 
         public static string FormatAndCondition(IEnumerable<(string property, string value)> conditions)
         {
-            var conditionsString = string.Join(" && ", conditions.Select(condition => $"@{condition.property}=={condition.value}"));
+            var conditionsString = string.Join(" && ", conditions.Select(condition => $"@.{condition.property}=={condition.value}"));
             return $"[?({conditionsString})]";
         }
 

@@ -16,8 +16,8 @@ namespace Qart.Testing.Tests
 
         private static IEnumerable<object[]> FormatConditionTestSource()
         {
-            yield return new object[] { new[] { ("a", "'b'") }, "[?(@a=='b')]" };
-            yield return new object[] { new[] { ("a", "3"), ("b", "'abc'") }, "[?(@a==3 && @b=='abc')]" };
+            yield return new object[] { new[] { ("a", "'b'") }, "[?(@.a=='b')]" };
+            yield return new object[] { new[] { ("a", "3"), ("b", "'abc'") }, "[?(@.a==3 && @.b=='abc')]" };
         }
 
         [TestCaseSource("FormatConditionTestSource")]
