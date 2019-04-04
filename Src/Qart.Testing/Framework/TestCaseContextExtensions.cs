@@ -19,7 +19,7 @@ namespace Qart.Testing.Framework
                 IList<Exception> exceptions = null;
                 foreach (var actionDescription in actionDescriptions)
                 {
-                    c.Logger.DebugFormat("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + _.Value)));
+                    c.Logger.DebugFormat("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value))));
                     var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
                     try
                     {

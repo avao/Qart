@@ -1,15 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json.Linq;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
-using Newtonsoft.Json.Linq;
 using Qart.Core.Validation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Qart.Testing.Framework
 {
-    public class TestCaseProcessorInfoExtractor 
+    public class TestCaseProcessorInfoExtractor
     {
         private class ProcessorInfo
         {
@@ -27,11 +26,20 @@ namespace Qart.Testing.Framework
             //hacky check for json format
             if (!content.StartsWith("{"))
             {
-                processorId = content.SubstringWhile(_ => char.IsLetterOrDigit(_) || _ == '_');
-                var paramContent = content.Substring(processorId.Length).Trim();
-                if (!string.IsNullOrEmpty(paramContent))
+                if (content.StartsWith("["))
                 {
-                    parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramContent);
+                    //Placehoder for processorless actions
+                    processorId = null;
+                    parameters = new Dictionary<string, object> { { "actions", JsonConvert.DeserializeObject<IEnumerable<object>>(content) } };
+                }
+                else
+                {
+                    processorId = content.SubstringWhile(_ => char.IsLetterOrDigit(_) || _ == '_');
+                    var paramContent = content.Substring(processorId.Length).Trim();
+                    if (!string.IsNullOrEmpty(paramContent))
+                    {
+                        parameters = JsonConvert.DeserializeObject<Dictionary<string, object>>(paramContent);
+                    }
                 }
             }
             else
@@ -40,8 +48,6 @@ namespace Qart.Testing.Framework
                 processorId = parsedJson.ProcessorId;
                 parameters = parsedJson.Parameters;
             }
-
-            Require.NotNullOrEmpty(processorId, "ProcessorId could not be empty");
             return new ResolvableItemDescription(processorId, PostProcess(parameters));
         }
 
@@ -53,9 +59,9 @@ namespace Qart.Testing.Framework
         private object PostProcess(object obj)
         {
             var jvalue = obj as JValue;
-            if(jvalue != null)
+            if (jvalue != null)
             {
-                switch( jvalue.Type)
+                switch (jvalue.Type)
                 {
                     case JTokenType.String:
                         return jvalue.Value<string>();
@@ -93,7 +99,7 @@ namespace Qart.Testing.Framework
                     }
                 }
             }
-            
+
             return obj;
         }
 

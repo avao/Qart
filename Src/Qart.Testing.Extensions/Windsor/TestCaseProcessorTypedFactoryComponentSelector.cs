@@ -1,9 +1,7 @@
 ﻿using Castle.Facilities.TypedFactory;
 using Qart.Testing.Framework;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Qart.Testing.Extensions.Windsor
 {
@@ -13,28 +11,16 @@ namespace Qart.Testing.Extensions.Windsor
 
         protected override string GetComponentName(MethodInfo method, object[] arguments)
         {
-            if (arguments.Length == 1)
-            {
-                var testCase = arguments[0] as TestCase;
-                if (testCase != null)
-                {
-                    return _parametersExtractor.Execute(testCase).Name;
-                }
-            }
-            return base.GetComponentName(method, arguments);
+            return arguments.Length == 1 && arguments[0] is TestCase testCase
+                ? _parametersExtractor.Execute(testCase).Name
+                : base.GetComponentName(method, arguments);
         }
 
-        protected override IDictionary GetArguments(System.Reflection.MethodInfo method, object[] arguments)
+        protected override IDictionary GetArguments(MethodInfo method, object[] arguments)
         {
-            if (arguments.Length == 1)
-            {
-                var testCase = arguments[0] as TestCase;
-                if (testCase != null)
-                {
-                    return (IDictionary)_parametersExtractor.Execute(testCase).Parameters;
-                }
-            }
-            return base.GetArguments(method, arguments);
+            return arguments.Length == 1 && arguments[0] is TestCase testCase
+                ? (IDictionary)_parametersExtractor.Execute(testCase).Parameters
+                : base.GetArguments(method, arguments);
         }
     }
 }

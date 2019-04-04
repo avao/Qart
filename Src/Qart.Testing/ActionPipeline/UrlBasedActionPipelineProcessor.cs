@@ -9,7 +9,7 @@ namespace Qart.Testing.ActionPipeline
     {
         private readonly IPipelineActionFactory<T> _actionFactory;
         private readonly IPipelineContextFactory<T> _pipelineContextFactory;
-        
+
         public IEnumerable<ResolvableItemDescription> ActionDecsriptions { get; private set; }
 
         public UrlBasedActionPipelineProcessor(IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
@@ -26,13 +26,17 @@ namespace Qart.Testing.ActionPipeline
 
         private static ResolvableItemDescription Convert(object actionDescription)
         {
-            var stringActionDef = actionDescription as string;
-            if (stringActionDef == null)
+            if (actionDescription is string stringActionDef)
             {
-                throw new Exception(string.Format("Could not convert action definition to url [{0}]", actionDescription));
+                return UrlBasedParameterExtraction.Parse(stringActionDef);
             }
 
-            return UrlBasedParameterExtraction.Parse(stringActionDef);
+            if (actionDescription is IDictionary<string, object> dictionaryActionDef)
+            {
+                return new ResolvableItemDescription((string)dictionaryActionDef["id"], dictionaryActionDef);
+            }
+
+            throw new Exception(string.Format("Could not convert action definition to url [{0}]", actionDescription));
         }
     }
 }
