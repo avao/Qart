@@ -22,11 +22,9 @@ namespace Qart.Rest.Core.Auth
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
-
             try
             {
-                if (!_authorisationManager.Authorise(context.UserName, context.Password))
+                if (!_authorisationManager.Authorise(context))
                 {
                     context.SetError("invalid_grant", "The user name or password is incorrect.");
                     return;
@@ -37,7 +35,6 @@ namespace Qart.Rest.Core.Auth
                 identity.AddClaim(new Claim("role", "user"));
 
                 context.Validated(identity);
-                //context.OwinContext.Response.Cookies
             }
             catch (Exception)
             {

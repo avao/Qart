@@ -1,7 +1,9 @@
-﻿namespace Qart.Rest.Core.Auth
+﻿using Microsoft.Owin.Security.OAuth;
+
+namespace Qart.Rest.Core.Auth
 {
     public interface IAuthorisationManager
     {
-        bool Authorise(string user, string password);
+        bool Authorise(OAuthGrantResourceOwnerCredentialsContext context);
     }
 }
