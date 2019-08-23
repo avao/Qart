@@ -8,7 +8,7 @@ namespace Qart.Testing.Tests
 {
     public class JsonExtensionTests
     {
-        [Test, Ignore]
+        [Test, Ignore("")]
         public void ScopedDataStore()
         {
             var dataStore = new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(@"TestData\JsonExtensions\Order"));

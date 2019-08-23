@@ -1,35 +1,35 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core", "Qart.Core\Qart.Core.csproj", "{2444BC84-514F-41D8-80D5-EF171F514C91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Core", "Qart.Core\Qart.Core.csproj", "{2444BC84-514F-41D8-80D5-EF171F514C91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core.Tests", "Qart.Core.Tests\Qart.Core.Tests.csproj", "{761188D6-E48E-4795-BE2F-28C020E5BE8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Core.Tests", "Qart.Core.Tests\Qart.Core.Tests.csproj", "{761188D6-E48E-4795-BE2F-28C020E5BE8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing", "Qart.Testing\Qart.Testing.csproj", "{DCDF538C-7F9C-4F0F-AC6E-851EF9344DB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Testing", "Qart.Testing\Qart.Testing.csproj", "{DCDF538C-7F9C-4F0F-AC6E-851EF9344DB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{AD2EFE07-7A37-4EB6-8F9E-70A493C8FE87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{AD2EFE07-7A37-4EB6-8F9E-70A493C8FE87}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.RandomLogger", "Qart.RandomLogger\Qart.RandomLogger.csproj", "{53D08AFD-EC85-4572-AA24-1B63AAEB931C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.FileForwarder", "Qart.FileForwarder\Qart.FileForwarder.csproj", "{02433D9E-C961-4F6A-AD24-37AE4465E59D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Tests", "Qart.Testing.Tests\Qart.Testing.Tests.csproj", "{2BFCE96B-E265-429C-94EE-FF647C2F17FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Testing.Tests", "Qart.Testing.Tests\Qart.Testing.Tests.csproj", "{2BFCE96B-E265-429C-94EE-FF647C2F17FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.CyberTester", "Qart.CyberTester\Qart.CyberTester.csproj", "{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.CyberTester", "Qart.CyberTester\Qart.CyberTester.csproj", "{C471ED5C-2EDD-4629-A884-6F140A9F7EB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Core.Io.FileRolling", "Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj", "{C367DF29-18E0-4266-AFFA-781E203DDBFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Core.Io.FileRolling", "Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj", "{C367DF29-18E0-4266-AFFA-781E203DDBFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Wheels", "Qart.Wheels\Qart.Wheels.csproj", "{F4D0A11F-1D59-491D-936E-72C5BC4D5F05}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Wheels.TestAutomation", "Qart.Wheels.TestAutomation\Qart.Wheels.TestAutomation.csproj", "{B664DDD4-6DD7-4454-9312-336C3B02BB96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Wheels.TestAutomation", "Qart.Wheels.TestAutomation\Qart.Wheels.TestAutomation.csproj", "{B664DDD4-6DD7-4454-9312-336C3B02BB96}"
 EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Qart.Wheels.SystemTests", "Qart.Wheels.SystemTests\Qart.Wheels.SystemTests.mdproj", "{E663D521-82C5-4F21-A745-A3811F41C0EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Testing.Extensions", "Qart.Testing.Extensions\Qart.Testing.Extensions.csproj", "{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Testing.Extensions", "Qart.Testing.Extensions\Qart.Testing.Extensions.csproj", "{069268E9-911B-4D57-9CB4-CB2C8E3C86BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Rest.Core", "Qart.Rest.Core\Qart.Rest.Core.csproj", "{ED10DA42-EECC-42A9-B041-3408750C8C2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qart.Wheels.CyberTester", "Qart.Wheels.CyberTester\Qart.Wheels.CyberTester.csproj", "{4E97B2FA-94CC-49F6-B6FA-94AC828ABA10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,10 +73,6 @@ Global
 		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C367DF29-18E0-4266-AFFA-781E203DDBFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4D0A11F-1D59-491D-936E-72C5BC4D5F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4D0A11F-1D59-491D-936E-72C5BC4D5F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4D0A11F-1D59-491D-936E-72C5BC4D5F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4D0A11F-1D59-491D-936E-72C5BC4D5F05}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B664DDD4-6DD7-4454-9312-336C3B02BB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -89,8 +85,15 @@ Global
 		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED10DA42-EECC-42A9-B041-3408750C8C2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E97B2FA-94CC-49F6-B6FA-94AC828ABA10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E97B2FA-94CC-49F6-B6FA-94AC828ABA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E97B2FA-94CC-49F6-B6FA-94AC828ABA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E97B2FA-94CC-49F6-B6FA-94AC828ABA10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC8AE377-7E5F-4E89-8A07-A122FA9F7072}
 	EndGlobalSection
 EndGlobal

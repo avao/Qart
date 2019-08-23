@@ -15,32 +15,34 @@ namespace Qart.Rest.Core.Auth
             _authorisationManager = authorisationManager;
         }
 
-        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             context.Validated();
+            return Task.CompletedTask;
         }
 
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
             try
             {
                 if (!_authorisationManager.Authorise(context))
                 {
                     context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
                 }
+                else
+                {
+                    var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+                    identity.AddClaim(new Claim("sub", context.UserName));
+                    identity.AddClaim(new Claim("role", "user"));
 
-                var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-                identity.AddClaim(new Claim("sub", context.UserName));
-                identity.AddClaim(new Claim("role", "user"));
-
-                context.Validated(identity);
+                    context.Validated(identity);
+                }
             }
             catch (Exception)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
-                return;
             }
+            return Task.CompletedTask;
         }
     }
 }

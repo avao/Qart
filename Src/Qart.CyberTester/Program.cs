@@ -4,6 +4,7 @@ using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Testing;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -21,28 +22,31 @@ namespace Qart.CyberTester
         [Option('s', "suppressExceptions", Required = false, HelpText = "Specifies whether to defer exceptions while executing actions to the end.")]
         public bool SuppressExceptions { get; set; }
 
-        [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'", DefaultValue = "")]
+        [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'")]
         public string Options { get; set; }
 
         [Option('h', "help", Required = false, HelpText = "Usage")]
         public bool Usage { get; set; }
     }
 
-    class Program
+    public class Program
     {
         static ILog Logger = LogManager.GetLogger("");
 
-        static int Main(string[] args)
+        public static int Main(string[] args)
         {
             int result = -1;
-            var options = new CommandlineOptions();
-            if (Parser.Default.ParseArgumentsStrict(args, options))
+            var parserResult = Parser.Default.ParseArguments<CommandlineOptions>(args);
+            if (parserResult.Tag == ParserResultType.Parsed)
             {
-                if (string.IsNullOrEmpty(options.Dir))
-                {
-                    options.Dir = Directory.GetCurrentDirectory();
-                }
-                result = Execute(options);
+                parserResult.WithParsed(options =>
+                    {
+                        if (string.IsNullOrEmpty(options.Dir))
+                        {
+                            options.Dir = Directory.GetCurrentDirectory();
+                        }
+                        result = Execute(options);
+                    });
             }
             return result;
         }
@@ -53,7 +57,7 @@ namespace Qart.CyberTester
 
             var container = Bootstrapper.CreateContainer(new FileBasedDataStore(options.Dir));
 
-            var parsedOptions = options.Options.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("="));
+            var parsedOptions = options.Options?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("=")) ?? new Dictionary<string, string>();
             parsedOptions.Add("ct.dir", options.Dir);
             parsedOptions.Add("ct.rebase", options.Rebase ? bool.TrueString : bool.FalseString);
             parsedOptions.Add("ct.deferExceptions", options.SuppressExceptions ? bool.TrueString : bool.FalseString);

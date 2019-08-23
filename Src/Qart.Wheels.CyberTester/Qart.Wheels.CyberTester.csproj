@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj" />
+    <ProjectReference Include="..\Qart.CyberTester\Qart.CyberTester.csproj" />
+    <ProjectReference Include="..\Qart.Wheels.TestAutomation\Qart.Wheels.TestAutomation.csproj" />
   </ItemGroup>
 
 </Project>

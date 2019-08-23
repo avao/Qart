@@ -1,4 +1,8 @@
 ﻿using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Qart.Testing.Extensions.Windsor
@@ -18,19 +22,17 @@ namespace Qart.Testing.Extensions.Windsor
             return base.GetComponentName(method, arguments);
         }
 
-        protected override System.Collections.IDictionary GetArguments(MethodInfo method, object[] arguments)
+        protected override Arguments GetArguments(MethodInfo method, object[] arguments)
         {
             if (arguments.Length == 1)
             {
-                var dictionary = arguments[0] as System.Collections.IDictionary;
-                if (dictionary != null)
-                    return dictionary;
+                if (arguments[0] is IDictionary<string, object> dictionary)
+                    return Arguments.FromNamed(dictionary);
             }
             else if (method.Name.ToLower().StartsWith("get") && arguments.Length == 2)
             {
-                var dictionary = arguments[1] as System.Collections.IDictionary;
-                if (dictionary != null)
-                    return dictionary;
+                if (arguments[1] is IDictionary<string, object> dictionary)
+                    return Arguments.FromNamed(dictionary);
             }
             return base.GetArguments(method, arguments);
         }

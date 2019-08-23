@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
+    <Authors>AVAO</Authors>
+    <Company>AVAO</Company>
+    <Product>Qart</Product>
+    <Copyright></Copyright>
+    <RepositoryUrl>https://github.com/avao/Qart</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>

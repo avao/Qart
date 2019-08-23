@@ -1,82 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B664DDD4-6DD7-4454-9312-336C3B02BB96}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Qart.Wheels.TestAutomation</RootNamespace>
-    <AssemblyName>Qart.Wheels.TestAutomation</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Castle.Core.3.2.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Castle.Windsor.3.2.0\lib\net45\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj" />
+    <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="PipelineActions\LogLineAction.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CustomTestSession.cs" />
-    <Compile Include="TestCaseProcessors\ThrowAnExceptionProcessor.cs" />
-    <Compile Include="WindsorContainerInstaller.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Qart.CyberTester\Qart.CyberTester.csproj">
-      <Project>{c471ed5c-2edd-4629-a884-6f140a9f7eb1}</Project>
-      <Name>Qart.CyberTester</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj">
-      <Project>{069268e9-911b-4d57-9cb4-cb2c8e3c86bb}</Project>
-      <Name>Qart.Testing.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj">
-      <Project>{DCDF538C-7F9C-4F0F-AC6E-851EF9344DB5}</Project>
-      <Name>Qart.Testing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Qart.Core\Qart.Core.csproj">
-      <Project>{2444BC84-514F-41D8-80D5-EF171F514C91}</Project>
-      <Name>Qart.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
+
 </Project>

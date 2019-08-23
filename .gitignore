@@ -185,3 +185,5 @@ FakesAssemblies/
 # mono develop user preferences
 *.userprefs
 Src/.vs/
+TestSessionResults.xml
+launchSettings.json

@@ -1,17 +1,17 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using Castle.Facilities.TypedFactory;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Common.Logging;
 using Qart.Core.DataStore;
 using Qart.Testing;
+using Qart.Testing.Extensions.Windsor;
 using Qart.Testing.Framework;
 using Qart.Testing.StreamTransformers;
-using System.IO;
-using Castle.Facilities.TypedFactory;
-using Qart.Testing.Extensions.Windsor;
-using Castle.MicroKernel.Resolvers.SpecializedResolvers;
-using System;
 using Qart.Testing.TestCasesPreprocessors;
+using System;
+using System.IO;
 
 namespace Qart.CyberTester
 {
@@ -40,7 +40,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<IDataStoreProvider>().ImplementedBy<DataStoreProvider>());
             kernel.Register(Component.For<IDataStore>().Instance(testsDataStore));
 
-            kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory( c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
+            kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory(c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
 
             //Tests selection
             kernel.Register(Component.For<Func<IDataStore, bool>>().Instance((dataStore) => dataStore.Contains(".test")));
@@ -51,7 +51,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatStreamTransformer>().Named("concat"));
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<ConcatJsonArrayStreamTransformer>().Named("concatArray"));
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));
-                        
+
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
             return container;
         }
