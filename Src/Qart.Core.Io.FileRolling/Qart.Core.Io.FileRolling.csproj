@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Qart.Core\Qart.Core.csproj" />
+    <ProjectReference Include="..\src\Qart.Core\Qart.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj" />
-    <ProjectReference Include="..\Qart.Core\Qart.Core.csproj" />
-    <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj" />
+    <ProjectReference Include="..\..\Qart.Core.Io.FileRolling\Qart.Core.Io.FileRolling.csproj" />
+    <ProjectReference Include="..\..\src\Qart.Core\Qart.Core.csproj" />
+    <ProjectReference Include="..\..\src\Qart.Testing\Qart.Testing.csproj" />
   </ItemGroup>
 
 </Project>

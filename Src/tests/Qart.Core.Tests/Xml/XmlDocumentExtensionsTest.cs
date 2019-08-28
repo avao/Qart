@@ -15,7 +15,7 @@ namespace Qart.Core.Tests.Xml
     {
         readonly ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true, null, null);
 
-        [TestCase("Override/RepeatedElements"), Ignore("TODO: fix line ending")]
+        [TestCase("Override/RepeatedElements")]
         public void Override(string testId)
         {
             var testCase = TestSystem.GetTestCase(testId);
@@ -28,7 +28,7 @@ namespace Qart.Core.Tests.Xml
             testCase.AssertContent(lhs, "Merged.xml", true);
         }
 
-        [TestCase("RemoveNodes/Element"), Ignore("TODO: fix line ending")]
+        [TestCase("RemoveNodes/Element")]
         public void RemoveNodes(string testId)
         {
             var testCase = TestSystem.GetTestCase(testId);
