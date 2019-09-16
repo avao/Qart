@@ -1,4 +1,5 @@
-﻿using Qart.Testing.ActionPipeline;
+﻿using Microsoft.Extensions.Logging;
+using Qart.Testing.ActionPipeline;
 using Qart.Testing.Framework;
 
 namespace Qart.Wheels.TestAutomation.PipelineActions
@@ -22,11 +23,11 @@ namespace Qart.Wheels.TestAutomation.PipelineActions
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            testCaseContext.Logger.Info(_somethingToSay);
+            testCaseContext.Logger.LogInformation(_somethingToSay);
 
             if(!string.IsNullOrEmpty(_somethingElseToSay))
             {
-                testCaseContext.Logger.Info(_somethingElseToSay);
+                testCaseContext.Logger.LogInformation(_somethingElseToSay);
             }
         }
     }

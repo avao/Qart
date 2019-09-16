@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qart.Testing.ActionPipeline;
 using Qart.Testing.Framework.Json;
@@ -19,7 +20,7 @@ namespace Qart.Testing.Framework
                 IList<Exception> exceptions = null;
                 foreach (var actionDescription in actionDescriptions)
                 {
-                    c.Logger.DebugFormat("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value))));
+                    c.Logger.LogDebug("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value))));
                     var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
                     try
                     {

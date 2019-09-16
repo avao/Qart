@@ -3,13 +3,15 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using Common.Logging;
+using Castle.Windsor.MsDependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Qart.Core.DataStore;
 using Qart.Testing;
 using Qart.Testing.Extensions.Windsor;
 using Qart.Testing.Framework;
 using Qart.Testing.StreamTransformers;
 using Qart.Testing.TestCasesPreprocessors;
+using Serilog;
 using System;
 using System.IO;
 
@@ -17,18 +19,26 @@ namespace Qart.CyberTester
 {
     public class Bootstrapper
     {
-        public static WindsorContainer CreateContainer(IDataStore testsDataStore)
+        public static IServiceProvider CreateContainer(IDataStore testsDataStore, IServiceCollection services)
         {
             var container = new WindsorContainer();
             var kernel = container.Kernel;
+
+            Log.Logger = new LoggerConfiguration()
+                  .Enrich.FromLogContext()
+                  .WriteTo.Console()
+                  .CreateLogger();
+
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+
+
+            kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
 
             kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
             kernel.AddFacility<TypedFactoryFacility>();
 
             kernel.Register(Component.For<Testing.CyberTester>());
 
-            kernel.Register(Component.For<ILogManager>().ImplementedBy<LogManager>());
-            kernel.Register(Component.For<ITestCaseLoggerFactory>().ImplementedBy<TestCaseLoggerFactory>());
             kernel.Register(Component.For<ITestStorage>().ImplementedBy<TestStorage>());
 
             kernel.Register(Component.For<ISchedule<TestCase>>().ImplementedBy<Schedule<TestCase>>());
@@ -53,7 +63,10 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<IStreamTransformer>().ImplementedBy<RefStreamTransformer>().Named("ref"));
 
             container.Install(FromAssembly.InDirectory(new AssemblyFilter(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location))));
-            return container;
+
+            var serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(container, services);
+
+            return serviceProvider;
         }
     }
 }

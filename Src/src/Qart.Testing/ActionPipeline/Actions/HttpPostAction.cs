@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Qart.Core.DataStore;
 using Qart.Testing.Framework;
@@ -50,7 +50,7 @@ namespace Qart.Testing.ActionPipeline.Actions
             Post(_url, testCaseContext.TestCase.GetContent(id), context, testCaseContext.Logger);
         }
 
-        private static void Post(string url, string body, T context, ILog logger)
+        private static void Post(string url, string body, T context, ILogger logger)
         {
             context.Content = context.HttpClient.PostEnsureSuccess(url, body, logger);
         }

@@ -1,4 +1,4 @@
-﻿using Qart.Core.Logging;
+﻿using Qart.Testing.Framework.Logging;
 
 namespace Qart.Testing
 {

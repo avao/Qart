@@ -1,10 +1,8 @@
-﻿using Common.Logging;
-using Qart.Testing.Framework;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +13,7 @@ namespace Qart.Testing.Framework
         private readonly IEnumerable<ITestSession> _customTestSessions;
         private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
-        private readonly ILog _logger;
+        private readonly ILogger _logger;
         private readonly ISchedule<TestCase> _schedule;
         private readonly IList<Task> _tasks;
         private readonly CancellationToken _cancellationToken;
@@ -35,14 +33,14 @@ namespace Qart.Testing.Framework
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILogManager logManager, IDictionary<string, string> options, ISchedule<TestCase> schedule)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILoggerFactory loggerFactory, IDictionary<string, string> options, ISchedule<TestCase> schedule)
         {
             _results = new ConcurrentBag<TestCaseResult>();
             _customTestSessions = customTestSessions;
 
             _testCaseProcessorFactory = testCaseProcessorFactory;
             _testCaseLoggerFactory = testCaseLoggerFactory;
-            _logger = logManager.GetLogger("");
+            _logger = loggerFactory.CreateLogger("");
             Options = new ReadOnlyDictionary<string, string>(options);
             _schedule = schedule;
             _tasks = new List<Task>();
@@ -78,10 +76,10 @@ namespace Qart.Testing.Framework
 
         private void OnTestCase(TestCase testCase)
         {
-            _logger.DebugFormat("Starting processing test case [{0}]", testCase.Id);
+            _logger.LogDebug("Starting processing test case [{0}]", testCase.Id);
             var isMuted = testCase.Contains(".muted");
             if (isMuted)
-                _logger.Debug("Test is muted.");
+                _logger.LogDebug("Test is muted.");
 
             TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
@@ -103,7 +101,7 @@ namespace Qart.Testing.Framework
                 }
                 catch (Exception ex)
                 {
-                    testCaseContext.Logger.Error("an error occured", ex);
+                    testCaseContext.Logger.LogError(ex, "an error occured");
                     testResult.MarkAsFailed(ex);
                 }
                 finally
@@ -120,7 +118,7 @@ namespace Qart.Testing.Framework
                 }
                 catch (Exception ex)
                 {
-                    testCaseContext.Logger.Error("an error occured while getting test case description", ex);
+                    testCaseContext.Logger.LogError(ex, "an error occured while getting test case description");
                 }
 
                 if (_customTestSessions != null)
@@ -130,7 +128,7 @@ namespace Qart.Testing.Framework
                 }
             }
 
-            _logger.DebugFormat("Finished processing test case [{0}]", testCase.Id);
+            _logger.LogDebug("Finished processing test case [{0}]", testCase.Id);
 
         }
 

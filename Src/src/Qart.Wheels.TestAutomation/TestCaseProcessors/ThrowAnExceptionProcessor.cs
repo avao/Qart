@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 using Qart.Testing;
+using System;
 
 namespace Qart.Wheels.TestAutomation.TestCaseProcessors
 {
@@ -8,7 +9,7 @@ namespace Qart.Wheels.TestAutomation.TestCaseProcessors
         public void Process(Testing.Framework.TestCaseContext c)
         {
             c.DescriptionWriter.AddNote("Action", "started");
-            c.Logger.InfoFormat("About to throw from {0}", c.TestCase.Id);
+            c.Logger.LogInformation("About to throw from {0}", c.TestCase.Id);
             throw new Exception("an exception");
         }
     }

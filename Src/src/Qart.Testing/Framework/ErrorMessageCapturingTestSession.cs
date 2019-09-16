@@ -1,8 +1,8 @@
-﻿using Common.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System.Collections.Generic;
 
 namespace Qart.Testing.Framework
 {
@@ -16,7 +16,7 @@ namespace Qart.Testing.Framework
         {
         }
 
-        public void OnFinish(TestCaseResult result, ILog logger)
+        public void OnFinish(TestCaseResult result, ILogger logger)
         {
             if (result.Exception != null)
             {

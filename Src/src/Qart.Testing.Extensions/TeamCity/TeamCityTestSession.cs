@@ -1,9 +1,9 @@
 ﻿using JetBrains.TeamCity.ServiceMessages.Write;
+using Microsoft.Extensions.Logging;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Text;
-using System.Collections;
 
 namespace Qart.Testing.Extensions.TeamCity
 {
@@ -17,17 +17,17 @@ namespace Qart.Testing.Extensions.TeamCity
 
         public void OnBegin(Framework.TestCaseContext ctx)
         {
-            ctx.Logger.Info(_formatter.FormatMessage("testStarted", GetCommonProperties(ctx.TestCase.Id)));
+            ctx.Logger.LogInformation(_formatter.FormatMessage("testStarted", GetCommonProperties(ctx.TestCase.Id)));
         }
 
-        public void OnFinish(TestCaseResult result, Common.Logging.ILog logger)
+        public void OnFinish(TestCaseResult result, ILogger logger)
         {
             var commonProperties = GetCommonProperties(result.TestCase.Id);
             if (result.Exception != null)
             {
                 if (result.IsMuted)
                 {
-                    logger.Info(_formatter.FormatMessage("testIgnored", commonProperties.Concat(new[] { new ServiceMessageProperty("message", "") })));
+                    logger.LogInformation(_formatter.FormatMessage("testIgnored", commonProperties.Concat(new[] { new ServiceMessageProperty("message", "") })));
                 }
                 else
                 {
@@ -39,10 +39,10 @@ namespace Qart.Testing.Extensions.TeamCity
                         detailsBuilder.Append(" : ");
                         detailsBuilder.Append(item.Value);
                     }
-                    logger.Info(_formatter.FormatMessage("testFailed", commonProperties.Concat(new[] { new ServiceMessageProperty("message", result.Exception.Message), new ServiceMessageProperty("details", detailsBuilder.ToString()) })));
+                    logger.LogInformation(_formatter.FormatMessage("testFailed", commonProperties.Concat(new[] { new ServiceMessageProperty("message", result.Exception.Message), new ServiceMessageProperty("details", detailsBuilder.ToString()) })));
                 }
             }
-            logger.Info(_formatter.FormatMessage("testFinished", commonProperties));
+            logger.LogInformation(_formatter.FormatMessage("testFinished", commonProperties));
         }
 
         public void Dispose()
