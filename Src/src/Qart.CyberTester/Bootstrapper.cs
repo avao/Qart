@@ -12,6 +12,7 @@ using Qart.Testing.Framework;
 using Qart.Testing.StreamTransformers;
 using Qart.Testing.TestCasesPreprocessors;
 using Serilog;
+using Serilog.Events;
 using System;
 using System.IO;
 
@@ -19,7 +20,7 @@ namespace Qart.CyberTester
 {
     public class Bootstrapper
     {
-        public static IServiceProvider CreateContainer(IDataStore testsDataStore, IServiceCollection services)
+        public static IServiceProvider CreateContainer(IDataStore testsDataStore, IServiceCollection services, LogEventLevel logEventLevel)
         {
             var container = new WindsorContainer();
             var kernel = container.Kernel;
@@ -27,6 +28,7 @@ namespace Qart.CyberTester
             Log.Logger = new LoggerConfiguration()
                   .Enrich.FromLogContext()
                   .WriteTo.Console()
+                  .MinimumLevel.Is(logEventLevel)
                   .CreateLogger();
 
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));

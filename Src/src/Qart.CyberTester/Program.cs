@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Testing;
+using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,10 @@ namespace Qart.CyberTester
 
         [Option('s', "suppressExceptions", Required = false, HelpText = "Specifies whether to defer exceptions while executing actions to the end.")]
         public bool SuppressExceptions { get; set; }
+
+        [Option('l', "logLevel", Required = false, HelpText = "Log level", Default = LogEventLevel.Information)]
+        public LogEventLevel LogLevel { get; set; }
+
 
         [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'")]
         public string Options { get; set; }
@@ -44,6 +49,7 @@ namespace Qart.CyberTester
                 {
                     parsedOptions.Dir = Directory.GetCurrentDirectory();
                 }
+
                 result = Execute(parsedOptions);
             }
             return result;
@@ -51,7 +57,7 @@ namespace Qart.CyberTester
 
         public static int Execute(CommandlineOptions options)
         {
-            var serviceProvider = Bootstrapper.CreateContainer(new FileBasedDataStore(options.Dir), new ServiceCollection());
+            var serviceProvider = Bootstrapper.CreateContainer(new FileBasedDataStore(options.Dir), new ServiceCollection(), options.LogLevel);
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 
