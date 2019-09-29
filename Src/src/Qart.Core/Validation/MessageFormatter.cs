@@ -13,6 +13,9 @@ namespace Qart.Core.Validation
             if (expectedContent == null)
                 return $"Expected content is null. Actual content: [{FormatForReporting(actualContent, 0, maxContextLength)}]";
 
+            actualContent = ReplaceCharacters(actualContent);
+            expectedContent = ReplaceCharacters(expectedContent);
+
             int diffIndex = 0;
             var minLen = Math.Min(actualContent.Length, expectedContent.Length);
             while (diffIndex < minLen && actualContent[diffIndex] == expectedContent[diffIndex])
@@ -27,6 +30,11 @@ namespace Qart.Core.Validation
             var expectedToReport = FormatForReporting(expectedContent, startIndex, maxContextLength);
             var diffPositionToReport = ReportDiffPosition(startIndex, diffIndex);
             return $"Expected string length {expectedContent.Length} but was {actualContent.Length}. Content differ at index {diffIndex}.\n Expected: [{expectedToReport}]\n But was:  [{actualToReport}]\n -----------{diffPositionToReport}";
+        }
+
+        private static string ReplaceCharacters(string content)
+        {
+            return content.Replace("\n", "\\n"); //TODO other characters like \t
         }
 
         private static string FormatForReporting(string content, int startIndex, int maxLength)
