@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
 using Qart.Core.DataStore;
+using Qart.Core.Validation;
 using Qart.Core.Xml;
 using Qart.Testing.Diff;
 using Qart.Testing.Framework.Json;
@@ -129,9 +129,8 @@ namespace Qart.Testing
             if (expectedContent != actualContent)
             {
                 failAction(actualContent, expectedContent);
-
-                Assert.That(actualContent, Is.EqualTo(expectedContent));
-                Assert.Fail("Just in case...");
+                string message = MessageFormatter.FormatMessageNotEqual(actualContent, expectedContent, 200);
+                throw new AssertException(message);
             }
         }
 
@@ -165,7 +164,7 @@ namespace Qart.Testing
             var diffDiffs = Compare(diffs, expectedDiffs).ToList();
             if (diffDiffs.Count > 0)
             {
-                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);                
+                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);
                 reportFunc(diffDiffs);
             }
             testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());

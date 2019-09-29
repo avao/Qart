@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using NUnit.Framework;
 using Qart.Core.Io;
 using System;
 using System.IO;
@@ -15,7 +14,7 @@ namespace Qart.Testing
 
         public static void AreEqual(string filePath, string actualContent, bool rebase)
         {
-            AreEqual(filePath, actualContent, rebase, (expected, actual) => Assert.Fail("Content in the expected file is different to the provided one", filePath, actualContent));
+            AreEqual(filePath, actualContent, rebase, (expected, actual) => throw new AssertException("Content in the expected file is different to the provided one"));
         }
 
         public static void AreEqual(string filePath, string actualContent, bool rebase, Action<string, string> failAction)

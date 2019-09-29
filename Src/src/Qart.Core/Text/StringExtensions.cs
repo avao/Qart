@@ -63,6 +63,11 @@ namespace Qart.Core.Text
         }
 
 
+        public static string SubstringUpTo(this string value, int startIndex, int maxLength)
+        {
+            return value.Substring(startIndex, Math.Min(maxLength, value.Length - startIndex));
+        }
+
         public static bool IsXml(this string content)
         {
             return content.StartsWith("<?xml", StringComparison.InvariantCulture);
