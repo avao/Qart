@@ -1,5 +1,6 @@
 ﻿using Qart.Core.Text;
 using System;
+using System.Text;
 
 namespace Qart.Core.Validation
 {
@@ -34,7 +35,7 @@ namespace Qart.Core.Validation
 
         private static string ReplaceCharacters(string content)
         {
-            return content.Replace("\n", "\\n"); //TODO other characters like \t
+            return content.Replace("\r", "").Replace("\n", "\\n"); //TODO other characters like \t
         }
 
         private static string FormatForReporting(string content, int startIndex, int maxLength)
