@@ -84,9 +84,10 @@ namespace Qart.Testing.Framework
             TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
 
-            using (var testCaseContext = new TestCaseContext(Options, testCase, _testCaseLoggerFactory.GetLogger(testCase), new XDocumentDescriptionWriter()))
+            var testCaseLogger = _testCaseLoggerFactory.GetLogger(testCase);
+            using (var testCaseContext = new TestCaseContext(Options, testCase, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger)))
             {
-                var descriptionWriter = new XDocumentDescriptionWriter();
+                var descriptionWriter = new XDocumentDescriptionWriter(testCaseLogger);
                 if (_customTestSessions != null)
                 {
                     foreach (var session in _customTestSessions)

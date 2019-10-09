@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 
 namespace Qart.Testing.Framework
 {
     public class XDocumentDescriptionWriter : IDescriptionWriter
     {
-        private XDocument _document;
-        private XElement _element;
+        private readonly XDocument _document;
+        private readonly XElement _element;
+        private readonly ILogger _logger;
 
-        public XDocumentDescriptionWriter()
+        public XDocumentDescriptionWriter(ILogger logger)
         {
             _document = new XDocument(new XElement("Description"));
             _element = _document.Root;
+            _logger = logger;
         }
 
         public XDocumentDescriptionWriter(XElement element)
@@ -27,6 +24,7 @@ namespace Qart.Testing.Framework
         public void AddNote(string name, string value)
         {
             _element.Add(new XElement(name, value));
+            _logger.LogDebug("Adding note {note}", new { name, value });
         }
 
         public IDescriptionWriter CreateNestedWriter(string scope)
