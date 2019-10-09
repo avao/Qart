@@ -16,9 +16,10 @@ namespace Qart.Testing.Framework
             _logger = logger;
         }
 
-        public XDocumentDescriptionWriter(XElement element)
+        public XDocumentDescriptionWriter(XElement element, ILogger logger)
         {
             _element = element;
+            _logger = logger;
         }
 
         public void AddNote(string name, string value)
@@ -31,7 +32,7 @@ namespace Qart.Testing.Framework
         {
             var nestedElement = new XElement(scope);
             _element.Add(nestedElement);
-            return new XDocumentDescriptionWriter(nestedElement);
+            return new XDocumentDescriptionWriter(nestedElement, _logger);
         }
 
         public XDocument GetContent()
