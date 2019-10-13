@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Qart.Core.Text;
 using Qart.Core.Validation;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,11 @@ namespace Qart.Testing.ActionPipeline
                 default:
                     throw new NotSupportedException($"Unsupported item type {item.GetType()} for conversion into JToken");
             }
+        }
+
+        public static string Resolve(this IPipelineContext pipelineContext, string value)
+        {
+            return VariableResolver.Resolve(value, (key) => pipelineContext.GetRequiredItemAsString(key));
         }
     }
 }

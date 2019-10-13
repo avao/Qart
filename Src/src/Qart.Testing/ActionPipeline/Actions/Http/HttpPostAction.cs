@@ -34,9 +34,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            testCaseContext.DescriptionWriter.AddNote("HttpPost", _url);
+            var url = context.Resolve(_url);
+            testCaseContext.DescriptionWriter.AddNote("HttpPost", url);
             var body = _bodyFunc(testCaseContext.TestCase, context);
-            context.SetItem(_targetKey, context.GetRequiredHttpClient().PostEnsureSuccess(_url, body, testCaseContext.Logger));
+            context.SetItem(_targetKey, context.GetRequiredHttpClient().PostEnsureSuccess(url, body, testCaseContext.Logger));
         }
     }
 }

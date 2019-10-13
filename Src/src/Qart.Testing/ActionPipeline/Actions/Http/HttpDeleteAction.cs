@@ -15,8 +15,9 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            testCaseContext.DescriptionWriter.AddNote("HttpDelete", _url);
-            context.GetRequiredHttpClient().DeleteEnsureSuccess(_url, testCaseContext.Logger);
+            var url = context.Resolve(_url);
+            testCaseContext.DescriptionWriter.AddNote("HttpDelete", url);
+            context.GetRequiredHttpClient().DeleteEnsureSuccess(url, testCaseContext.Logger);
         }
     }
 }

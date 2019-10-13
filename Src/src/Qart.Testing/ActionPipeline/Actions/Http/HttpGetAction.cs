@@ -17,8 +17,9 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            testCaseContext.DescriptionWriter.AddNote("HttpGet", _url);
-            context.SetItem(_itemKey, context.GetRequiredHttpClient().GetEnsureSuccess(_url, testCaseContext.Logger));
+            var url = context.Resolve(_url);
+            testCaseContext.DescriptionWriter.AddNote("HttpGet", url);
+            context.SetItem(_itemKey, context.GetRequiredHttpClient().GetEnsureSuccess(url, testCaseContext.Logger));
         }
-    }    
+    }
 }

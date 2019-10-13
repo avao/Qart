@@ -1,7 +1,8 @@
 {
 	"Parameters" : {
 		"actions" : [
-            "http_get?url=https://api.nuget.org/v3/index.json",
+            "set_item?key=version&value=v3",
+            "http_get?url=https://api.nuget.org/${version}/index.json",
             "json_select?jsonPath=$.version",
             "assert_item?path=expected1.json"
         ]
