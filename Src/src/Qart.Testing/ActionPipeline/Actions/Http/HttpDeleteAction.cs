@@ -1,10 +1,10 @@
 ﻿using Qart.Testing.Framework;
 using Qart.Testing.Framework.Http;
 
-namespace Qart.Testing.ActionPipeline.Actions
+namespace Qart.Testing.ActionPipeline.Actions.Http
 {
     public class HttpDeleteAction<T> : IPipelineAction<T>
-        where T : IHttpContext
+        where T : IHttpPipelineContext
     {
         private string _url;
 
@@ -15,7 +15,8 @@ namespace Qart.Testing.ActionPipeline.Actions
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            context.HttpClient.DeleteEnsureSuccess(_url, testCaseContext.Logger);
+            testCaseContext.DescriptionWriter.AddNote("HttpDelete", _url);
+            context.GetRequiredHttpClient().DeleteEnsureSuccess(_url, testCaseContext.Logger);
         }
     }
 }

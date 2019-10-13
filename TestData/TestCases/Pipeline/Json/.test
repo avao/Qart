@@ -1,0 +1,12 @@
+{
+	"Parameters" : {
+		"actions" : [
+            "set_item?value=\"a value\"",
+            "to_jtoken",
+            "save_item?path=jtoken1.json",
+            "load_item?path=value.json",
+            "json_select?jsonPath=$.array_property[*]",
+            "assert_item?path=expected1.json"
+        ]
+	}
+}

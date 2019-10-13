@@ -1,0 +1,9 @@
+{
+	"Parameters" : {
+		"actions" : [
+            "http_get?url=https://api.nuget.org/v3/index.json",
+            "json_select?jsonPath=$.version",
+            "assert_item?path=expected1.json"
+        ]
+	}
+}

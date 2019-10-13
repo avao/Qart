@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -6,46 +7,64 @@ namespace Qart.Testing.Framework.Http
 {
     public static class HttpClientExtensions
     {
-        public static string GetEnsureSuccess(this HttpClient client, string relativeUri)
+        public static Task<string> GetEnsureSuccessAsync(this HttpClient client, string relativeUri, ILogger logger)
         {
-            return client.GetAsync(relativeUri).GetContentEnsureSuccess();
+            logger.LogDebug("Executing GET on [{0}]", relativeUri);
+            return client.GetAsync(relativeUri).GetContentAssertSuccessAsync(logger);
         }
 
-        public static string DeleteEnsureSuccess(this HttpClient client, string relativeUri)
+        public static string GetEnsureSuccess(this HttpClient client, string relativeUri, ILogger logger)
         {
-            return client.DeleteAsync(relativeUri).GetContentEnsureSuccess();
+            return client.GetEnsureSuccessAsync(relativeUri, logger).GetAwaiter().GetResult();
         }
 
-        public static string PostEnsureSuccess(this HttpClient client, string relativeUri, string content)
+        public static Task<string> PostEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, ILogger logger)
         {
             if (content.StartsWith("<?xml"))
-                return client.PostXmlEnsureSuccess(relativeUri, content);
+                return client.PostXmlEnsureSuccessAsync(relativeUri, content, logger);
             else
-                return client.PostJsonEnsureSuccess(relativeUri, content);
+                return client.PostJsonEnsureSuccessAsync(relativeUri, content, logger);
         }
 
-        public static string PostJsonEnsureSuccess(this HttpClient client, string relativeUri, string content)
+        public static string PostEnsureSuccess(this HttpClient client, string relativeUri, string content, ILogger logger)
         {
-            return client.PostJsonAsync(relativeUri, content).GetContentEnsureSuccess();
+            return client.PostEnsureSuccessAsync(relativeUri, content, logger).GetAwaiter().GetResult();
         }
 
-        public static string PostXmlEnsureSuccess(this HttpClient client, string relativeUri, string content)
+        public static Task<string> DeleteEnsureSuccessAsync(this HttpClient client, string relativeUri, ILogger logger)
         {
-            return client.PostXmlAsync(relativeUri, content).GetContentEnsureSuccess();
+            logger.LogDebug("Executing DELETE on [{0}]", relativeUri);
+            return client.DeleteAsync(relativeUri).GetContentAssertSuccessAsync(logger);
         }
 
-        public static Task<HttpResponseMessage> PostXmlAsync(this HttpClient client, string relativeUri, string content)
+        public static string DeleteEnsureSuccess(this HttpClient client, string relativeUri, ILogger logger)
         {
-            return client.PostAsync(relativeUri, content, "application/xml");
+            return client.DeleteEnsureSuccessAsync(relativeUri, logger).GetAwaiter().GetResult();
         }
 
-        public static Task<HttpResponseMessage> PostJsonAsync(this HttpClient client, string relativeUri, string content)
+        public static Task<string> PostJsonEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, ILogger logger)
         {
-            return client.PostAsync(relativeUri, content, "application/json");
+            return client.PostJsonAsync(relativeUri, content, logger).GetContentAssertSuccessAsync(logger);
         }
 
-        public static Task<HttpResponseMessage> PostAsync(this HttpClient client, string relativeUri, string content, string mediaType)
+        public static Task<string> PostXmlEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, ILogger logger)
         {
+            return client.PostXmlAsync(relativeUri, content, logger).GetContentAssertSuccessAsync(logger);
+        }
+
+        public static Task<HttpResponseMessage> PostXmlAsync(this HttpClient client, string relativeUri, string content, ILogger logger)
+        {
+            return client.PostAsync(relativeUri, content, "application/xml", logger);
+        }
+
+        public static Task<HttpResponseMessage> PostJsonAsync(this HttpClient client, string relativeUri, string content, ILogger logger)
+        {
+            return client.PostAsync(relativeUri, content, "application/json", logger);
+        }
+
+        public static Task<HttpResponseMessage> PostAsync(this HttpClient client, string relativeUri, string content, string mediaType, ILogger logger)
+        {
+            logger.LogDebug("Executing POST on [{0}]", relativeUri);
             return client.PostAsync(relativeUri, new StringContent(content, Encoding.UTF8, mediaType));
         }
     }

@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
 using Qart.Core.Validation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qart.Core.Tests.Validation
 {
@@ -13,13 +9,13 @@ namespace Qart.Core.Tests.Validation
         [Test]
         public void NotNullFailsWithNull()
         {
-            Assert.Throws<ArgumentException>(() => Require.NotNull((string)null));
+            Assert.Throws<ArgumentException>(() => Require.NotNull((string)null, "message"));
         }
 
         [Test]
         public void NotNullSucceedsWithNotNull()
         {
-            Require.NotNull("");
+            Require.NotNull("", "message");
         }
 
         [Test]

@@ -1,7 +1,7 @@
 {
 	"ProcessorId" : "piper",
 	"Parameters" : {
-		"actions" : ["anAction?somethingToSay=Hello World!"],
+		"actions" : ["log_info?message=Hello World!"],
 		"prop" : {
 			"nnn" : "bbb"
 		}

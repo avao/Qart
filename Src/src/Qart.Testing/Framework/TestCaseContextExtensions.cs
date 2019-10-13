@@ -13,6 +13,7 @@ namespace Qart.Testing.Framework
     public static class TestCaseContextExtensions
     {
         public static void ExecuteActions<T>(this TestCaseContext c, IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd)
+            where T : IPipelineContext
         {
             var pipelineContext = pipelineContextFactory.CreateContext(c);
             try
@@ -20,7 +21,7 @@ namespace Qart.Testing.Framework
                 IList<Exception> exceptions = null;
                 foreach (var actionDescription in actionDescriptions)
                 {
-                    c.Logger.LogDebug("Creating action [{0}] with parameters [{1}]", actionDescription.Name, string.Join("\n", actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value))));
+                    c.Logger.LogDebug("Creating action {0} with parameters {1}", actionDescription.Name, actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value)));
                     var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
                     try
                     {

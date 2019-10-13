@@ -4,46 +4,34 @@ namespace Qart.Core.Validation
 {
     public static class Require
     {
-        public static T NotNull<T>(T value)
-            where T : class
-        {
-            return NotNull(value, "Expected non null value.");
-        }
+        public static void NotNull<T>(T value, string message) where T : class => That(() => value != null, message);
 
-        public static T NotNull<T>(T value, string message)
-            where T : class
-        {
-            Require.That(() => value != null, message);
-            return value;
-        }
+        public static void NotNullOrEmpty(string value) => NotNullOrEmpty(value, "Expected non null and not empty value.");
+        public static void NotNullOrEmpty(string value, string message) => That(() => !string.IsNullOrEmpty(value), message);
 
-        public static string NotNullOrEmpty(string value)
-        {
-            Require.NotNullOrEmpty(value, "Expected non null and not empty value.");
-            return value;
-        }
+        public static void DoesNotContain(string value, string substring) => That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
 
-        public static void NotNullOrEmpty(string value, string message)
-        {
-            Require.That(() => !string.IsNullOrEmpty(value), message);
-        }
+        public static void That(Func<bool> predicate, string failMessage) => That(predicate, () => failMessage);
 
-        public static void DoesNotContain(string value, string substring)
+        public static void That(Func<bool> predicate, Func<string> messageFunc)
         {
-            Require.That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
-        }
-
-        public static void That(Func<bool> predicate, string failMessage)
-        {
-            Require.That(predicate, () => failMessage);
-        }
-
-        public static void That(Func<bool> predicate, Func<string> fail)
-        {
-            if(!predicate())
+            if (!predicate())
             {
-                throw new ArgumentException(fail());
+                Fail(messageFunc);
             }
         }
-    }   
+
+        public static void Fail(Func<string> messageFunc) => Fail(messageFunc());
+        public static void Fail(string message) => throw new ArgumentException(message);
+    }
+
+    public static class RequireExtensions
+    {
+        public static T RequireNotNull<T>(this T obj, string message)
+            where T : class
+        {
+            Require.NotNull(obj, message);
+            return obj;
+        }
+    }
 }

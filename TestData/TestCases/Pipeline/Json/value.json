@@ -1,0 +1,16 @@
+{
+    "property": {
+        "nested_integer": 123,
+        "nested_array": [1,2]
+    },
+    "array_property" : [
+        {
+            "id" : 1,
+            "value" : "value1"
+        },
+        {
+            "id" : 2,
+            "value" : "value2"
+        }
+    ] 
+}

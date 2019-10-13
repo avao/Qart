@@ -6,6 +6,7 @@ using System.Linq;
 namespace Qart.Testing.ActionPipeline
 {
     public class UrlBasedActionPipelineProcessor<T> : IActionPipelineProcessor
+        where T : IPipelineContext
     {
         private readonly IPipelineActionFactory<T> _actionFactory;
         private readonly IPipelineContextFactory<T> _pipelineContextFactory;

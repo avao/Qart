@@ -33,16 +33,32 @@ namespace Qart.Core.DataStore
             if (!dataStore.Contains(itemId))
                 return null;
 
-            using(var stream = dataStore.GetRequiredReadStream(itemId))
-            using(var reader = new StreamReader(stream))
+            using (var stream = dataStore.GetRequiredReadStream(itemId))
+            using (var reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
             }
         }
 
+        public static IEnumerable<string> GetRequiredAllLines(this IDataStore dataStore, string itemId)
+        {
+            using (var stream = dataStore.GetRequiredReadStream(itemId))
+            using (var reader = new StreamReader(stream))
+            {
+                var lines = new List<string>();
+                var line = reader.ReadLine();
+                while(line!=null)
+                {
+                    lines.Add(line);
+                    line = reader.ReadLine();
+                }
+                return lines;
+            }
+        }
+
         public static string GetRequiredContent(this IDataStore dataStore, string itemId)
         {
-            return Require.NotNull(dataStore.GetContent(itemId), "No content read from [" + itemId + "]");
+            return dataStore.GetContent(itemId).RequireNotNull("No content read from [" + itemId + "]");
         }
 
         public static void PutContent(this IDataStore dataStore, string itemId, string content)
@@ -82,9 +98,9 @@ namespace Qart.Core.DataStore
 
         public static Stream GetRequiredReadStream(this IDataStore dataStore, string id)
         {
-            return Require.NotNull(dataStore.GetReadStream(id), "Could not get stream [" + id + "]");
+            return dataStore.GetReadStream(id).RequireNotNull("Could not get stream [" + id + "]");
         }
-       
+
         public static IEnumerable<string> GetAllGroups(this IDataStore dataStore)
         {
             return dataStore.GetAllGroups(string.Empty);
