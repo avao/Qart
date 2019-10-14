@@ -21,15 +21,12 @@ namespace Qart.Testing.ActionPipeline.Actions
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            if (string.IsNullOrEmpty(_jsonPath))
+            string value = context.GetRequiredItem<string>(_itemKey);
+            if (!string.IsNullOrEmpty(_jsonPath))
             {
-                testCaseContext.AssertContentJson(_itemKey, _fileName);
+                value = JsonConvert.DeserializeObject<JToken>(value).SelectTokens(_jsonPath).ToIndentedJson();
             }
-            else
-            {
-                var actual = JsonConvert.DeserializeObject<JToken>(context.GetRequiredItem<string>(_itemKey));
-                testCaseContext.AssertContent(actual.SelectTokens(_jsonPath).ToIndentedJson(), _fileName);
-            }
+            testCaseContext.AssertContentJson(value, _fileName);
         }
     }
 }

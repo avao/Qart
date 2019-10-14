@@ -33,5 +33,17 @@ namespace Qart.Core.Validation
             Require.NotNull(obj, message);
             return obj;
         }
+
+        public static T RequireType<T>(this object obj, string message)
+            where T : class
+        {
+            if(obj is T value)
+            {
+                return value;
+            }
+
+            Require.Fail(message);
+            throw new NotSupportedException("Just to make compiler happy");
+        }
     }
 }

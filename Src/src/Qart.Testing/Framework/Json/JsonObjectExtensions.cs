@@ -16,7 +16,7 @@ namespace Qart.Testing.Framework.Json
                 orderedArray.Add(item);
             }
 
-            array.Replace(orderedArray);
+            array.ReplaceAll(orderedArray.Children());
         }
 
         public static void Order(this JObject obj, string path, Func<JToken, object> keySelector)
