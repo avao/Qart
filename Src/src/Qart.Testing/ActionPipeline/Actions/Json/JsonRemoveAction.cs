@@ -35,10 +35,16 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
             {
                 jtoken = jtoken.DeepClone();
             }
-            foreach (var token in _jsonPathsFunc(testCaseContext.TestCase).SelectMany(jsonPath => jtoken.SelectTokens(jsonPath)))
+
+            var tokensToRemove = _jsonPathsFunc(testCaseContext.TestCase)
+                .SelectMany(jsonPath => jtoken.SelectTokens(jsonPath))
+                .ToList();
+
+            foreach (var token in tokensToRemove)
             {
                 token.Remove();
             }
+
             context.SetItem(_targetKey, jtoken);
         }
     }

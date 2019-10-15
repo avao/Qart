@@ -21,7 +21,7 @@ namespace Qart.Testing.ActionPipeline.Actions
 
         public void Execute(TestCaseContext testCaseContext, T context)
         {
-            string value = context.GetRequiredItem<string>(_itemKey);
+            string value = context.GetRequiredItemAsString(_itemKey);
             if (!string.IsNullOrEmpty(_jsonPath))
             {
                 value = JsonConvert.DeserializeObject<JToken>(value).SelectTokens(_jsonPath).ToIndentedJson();
