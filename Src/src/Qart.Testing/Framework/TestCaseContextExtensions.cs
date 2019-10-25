@@ -12,49 +12,41 @@ namespace Qart.Testing.Framework
 {
     public static class TestCaseContextExtensions
     {
-        public static void ExecuteActions<T>(this TestCaseContext c, IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd)
-            where T : IPipelineContext
+        public static void ExecuteActions(this TestCaseContext context, IPipelineActionFactory actionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd)
         {
-            var pipelineContext = pipelineContextFactory.CreateContext(c);
-            try
+            IList<Exception> exceptions = null;
+            foreach (var actionDescription in actionDescriptions)
             {
-                IList<Exception> exceptions = null;
-                foreach (var actionDescription in actionDescriptions)
+                context.Logger.LogDebug("Creating action {0} with parameters {1}", actionDescription.Name, actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value)));
+                var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
+                try
                 {
-                    c.Logger.LogDebug("Creating action {0} with parameters {1}", actionDescription.Name, actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value)));
-                    var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
-                    try
+                    action.Execute(context);
+                }
+                catch (Exception ex)
+                {
+                    if (suppressExceptionsTilltheEnd)
                     {
-                        action.Execute(c, pipelineContext);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (suppressExceptionsTilltheEnd)
+                        context.Logger.LogWarning("An exception occurred {message}", ex.Message);
+                        if (exceptions == null)
                         {
-                            if (exceptions == null)
-                            {
-                                exceptions = new List<Exception>();
-                            }
-                            exceptions.Add(ex);
+                            exceptions = new List<Exception>();
                         }
-                        else
-                        {
-                            throw;
-                        }
+                        exceptions.Add(ex);
                     }
-                    finally
+                    else
                     {
-                        actionFactory.Release(action);
+                        throw;
                     }
                 }
+                finally
+                {
+                    actionFactory.Release(action);
+                }
+            }
 
-                if (exceptions != null)
-                    throw new AggregateException(exceptions);
-            }
-            finally
-            {
-                pipelineContextFactory.Release(pipelineContext);
-            }
+            if (exceptions != null)
+                throw new AggregateException(exceptions);
         }
 
         public static void AssertContent(this TestCaseContext testCaseContext, JToken item, string path)
@@ -96,5 +88,7 @@ namespace Qart.Testing.Framework
                 throw new AggregateException(exceptions);
             }
         }
+
+
     }
 }

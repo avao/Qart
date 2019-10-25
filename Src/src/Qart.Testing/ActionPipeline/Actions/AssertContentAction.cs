@@ -5,23 +5,22 @@ using Qart.Testing.Framework.Json;
 
 namespace Qart.Testing.ActionPipeline.Actions
 {
-    public class AssertJsonContentAction<T> : IPipelineAction<T>
-        where T : IHttpPipelineContext
+    public class AssertJsonContentAction : IPipelineAction
     {
         private readonly string _fileName;
         private readonly string _jsonPath;
         private readonly string _itemKey;
 
-        public AssertJsonContentAction(string fileName, string jsonPath = null, string itemKey = PipelineContextKeys.Content)
+        public AssertJsonContentAction(string fileName, string jsonPath = null, string itemKey = ItemKeys.Content)
         {
             _fileName = fileName;
             _jsonPath = jsonPath;
             _itemKey = itemKey;
         }
 
-        public void Execute(TestCaseContext testCaseContext, T context)
+        public void Execute(TestCaseContext testCaseContext)
         {
-            string value = context.GetRequiredItemAsString(_itemKey);
+            string value = testCaseContext.GetRequiredItem(_itemKey);
             if (!string.IsNullOrEmpty(_jsonPath))
             {
                 value = JsonConvert.DeserializeObject<JToken>(value).SelectTokens(_jsonPath).ToIndentedJson();

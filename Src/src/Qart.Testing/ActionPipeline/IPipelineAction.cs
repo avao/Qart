@@ -2,9 +2,8 @@
 
 namespace Qart.Testing.ActionPipeline
 {
-    public interface IPipelineAction<in T>
-        where T : IPipelineContext
+    public interface IPipelineAction
     {
-        void Execute(TestCaseContext testCaseContext, T context);
+        void Execute(TestCaseContext testCaseContext);
     }
 }

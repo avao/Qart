@@ -12,11 +12,12 @@ namespace Qart.Testing.Framework
     {
         private readonly IEnumerable<ITestSession> _customTestSessions;
         private readonly ITestCaseProcessorFactory _testCaseProcessorFactory;
-        private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
+
         private readonly ILogger _logger;
         private readonly ISchedule<TestCase> _schedule;
         private readonly IList<Task> _tasks;
         private readonly CancellationToken _cancellationToken;
+        private readonly ITestCaseContextFactory _testCaseContextFactory;
 
         private readonly ConcurrentBag<TestCaseResult> _results;
         public IEnumerable<TestCaseResult> Results
@@ -33,22 +34,24 @@ namespace Qart.Testing.Framework
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILoggerFactory loggerFactory, IDictionary<string, string> options, ISchedule<TestCase> schedule)
+        public TestSession(IEnumerable<ITestSession> customTestSessions, ITestCaseProcessorFactory testCaseProcessorFactory, ITestCaseLoggerFactory testCaseLoggerFactory, ILoggerFactory loggerFactory, IDictionary<string, string> options, ISchedule<TestCase> schedule, ITestCaseContextFactory testCaseContextFactory)
         {
             _results = new ConcurrentBag<TestCaseResult>();
             _customTestSessions = customTestSessions;
 
             _testCaseProcessorFactory = testCaseProcessorFactory;
-            _testCaseLoggerFactory = testCaseLoggerFactory;
-            _logger = loggerFactory.CreateLogger("");
+            _logger = loggerFactory.CreateLogger<TestSession>();
             Options = new ReadOnlyDictionary<string, string>(options);
             _schedule = schedule;
             _tasks = new List<Task>();
             _cancellationToken = Task.Factory.CancellationToken;
+            _testCaseContextFactory = testCaseContextFactory;
         }
 
         public void Schedule(IEnumerable<TestCase> testCases, int workerCount)
         {
+            _logger.LogTrace("Scheduling tests");
+
             if (_customTestSessions != null)
             {
                 foreach (var session in _customTestSessions)
@@ -84,10 +87,10 @@ namespace Qart.Testing.Framework
             TestCaseResult testResult = new TestCaseResult(testCase, isMuted);
             _results.Add(testResult);
 
-            var testCaseLogger = _testCaseLoggerFactory.GetLogger(testCase);
-            using (var testCaseContext = new TestCaseContext(Options, testCase, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger)))
+            var testCaseContext = _testCaseContextFactory.CreateContext(testCase, Options);
+            try
             {
-                var descriptionWriter = new XDocumentDescriptionWriter(testCaseLogger);
+                var descriptionWriter = new XDocumentDescriptionWriter(testCaseContext.Logger);
                 if (_customTestSessions != null)
                 {
                     foreach (var session in _customTestSessions)
@@ -127,6 +130,10 @@ namespace Qart.Testing.Framework
                     foreach (var session in _customTestSessions)
                         session.OnFinish(testResult, testCaseContext.Logger);
                 }
+            }
+            finally
+            {
+                _testCaseContextFactory.Release(testCaseContext);
             }
 
             _logger.LogDebug("Finished processing test case [{0}]", testCase.Id);

@@ -21,22 +21,20 @@ namespace Qart.Wheels.TestAutomation
             //kernel.Resolver.AddSubResolver(new CollectionResolver(kernel));
             //kernel.AddFacility<TypedFactoryFacility>();
 
-            
             // Custom session
             kernel.Register(Component.For<ITestSession>().ImplementedBy<CustomTestSession>().IsDefault());
 
-            // Action pipeline registration for an ActionContext context
-            kernel.Register(Component.For<IPipelineActionFactory<ActionContext>>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
-            kernel.Register(Component.For<ActionContext>().ImplementedBy<ActionContext>().LifeStyle.Transient);
-            kernel.Register(Component.For<IPipelineContextFactory<ActionContext>>().AsFactory());
+            //ItemsInitialiser
+            kernel.Register(Component.For<IItemProvider>().ImplementedBy<ItemProvider>().IsDefault());
 
             //Default processor
-            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<UrlBasedActionPipelineProcessor<ActionContext>>().LifeStyle.Transient);
+            kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<UrlBasedActionPipelineProcessor>().LifeStyle.Transient);
 
             // Pipeline actions
-            kernel.RegisterPipelineAction<HttpGetAction<ActionContext>, ActionContext>("http_get");
-            kernel.RegisterPipelineAction<HttpPostAction<ActionContext>, ActionContext>("http_post");
-            kernel.RegisterPipelineAction<HttpDeleteAction<ActionContext>, ActionContext>("http_delete");
+            kernel.Register(Component.For<IPipelineActionFactory>().AsFactory(c => c.SelectedWith(new TypedFactoryComponentSelectorWithDynamicBinding())));
+            kernel.RegisterPipelineAction<HttpGetAction>("http_get");
+            kernel.RegisterPipelineAction<HttpPostAction>("http_post");
+            kernel.RegisterPipelineAction<HttpDeleteAction>("http_delete");
             kernel.RegisterPipelineAction<ToJTokenAction>("to_jtoken");
             kernel.RegisterPipelineAction<JsonSelectAction>("json_select");
             kernel.RegisterPipelineAction<JsonRemoveAction>("json_remove");

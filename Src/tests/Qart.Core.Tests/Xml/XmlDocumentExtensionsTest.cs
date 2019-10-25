@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.Logging;
+using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Io;
 using Qart.Core.Xml;
@@ -13,7 +14,7 @@ namespace Qart.Core.Tests.Xml
 {
     class XmlDocumentExtensionsTest
     {
-        readonly ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true, null, null);
+        readonly ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "XmlDocumentExtensionsTests"))), _ => true, null, null, new LoggerFactory());
 
         [TestCase("Override/RepeatedElements"), Ignore("TODO: fix line ending")]
         public void Override(string testId)

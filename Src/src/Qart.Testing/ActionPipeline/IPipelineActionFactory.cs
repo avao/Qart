@@ -2,11 +2,10 @@
 
 namespace Qart.Testing.ActionPipeline
 {
-    public interface IPipelineActionFactory<T>
-        where T : IPipelineContext
+    public interface IPipelineActionFactory
     {
-        IPipelineAction<T> Create(IDictionary<string, object> arguments);
-        IPipelineAction<T> Get(string name, IDictionary<string, object> arguments);
-        void Release(IPipelineAction<T> action);
+        IPipelineAction Create(IDictionary<string, object> arguments);
+        IPipelineAction Get(string name, IDictionary<string, object> arguments);
+        void Release(IPipelineAction action);
     }
 }

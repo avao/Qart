@@ -1,10 +1,10 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.Logging;
+using NUnit.Framework;
 using Qart.Core.DataStore;
 using Qart.Core.Io;
 using Qart.Testing.Framework;
 using System.IO;
 using System.Text;
-using System;
 
 namespace Qart.Testing.Tests
 {
@@ -30,7 +30,7 @@ namespace Qart.Testing.Tests
             }
         }
 
-        ITestStorage TestSystem =  new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "TestCases"))), _ => true, new ContentProcessor(new StreamTransformResolver()), null);
+        ITestStorage TestSystem = new TestStorage(new FileBasedDataStore(PathUtils.ResolveRelativeToAssmeblyLocation(Path.Combine("TestData", "TestCases"))), _ => true, new ContentProcessor(new StreamTransformResolver()), null, new LoggerFactory());
 
         [Test]
         public void Ref()

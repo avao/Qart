@@ -53,6 +53,7 @@ namespace Qart.CyberTester
             kernel.Register(Component.For<IDataStore>().Instance(testsDataStore));
 
             kernel.Register(Component.For<ITestCaseProcessorFactory>().AsFactory(c => c.SelectedWith(new TestCaseProcessorTypedFactoryComponentSelector())));
+            kernel.Register(Component.For<ITestCaseContextFactory>().ImplementedBy<TestCaseContextFactory>());
 
             //Tests selection
             kernel.Register(Component.For<Func<IDataStore, bool>>().Instance((dataStore) => dataStore.Contains(".test")));

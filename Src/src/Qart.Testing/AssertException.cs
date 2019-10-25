@@ -2,6 +2,7 @@
 
 namespace Qart.Testing
 {
+    [Serializable]
     public class AssertException : Exception
     {
         public AssertException()

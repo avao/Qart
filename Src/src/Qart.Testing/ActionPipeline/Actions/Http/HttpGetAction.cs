@@ -1,25 +1,28 @@
 ﻿using Qart.Testing.Framework;
 using Qart.Testing.Framework.Http;
+using System.Net.Http;
 
 namespace Qart.Testing.ActionPipeline.Actions.Http
 {
-    public class HttpGetAction<T> : IPipelineAction<T>
-        where T : IHttpPipelineContext
+    public class HttpGetAction : IPipelineAction
     {
         private readonly string _url;
         private readonly string _itemKey;
+        private string _httpClientKey;
 
-        public HttpGetAction(string url, string itemKey = PipelineContextKeys.Content)
+        public HttpGetAction(string url, string itemKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
         {
             _url = url;
             _itemKey = itemKey;
+            _httpClientKey = httpClientKey;
         }
 
-        public void Execute(TestCaseContext testCaseContext, T context)
+        public void Execute(TestCaseContext testCaseContext)
         {
-            var url = context.Resolve(_url);
+            var url = testCaseContext.Resolve(_url);
             testCaseContext.DescriptionWriter.AddNote("HttpGet", url);
-            context.SetItem(_itemKey, context.GetRequiredHttpClient().GetEnsureSuccess(url, testCaseContext.Logger));
+            var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
+            testCaseContext.SetItem(_itemKey, httpClient.GetEnsureSuccess(url, testCaseContext.Logger));
         }
     }
 }

@@ -4,7 +4,7 @@ using Qart.Testing.Framework;
 
 namespace Qart.Wheels.TestAutomation.PipelineActions
 {
-    public class LogInfoAction : IPipelineAction<IPipelineContext>
+    public class LogInfoAction : IPipelineAction
     {
         private readonly string _message;
 
@@ -13,7 +13,7 @@ namespace Qart.Wheels.TestAutomation.PipelineActions
             _message = message;
         }
 
-        public void Execute(TestCaseContext testCaseContext, IPipelineContext context)
+        public void Execute(TestCaseContext testCaseContext)
         {
             testCaseContext.Logger.LogInformation(_message);
         }

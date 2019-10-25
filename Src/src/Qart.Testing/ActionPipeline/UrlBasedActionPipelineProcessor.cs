@@ -5,24 +5,21 @@ using System.Linq;
 
 namespace Qart.Testing.ActionPipeline
 {
-    public class UrlBasedActionPipelineProcessor<T> : IActionPipelineProcessor
-        where T : IPipelineContext
+    public class UrlBasedActionPipelineProcessor : IActionPipelineProcessor
     {
-        private readonly IPipelineActionFactory<T> _actionFactory;
-        private readonly IPipelineContextFactory<T> _pipelineContextFactory;
+        private readonly IPipelineActionFactory _actionFactory;
 
         public IEnumerable<ResolvableItemDescription> ActionDecsriptions { get; private set; }
 
-        public UrlBasedActionPipelineProcessor(IPipelineContextFactory<T> pipelineContextFactory, IPipelineActionFactory<T> actionFactory, IEnumerable<object> actions)
+        public UrlBasedActionPipelineProcessor(IPipelineActionFactory actionFactory, IEnumerable<object> actions)
         {
-            _pipelineContextFactory = pipelineContextFactory;
             _actionFactory = actionFactory;
             ActionDecsriptions = actions.Select(Convert).ToList();
         }
 
         public void Process(TestCaseContext c)
         {
-            c.ExecuteActions(_pipelineContextFactory, _actionFactory, ActionDecsriptions, c.Options.GetDeferExceptions());
+            c.ExecuteActions(_actionFactory, ActionDecsriptions, c.Options.GetDeferExceptions());
         }
 
         private static ResolvableItemDescription Convert(object actionDescription)

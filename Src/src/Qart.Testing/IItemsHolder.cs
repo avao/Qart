@@ -1,28 +1,31 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Core.Validation;
 using System;
 using System.Collections.Generic;
 
-namespace Qart.Testing.ActionPipeline
+namespace Qart.Testing
 {
-    public interface IPipelineContext : IEnumerable<KeyValuePair<string, object>>
+    public interface IItemsHolder : IEnumerable<KeyValuePair<string, object>>
     {
-        bool TryGetItem<T>(string key, out T item);
         void SetItem<T>(string key, T item);
+        bool TryGetItem<T>(string key, out T item) where T : class;
         bool TryRemoveItem(string key);
     }
 
-    public static class PipelineContextExtensions
+    public static class ItemsHolderExtensions
     {
-        public static T GetItem<T>(this IPipelineContext pipelineContext, string key)
+        public static T GetItem<T>(this IItemsHolder pipelineContext, string key)
+            where T : class
         {
             pipelineContext.TryGetItem<T>(key, out var item);
             return item;
         }
 
-        public static T GetRequiredItem<T>(this IPipelineContext pipelineContext, string key)
+        public static T GetRequiredItem<T>(this IItemsHolder pipelineContext, string key)
+            where T : class
         {
             if (!pipelineContext.TryGetItem<T>(key, out var item))
             {
@@ -32,7 +35,7 @@ namespace Qart.Testing.ActionPipeline
             return item;
         }
 
-        public static string GetRequiredItemAsString(this IPipelineContext pipelineContext, string key)
+        public static string GetRequiredItem(this IItemsHolder pipelineContext, string key)
         {
             var item = pipelineContext.GetRequiredItem<object>(key);
             switch (item)
@@ -48,7 +51,7 @@ namespace Qart.Testing.ActionPipeline
             }
         }
 
-        public static JToken GetRequiredItemAsJToken(this IPipelineContext pipelineContext, string key)
+        public static JToken GetRequiredItemAsJToken(this IItemsHolder pipelineContext, string key)
         {
             var item = pipelineContext.GetRequiredItem<object>(key);
             switch (item)
@@ -64,9 +67,21 @@ namespace Qart.Testing.ActionPipeline
             }
         }
 
-        public static string Resolve(this IPipelineContext pipelineContext, string value)
+        public static string Resolve(this IItemsHolder pipelineContext, string value)
         {
-            return VariableResolver.Resolve(value, (key) => pipelineContext.GetRequiredItemAsString(key));
+            return VariableResolver.Resolve(value, (key) => pipelineContext.GetRequiredItem(key));
+        }
+
+        public static string GetRequiredResolvedContent(this IItemsHolder pipelineContext, TestCase testCase, string itemId)
+        {
+            var content = testCase.GetRequiredContent(itemId);
+            return pipelineContext.Resolve(content);
+        }
+
+        public static T GetRequiredResolvedObject<T>(this IItemsHolder pipelineContext, TestCase testCase, string itemId)
+        {
+            var content = pipelineContext.GetRequiredResolvedContent(testCase, itemId);
+            return JsonConvert.DeserializeObject<T>(content);
         }
     }
 }

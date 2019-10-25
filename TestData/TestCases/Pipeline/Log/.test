@@ -1,5 +1,4 @@
 {
-	"ProcessorId" : "piper",
 	"Parameters" : {
 		"actions" : ["log_info?message=Hello World!"],
 		"prop" : {
