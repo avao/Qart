@@ -1,0 +1,11 @@
+{
+    "Parameters": {
+        "actions": [
+            "load_item?path=value.json",
+            "json_remove?jsonPath=$.property.nested_integer",
+            "json_remove?jsonPath=$.property.nested_array[0]",
+            "json_remove?jsonPath=$.array_property[1]",
+            "assert_diff?baseFile=value.json&diffName=diff.json"
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "JsonPath": "$.array_property[?(@.id==2)]",
+    "Value": null
+  },
+  {
+    "JsonPath": "$.property.nested_array[0]",
+    "Value": 2
+  },
+  {
+    "JsonPath": "$.property.nested_array[1]",
+    "Value": null
+  },
+  {
+    "JsonPath": "$.property.nested_integer",
+    "Value": null
+  }
+]

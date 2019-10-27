@@ -1,8 +1,8 @@
 ﻿using Qart.Core.DataStore;
+using Qart.Testing.Diff;
 using Qart.Testing.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Qart.Testing.ActionPipeline.Actions.Json
 {
@@ -36,14 +36,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
                 jtoken = jtoken.DeepClone();
             }
 
-            var tokensToRemove = _jsonPathsFunc(testCaseContext.TestCase)
-                .SelectMany(jsonPath => jtoken.SelectTokens(jsonPath))
-                .ToList();
-
-            foreach (var token in tokensToRemove)
-            {
-                token.Remove();
-            }
+            jtoken.RemoveTokens(_jsonPathsFunc(testCaseContext.TestCase));
 
             testCaseContext.SetItem(_targetKey, jtoken);
         }

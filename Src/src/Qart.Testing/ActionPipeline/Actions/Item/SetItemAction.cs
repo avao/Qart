@@ -1,6 +1,6 @@
 ﻿using Qart.Testing.Framework;
 
-namespace Qart.Testing.ActionPipeline.Actions.Json
+namespace Qart.Testing.ActionPipeline.Actions.Item
 {
     public class SetItemAction : IPipelineAction
     {

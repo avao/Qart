@@ -62,6 +62,8 @@ namespace Qart.Testing
                     return JToken.Parse(stringValue);
                 case JToken jtokenValue:
                     return jtokenValue;
+                case object obj:
+                    return JObject.FromObject(obj);
                 default:
                     throw new NotSupportedException($"Unsupported item type {item.GetType()} for conversion into JToken");
             }

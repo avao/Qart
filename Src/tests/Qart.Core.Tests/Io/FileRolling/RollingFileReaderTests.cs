@@ -3,7 +3,6 @@ using NUnit.Framework;
 using Qart.Core.Io;
 using Qart.Core.Io.FileRolling;
 using Qart.Testing;
-using System;
 using System.IO;
 
 namespace Qart.Core.Tests.Io.FileRolling
@@ -30,12 +29,12 @@ namespace Qart.Core.Tests.Io.FileRolling
         public void RolledFilesWithPosition()
         {
             string testDir = Path.Combine(BaseDir, "RolledFilesWithPosition");
-            
+
             var path = Path.Combine(testDir, "aFile.txt");
 
             FilePosition position;
-            using(var stream = FileUtils.OpenFileStreamForReading(Path.Combine(testDir, "_aFile.txt")))
-            using(var reader = new StreamReader(stream))
+            using (var stream = FileUtils.OpenFileStreamForReading(Path.Combine(testDir, "_aFile.txt")))
+            using (var reader = new StreamReader(stream))
             {
                 position = FilePositionSerialiser.Read(path, reader);
             }
@@ -52,7 +51,7 @@ namespace Qart.Core.Tests.Io.FileRolling
     {
         public static string ReadAllText(this RollingFileReader reader)
         {
-            using(var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
                 reader.CopyAllTextTo(stream);
                 stream.Position = 0;

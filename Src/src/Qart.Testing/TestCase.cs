@@ -15,16 +15,14 @@ namespace Qart.Testing
 {
     public class TestCase : IDataStore
     {
-        public ITestStorage TestStorage { get; private set; }
-        public IDataStore DataStorage { get; private set; }
-        public IDataStore TmpDataStore { get; private set; }
-        public string Id { get; private set; }
+        public IDataStore DataStorage { get; }
+        public IDataStore TmpDataStore { get; }
+        public string Id { get; }
 
         private readonly IDataStoreProvider _dataStoreProvider;
 
-        internal TestCase(string id, ITestStorage testStorage, IDataStore dataStore, IDataStore tmpDataStore, IDataStoreProvider dataStoreProvider)
+        internal TestCase(string id, IDataStore dataStore, IDataStore tmpDataStore, IDataStoreProvider dataStoreProvider)
         {
-            TestStorage = testStorage;
             DataStorage = dataStore;
             TmpDataStore = tmpDataStore;
             Id = id;
@@ -34,19 +32,19 @@ namespace Qart.Testing
         public Stream GetReadStream(string id)
         {
             var targetInfo = GetTargetInfo(id);
-            return targetInfo.Item1.GetReadStream(targetInfo.Item2);
+            return targetInfo.DataStore.GetReadStream(targetInfo.Id);
         }
 
         public Stream GetWriteStream(string id)
         {
             var targetInfo = GetTargetInfo(id);
-            return targetInfo.Item1.GetWriteStream(targetInfo.Item2);
+            return targetInfo.DataStore.GetWriteStream(targetInfo.Id);
         }
 
         public bool Contains(string id)
         {
             var targetInfo = GetTargetInfo(id);
-            return targetInfo.Item1.Contains(targetInfo.Item2);
+            return targetInfo.DataStore.Contains(targetInfo.Id);
         }
 
         public IEnumerable<string> GetItemIds(string tag)
@@ -59,11 +57,10 @@ namespace Qart.Testing
             throw new NotImplementedException();
         }
 
-        private Tuple<IDataStore, string> GetTargetInfo(string id)
+        private (IDataStore DataStore, string Id) GetTargetInfo(string id)
         {
             var ds = DataStorage;
-            Uri uri;
-            if (Uri.TryCreate(id, UriKind.Absolute, out uri))
+            if (Uri.TryCreate(id, UriKind.Absolute, out Uri uri))
             {
                 if (uri.Scheme == "ds")
                 {
@@ -79,7 +76,7 @@ namespace Qart.Testing
                 }
             }
 
-            return new Tuple<IDataStore, string>(ds, id);
+            return (ds, id);
         }
     }
 
@@ -151,21 +148,24 @@ namespace Qart.Testing
         public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
             var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
-            testCase.AssertDiffs(actual, diffs, resultName, ReportDiffs, rebaseline);
+            testCase.AssertDiffs(actual, expected, diffs, resultName, ReportDiffs, idProvider, rebaseline);
         }
 
-        public static void AssertDiffs(this TestCase testCase, JToken actual, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, bool rebaseline)
+        public static void AssertDiffs(this TestCase testCase, JToken actual, JToken @base, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, ITokenSelectorProvider idProvider, bool rebaseline)
         {
-            string expectedContent = testCase.GetContent(resultName);
-            var expectedDiffs = expectedContent == null
+            string expectedDiffsContent = testCase.GetContent(resultName);
+            var expectedDiffs = expectedDiffsContent == null
                 ? Enumerable.Empty<DiffItem>()
-                : JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedContent);
+                : JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedDiffsContent);
 
-            var diffDiffs = Compare(diffs, expectedDiffs).ToList();
-            if (diffDiffs.Count > 0)
+            var expectedToken = @base.DeepClone();
+            expectedToken.ApplyPatch(expectedDiffs);
+
+            var newDiffs = JsonPatchCreator.Compare(expectedToken, actual, idProvider).ToList();
+            if (newDiffs.Count > 0)
             {
                 testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);
-                reportFunc(diffDiffs);
+                reportFunc(newDiffs);
             }
             testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());
         }

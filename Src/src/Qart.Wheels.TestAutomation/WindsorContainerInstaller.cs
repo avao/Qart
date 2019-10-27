@@ -5,7 +5,9 @@ using Qart.Testing;
 using Qart.Testing.ActionPipeline;
 using Qart.Testing.ActionPipeline.Actions;
 using Qart.Testing.ActionPipeline.Actions.Http;
+using Qart.Testing.ActionPipeline.Actions.Item;
 using Qart.Testing.ActionPipeline.Actions.Json;
+using Qart.Testing.Diff;
 using Qart.Testing.Extensions.Windsor;
 using Qart.Wheels.TestAutomation.PipelineActions;
 using Qart.Wheels.TestAutomation.TestCaseProcessors;
@@ -37,13 +39,17 @@ namespace Qart.Wheels.TestAutomation
             kernel.RegisterPipelineAction<HttpDeleteAction>("http_delete");
             kernel.RegisterPipelineAction<ToJTokenAction>("to_jtoken");
             kernel.RegisterPipelineAction<JsonSelectAction>("json_select");
+            kernel.RegisterPipelineAction<JsonSelectManyAction>("json_select_many");
             kernel.RegisterPipelineAction<JsonRemoveAction>("json_remove");
             kernel.RegisterPipelineAction<LoadItemAction>("load_item");
             kernel.RegisterPipelineAction<SaveItemAction>("save_item");
             kernel.RegisterPipelineAction<SetItemAction>("set_item");
             kernel.RegisterPipelineAction<AssertItemAction>("assert_item");
             kernel.RegisterPipelineAction<LogInfoAction>("log_info");
-            //kernel.Register(Component.For<IPipelineAction<IPipelineContext>>().ImplementedBy<LogInfoAction>().Named("log_info").LifeStyle.Transient);
+            kernel.RegisterPipelineAction<AssertContentDiffAction>("assert_diff");
+
+            kernel.Register(Component.For<ITokenSelectorProvider>().ImplementedBy<PropertyBasedTokenSelectorProvider>().DependsOn(Dependency.OnValue("propertyName", "id")));
+            
 
             // Example of another processor
             kernel.Register(Component.For<ITestCaseProcessor>().ImplementedBy<ThrowAnExceptionProcessor>().Named("Processor"));

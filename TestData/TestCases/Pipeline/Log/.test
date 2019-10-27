@@ -1,8 +1,10 @@
 {
-	"Parameters" : {
-		"actions" : ["log_info?message=Hello World!"],
-		"prop" : {
-			"nnn" : "bbb"
+	"Parameters": {
+		"actions": [
+			"log_info?message=Hello World!"
+		],
+		"prop": {
+			"nnn": "bbb"
 		}
 	}
 }

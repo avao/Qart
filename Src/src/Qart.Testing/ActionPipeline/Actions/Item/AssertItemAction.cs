@@ -1,6 +1,6 @@
 ﻿using Qart.Testing.Framework;
 
-namespace Qart.Testing.ActionPipeline.Actions
+namespace Qart.Testing.ActionPipeline.Actions.Item
 {
     public class AssertItemAction : IPipelineAction
     {
