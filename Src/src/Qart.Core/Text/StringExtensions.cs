@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Qart.Core.Text
@@ -78,6 +79,16 @@ namespace Qart.Core.Text
             where T : struct, IConvertible
         {
             return (T)Enum.Parse(typeof(T), value);
+        }
+
+        public static string ToCsv(this IEnumerable<string> items)
+        {
+            return string.Join(",", items);
+        }
+
+        public static string ToMultiLine(this IEnumerable<string> items)
+        {
+            return string.Join(Environment.NewLine, items);
         }
     }
 }

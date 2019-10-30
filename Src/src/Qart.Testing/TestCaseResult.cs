@@ -5,10 +5,10 @@ namespace Qart.Testing
 {
     public class TestCaseResult
     {
-        public TestCase TestCase { get; private set; }
+        public TestCase TestCase { get; }
         public Exception Exception { get; private set; }
         public XDocument Description { get; set; }
-        public bool IsMuted { get; private set; }
+        public bool IsMuted { get; }
 
         public TestCaseResult(TestCase testCase, bool isMuted)
         {

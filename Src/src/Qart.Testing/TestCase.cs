@@ -102,11 +102,6 @@ namespace Qart.Testing
             return testCase.UsingWriteStream(id, stream => stream.UsingXmlWriter(action, true));
         }
 
-        public static T GetObjectJson<T>(this TestCase testCase, string id)
-        {
-            return JsonConvert.DeserializeObject<T>(testCase.GetContent(id));
-        }
-
         public static XmlDocument GetXmlDocument(this TestCase testCase, string id)
         {
             var xmlDocument = new XmlDocument();
@@ -142,42 +137,33 @@ namespace Qart.Testing
 
         public static void AssertContentAsDiff(this TestCase testCase, JToken actual, string expectedName, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
-            AssertContentAsDiff(testCase, actual, JToken.Parse(testCase.GetRequiredContent(expectedName)), resultName, idProvider, rebaseline);
+            AssertContentAsDiff(testCase, actual, testCase.GetObjectFromJson<JToken>(expectedName), resultName, idProvider, rebaseline);
         }
 
         public static void AssertContentAsDiff(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
             var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
-            testCase.AssertDiffs(actual, expected, diffs, resultName, ReportDiffs, idProvider, rebaseline);
+            (var mismatches, var _) = testCase.CompareAndRebase(actual, expected, diffs, resultName, idProvider, rebaseline);
+            if (mismatches.Count > 0)
+            {
+                throw new AssertException("Unexpected token changes:" + string.Join("\n", mismatches.Select(d => d.JsonPath)));
+            }
         }
 
-        public static void AssertDiffs(this TestCase testCase, JToken actual, JToken @base, IEnumerable<DiffItem> diffs, string resultName, Action<IEnumerable<DiffItem>> reportFunc, ITokenSelectorProvider idProvider, bool rebaseline)
+        public static (IReadOnlyCollection<DiffItem> mismatches, JToken expected) CompareAndRebase(this TestCase testCase, JToken actual, JToken @base, IEnumerable<DiffItem> actualDiffs, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
         {
-            string expectedDiffsContent = testCase.GetContent(resultName);
-            var expectedDiffs = expectedDiffsContent == null
-                ? Enumerable.Empty<DiffItem>()
-                : JsonConvert.DeserializeObject<IEnumerable<DiffItem>>(expectedDiffsContent);
+            var expectedDiffs = testCase.GetObjectFromJson<IEnumerable<DiffItem>>(resultName) ?? Enumerable.Empty<DiffItem>();
 
-            var expectedToken = @base.DeepClone();
-            expectedToken.ApplyPatch(expectedDiffs);
+            var expected = @base.DeepClone();
+            expected.ApplyPatch(expectedDiffs);
 
-            var newDiffs = JsonPatchCreator.Compare(expectedToken, actual, idProvider).ToList();
-            if (newDiffs.Count > 0)
+            var mismatches = JsonPatchCreator.Compare(expected, actual, idProvider).ToList();
+            if (mismatches.Count > 0)
             {
-                testCase.RebaseContentOrStoreTmp(resultName, diffs.ToIndentedJson(), rebaseline);
-                reportFunc(newDiffs);
+                testCase.RebaseContentOrStoreTmp(resultName, actualDiffs.ToIndentedJson(), rebaseline);
             }
             testCase.AddTmpItem("full_" + resultName, actual.ToIndentedJson());
-        }
-
-        private static void ReportDiffs(IEnumerable<DiffItem> diffs)
-        {
-            throw new Exception("Unexpected token changes:" + string.Join("\n", diffs.Select(d => d.JsonPath)));
-        }
-
-        private static IEnumerable<DiffItem> Compare(IEnumerable<DiffItem> actualDiffs, IEnumerable<DiffItem> expectedDiffs)
-        {
-            return JsonPatchCreator.Compare(JsonConvert.SerializeObject(actualDiffs), JsonConvert.SerializeObject(expectedDiffs), new PropertyBasedTokenSelectorProvider("JsonPath"));
+            return (mismatches, expected);
         }
 
         public static void AssertContent(this TestCase testCase, string actualContent, string resultName, bool rebaseline)

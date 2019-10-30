@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Qart.Core.Collections;
 using Qart.Testing.ActionPipeline;
+using Qart.Testing.Diff;
 using Qart.Testing.Framework.Json;
 using System;
 using System.Collections.Generic;
@@ -89,6 +91,28 @@ namespace Qart.Testing.Framework
             }
         }
 
+        public static IEnumerable<string> GetDiffCategories(this TestCaseContext testCaseContext, JToken actual, JToken expected, string categoriesPath)
+        {
+            var categories = testCaseContext.TestCase.GetObjectFromJson<Dictionary<string, IReadOnlyCollection<string>>>(categoriesPath);
+            return GetDiffCategories(actual, expected, categories);
+        }
 
+        public static IEnumerable<string> GetDiffCategories(JToken actualToken, JToken expectedToken, IDictionary<string, IReadOnlyCollection<string>> categories)
+        {
+            var knownCategories = categories.Where(kvp => !AreEqual(actualToken, expectedToken, kvp.Value)).Select(kvp => kvp.Key);
+            //TODO unknown category
+            return knownCategories;
+        }
+
+        private static bool AreEqual(JToken actualToken, JToken expectedToken, IReadOnlyCollection<string> jsonPaths)
+        {
+            return jsonPaths.All(jsonPath => AreEqual(actualToken.SelectTokens(jsonPath), expectedToken.SelectTokens(jsonPath)));
+        }
+
+        private static IEqualityComparer<JToken> equalityComparer = new JTokenEqualityComparer();
+        private static bool AreEqual(IEnumerable<JToken> actualTokens, IEnumerable<JToken> expectedTokens)
+        {
+            return actualTokens.IsEqualTo(expectedTokens, equalityComparer);
+        }
     }
 }

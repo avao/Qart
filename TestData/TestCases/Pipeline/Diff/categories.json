@@ -1,0 +1,11 @@
+{
+    "categoryProperty": [
+        "$.property"
+    ],
+    "categoryNestedInteger": [
+        "$.property.nested_integer"
+    ],
+    "categoryNestedArray": [
+        "$.property.nested_array"
+    ]
+}

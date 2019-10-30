@@ -1,5 +1,6 @@
 ﻿using JetBrains.TeamCity.ServiceMessages.Write;
 using Microsoft.Extensions.Logging;
+using Qart.Core.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace Qart.Testing.Extensions.TeamCity
             var commonProperties = GetCommonProperties(result.TestCase.Id);
             if (result.Exception != null)
             {
+
                 if (result.IsMuted)
                 {
                     logger.LogInformation(_formatter.FormatMessage("testIgnored", commonProperties.Concat(new[] { new ServiceMessageProperty("message", "") })));
@@ -32,6 +34,12 @@ namespace Qart.Testing.Extensions.TeamCity
                 else
                 {
                     var detailsBuilder = new StringBuilder(result.Exception.StackTrace);
+                    if (result.Exception is AssertException assertException && assertException.TryGetCategories(out var categories))
+                    {
+                        detailsBuilder.AppendLine();
+                        detailsBuilder.Append("Categories: " + categories.ToCsv());
+                    }
+
                     foreach (DictionaryEntry item in result.Exception.Data)
                     {
                         detailsBuilder.AppendLine();

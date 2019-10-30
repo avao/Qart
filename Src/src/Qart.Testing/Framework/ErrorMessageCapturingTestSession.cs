@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Qart.Core.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Qart.Testing.Framework
             {
                 var aggregateException = result.Exception as AggregateException;
                 var messages = aggregateException == null ? new[] { result.Exception.Message } : aggregateException.InnerExceptions.Select(_ => _.Message);
-                result.Description.Root.Add(new XElement("ErrorMessage", string.Join(Environment.NewLine, messages)));
+                result.Description.Root.Add(new XElement("ErrorMessage", messages.ToMultiLine()));
             }
         }
 
