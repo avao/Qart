@@ -46,6 +46,17 @@ namespace Qart.Core.Text
             return value.Substring(0, pos);
         }
 
+        public static (string, string) SplitOnLast(this string value, string token)
+        {
+            var pos = value.LastIndexOf(token, StringComparison.InvariantCulture);
+            if (pos == -1)
+            {
+                return (value, null);
+            }
+            return (value.Substring(0, pos), value.Substring(pos + 1));
+        }
+
+
         public static string SubstringWhile(this string value, Func<char, bool> predicate)
         {
             var builder = new StringBuilder();

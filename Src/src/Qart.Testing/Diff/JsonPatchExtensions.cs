@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
+using Qart.Core.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +19,14 @@ namespace Qart.Testing.Diff
                 else
                 {
                     var tokenToChange = token.SelectToken(diff.JsonPath);
-                    tokenToChange.Replace(diff.Value);
+                    if (tokenToChange == null)
+                    {
+                        AddTokenByJsonPath(token, diff.JsonPath, diff.Value);
+                    }
+                    else
+                    {
+                        tokenToChange.Replace(diff.Value);
+                    }
                 }
             }
         }
@@ -42,6 +51,21 @@ namespace Qart.Testing.Diff
             foreach (var jsonPath in jsonPaths)
             {
                 token.RemoveTokens(jsonPath);
+            }
+        }
+
+        public static void AddTokenByJsonPath(this JToken token, string jsonPath, JToken childToken)
+        {
+            //TODO not implemented! Just a hack for single trailing property
+            (string left, string right) = jsonPath.SplitOnLast(".");
+            var parentToken = token.SelectToken(left);
+            switch (parentToken)
+            {
+                case JObject jObject:
+                    jObject.Add(right, childToken);
+                    break;
+                default:
+                    throw new NotSupportedException($"{nameof(AddTokenByJsonPath)} does not support non-object parent tokens");
             }
         }
     }
