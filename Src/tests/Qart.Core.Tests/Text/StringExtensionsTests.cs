@@ -14,6 +14,17 @@ namespace Qart.Core.Tests.Text
             return value.LeftOf(token);
         }
 
+        [TestCase("a.bc", ".", ExpectedResult = "a")]
+        [TestCase("abc.", ".", ExpectedResult = "abc")]
+        [TestCase(".ab", ".", ExpectedResult = "")]
+        [TestCase("ab.c.d", ".", ExpectedResult = "ab.c")]
+        [TestCase("ab.cd.", ".", ExpectedResult = "ab.cd")]
+        [TestCase("ab<tag>cd", "<tag>", ExpectedResult = "ab")]
+        public string LeftOfLastSucceeds(string value, string token)
+        {
+            return value.LeftOfLast(token);
+        }
+
         [TestCase("a.bc", ".", ExpectedResult = "bc")]
         [TestCase("abc.", ".", ExpectedResult = "")]
         [TestCase(".ab", ".", ExpectedResult = "ab")]
@@ -21,6 +32,18 @@ namespace Qart.Core.Tests.Text
         public string RightOfSucceeds(string value, string token)
         {
             return value.RightOf(token);
+        }
+
+
+        [TestCase("a.bc", ".", ExpectedResult = "bc")]
+        [TestCase("abc.", ".", ExpectedResult = "")]
+        [TestCase(".ab", ".", ExpectedResult = "ab")]
+        [TestCase("ab.c.d", ".", ExpectedResult = "d")]
+        [TestCase("ab.cd.", ".", ExpectedResult = "")]
+        [TestCase("ab<tag>cd", "<tag>", ExpectedResult = "cd")]
+        public string RightOfLastSucceeds(string value, string token)
+        {
+            return value.RightOfLast(token);
         }
 
         [TestCase("abc.cd", ".", "abc", "cd")]

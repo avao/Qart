@@ -7,7 +7,10 @@ namespace Qart.Testing.Framework.Json
     {
         public static T GetObjectFromJson<T>(this IDataStore dataStore, string id)
         {
-            return JsonConvert.DeserializeObject<T>(dataStore.GetContent(id));
+            var content = dataStore.GetContent(id);
+            return content != null
+                ? JsonConvert.DeserializeObject<T>(content)
+                : default;
         }
     }
 }

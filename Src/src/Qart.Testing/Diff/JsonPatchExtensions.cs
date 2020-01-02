@@ -57,15 +57,23 @@ namespace Qart.Testing.Diff
         public static void AddTokenByJsonPath(this JToken token, string jsonPath, JToken childToken)
         {
             //TODO not implemented! Just a hack for single trailing property
-            (string left, string right) = jsonPath.SplitOnLast(".");
-            var parentToken = token.SelectToken(left);
-            switch (parentToken)
+            if(jsonPath.EndsWith("]"))
+            {//selector like ...items[?(@.prop='blah')]
+                var jpath = jsonPath.LeftOfLast("[");
+                var parentToken = (JArray)token.SelectToken(jpath);
+            }
+            else
             {
-                case JObject jObject:
-                    jObject.Add(right, childToken);
-                    break;
-                default:
-                    throw new NotSupportedException($"{nameof(AddTokenByJsonPath)} does not support non-object parent tokens");
+                (string left, string right) = jsonPath.SplitOnLast(".");
+                var parentToken = token.SelectToken(left);
+                switch (parentToken)
+                {
+                    case JObject jObject:
+                        jObject.Add(right, childToken);
+                        break;
+                    default:
+                        throw new NotSupportedException($"{nameof(AddTokenByJsonPath)} does not support non-object parent tokens");
+                }
             }
         }
     }

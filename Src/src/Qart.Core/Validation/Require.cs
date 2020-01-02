@@ -8,8 +8,9 @@ namespace Qart.Core.Validation
 
         public static void NotNullOrEmpty(string value) => NotNullOrEmpty(value, "Expected non null and not empty value.");
         public static void NotNullOrEmpty(string value, string message) => That(() => !string.IsNullOrEmpty(value), message);
-
         public static void DoesNotContain(string value, string substring) => That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
+        public static void Equal(string lhs, string rhs, string message) => That(() => lhs == rhs, message);
+        public static void NotEqual(string lhs, string rhs, string message) => That(() => lhs != rhs, message);
 
         public static void That(Func<bool> predicate, string failMessage) => That(predicate, () => failMessage);
 
@@ -37,7 +38,7 @@ namespace Qart.Core.Validation
         public static T RequireType<T>(this object obj, string message)
             where T : class
         {
-            if(obj is T value)
+            if (obj is T value)
             {
                 return value;
             }

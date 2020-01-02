@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Qart.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,21 +10,33 @@ namespace Qart.Core.Text
         public static string LeftOf(this string value, string token)
         {
             string result = value.LeftOfOptional(token);
-            if (result == value)
-            {
-                throw new ArgumentException("String does not contain requested token [" + token + "]");
-            }
+            RequireDifferent(result, value, token);
+            return result;
+        }
+
+        public static string LeftOfLast(this string value, string token)
+        {
+            string result = value.LeftOfLastOptional(token);
+            RequireDifferent(result, value, token);
             return result;
         }
 
         public static string RightOf(this string value, string token)
         {
             string result = value.RightOfOptional(token);
-            if (result == value)
-            {
-                throw new ArgumentException("String does not contain requested token [" + token + "]");
-            }
+            RequireDifferent(result, value, token);
             return result;
+        }
+        public static string RightOfLast(this string value, string token)
+        {
+            string result = value.RightOfLastOptional(token);
+            RequireDifferent(result, value, token);
+            return result;
+        }
+
+        private static void RequireDifferent(string result, string value, string token)
+        {
+            Require.NotEqual(result, value, "String does not contain required token [" + token + "]");
         }
 
         public static string RightOfOptional(this string value, string token)
@@ -39,6 +52,26 @@ namespace Qart.Core.Text
         public static string LeftOfOptional(this string value, string token)
         {
             var pos = value.IndexOf(token, StringComparison.InvariantCulture);
+            if (pos == -1)
+            {
+                return value;
+            }
+            return value.Substring(0, pos);
+        }
+
+        public static string RightOfLastOptional(this string value, string token)
+        {
+            var pos = value.LastIndexOf(token, StringComparison.InvariantCulture);
+            if (pos == -1)
+            {
+                return value;
+            }
+            return value.Substring(pos + token.Length);
+        }
+
+        public static string LeftOfLastOptional(this string value, string token)
+        {
+            var pos = value.LastIndexOf(token, StringComparison.InvariantCulture);
             if (pos == -1)
             {
                 return value;
