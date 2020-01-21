@@ -61,6 +61,7 @@ namespace Qart.Testing.Diff
             {//selector like ...items[?(@.prop='blah')]
                 var jpath = jsonPath.LeftOfLast("[");
                 var parentToken = (JArray)token.SelectToken(jpath);
+                parentToken.Add(childToken);
             }
             else
             {
