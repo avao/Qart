@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qart.Core.DataStore;
+using Qart.Core.Io;
 using Qart.Core.Validation;
 using Qart.Core.Xml;
 using Qart.Testing.Diff;
@@ -190,7 +191,7 @@ namespace Qart.Testing
         public static void RebaseContentOrStoreTmp(this TestCase testCase, string itemId, string content, bool rebaseline)
         {
             var store = rebaseline ? testCase : testCase.TmpDataStore;
-            store.PutContent(itemId, content);
+            store.PutContent(PathUtils.ReplaceInvalidChars(itemId), content);
         }
     }
 }

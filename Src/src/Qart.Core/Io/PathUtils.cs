@@ -37,5 +37,10 @@ namespace Qart.Core.Io
             }
             throw new IOException(string.Format("Cannot resolve path [{0}] with starting point [{1}]", relativePath, startingPath));
         }
+
+        public static string ReplaceInvalidChars(string filename)
+        {
+            return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+        }
     }
 }
