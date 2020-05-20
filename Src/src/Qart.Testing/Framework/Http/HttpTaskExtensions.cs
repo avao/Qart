@@ -37,10 +37,5 @@ namespace Qart.Testing.Framework.Http
             var message = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
             return message;
         }
-
-        public static string GetContentAssertSuccess(this Task<HttpResponseMessage> task, ILogger logger)
-        {
-            return task.GetContentAssertSuccessAsync(logger).GetAwaiter().GetResult();
-        }
     }
 }
