@@ -190,8 +190,11 @@ namespace Qart.Testing
 
         public static void RebaseContentOrStoreTmp(this TestCase testCase, string itemId, string content, bool rebaseline)
         {
-            var store = rebaseline ? testCase : testCase.TmpDataStore;
-            store.PutContent(PathUtils.ReplaceInvalidChars(itemId), content);
+            (IDataStore Store, string Id) spec = rebaseline
+                ? (testCase, itemId)
+                : (testCase.TmpDataStore, PathUtils.ReplaceInvalidChars(itemId));
+
+            spec.Store.PutContent(spec.Id, content);
         }
     }
 }
