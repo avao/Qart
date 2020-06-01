@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Qart.Core.Validation;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,8 +14,12 @@ namespace Qart.Core.Structures.Tree
         public INode<T> Current => _stack.Peek().Node;
         object IEnumerator.Current => Current;
 
+        public IEnumerable<INode<T>> Path => _stack.Select(item => item.Node).Skip(1);
+
         public TreeEnumerator(INode<T> rootNode)
         {
+            Require.NotNull(rootNode, "rootNode cannot be null.");
+
             _rootNode = rootNode;
             _stack = new Stack<(INode<T> Node, IEnumerator<INode<T>> Enumerator)>();
 

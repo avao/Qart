@@ -20,5 +20,16 @@ namespace Qart.Core.Structures.Tree
                 }
             }
         }
+
+        public static IEnumerable<(INode<T> Node, IEnumerable<INode<T>> Path)> ToEnumerableWithPath<T>(this INode<T> root)
+        {
+            using (var enumerator = new TreeEnumerator<T>(root))
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return (enumerator.Current, enumerator.Path);
+                }
+            }
+        }
     }
 }

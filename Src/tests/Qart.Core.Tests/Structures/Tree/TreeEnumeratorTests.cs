@@ -51,7 +51,7 @@ namespace Qart.Core.Tests.Structures.Tree
         }
 
         [TestCase]
-        public void MultyNodeIterationSucceeds()
+        public void MultiNodeIterationSucceeds()
         {
             var root = new Node("root", new List<Node> {
                            new Node("node1")
@@ -60,7 +60,7 @@ namespace Qart.Core.Tests.Structures.Tree
         }
 
         [TestCase]
-        public void MultyNodeIteration2Succeeds()
+        public void MultiNodeIteration2Succeeds()
         {
             var root = new Node("root", new List<Node> {
                             new Node("node1"),
@@ -70,7 +70,7 @@ namespace Qart.Core.Tests.Structures.Tree
         }
 
         [TestCase]
-        public void MultyNodeIteration3Succeeds()
+        public void MultiNodeIteration3Succeeds()
         {
             var root = new Node("root", new List<Node> {
                            new Node("node1", new List<Node> {
@@ -85,9 +85,37 @@ namespace Qart.Core.Tests.Structures.Tree
             AssertEnumeration(root, new[] { "root", "node1", "node11", "node12", "node2", "node21", "node211" });
         }
 
+
+        [TestCase]
+        public void MultiNodeIterationWIthPathSucceeds()
+        {
+            var root = new Node("root", new List<Node> {
+                           new Node("node1", new List<Node> {
+                               new Node("node11"),
+                               new Node("node12", new List<Node>{ }) }),
+                           new Node("node2", new List<Node> {
+                               new Node("node21", new List<Node> {
+                                    new Node("node211") })
+                           })
+                        });
+
+            AssertEnumerationWithPath(root, new[] {("root", ""),
+                                                        ("node1", "root"),
+                                                            ("node11", "node1->root"),
+                                                            ("node12", "node1->root"),
+                                                        ("node2", "root"),
+                                                            ("node21", "node2->root"),
+                                                                ("node211", "node21->node2->root")});
+        }
+
         private static void AssertEnumeration(Node rootNode, IEnumerable<string> expectation)
         {
             Assert.That(rootNode.ToEnumerable().Select(node => node.GetData().Id), Is.EquivalentTo(expectation));
+        }
+
+        private static void AssertEnumerationWithPath(Node rootNode, IEnumerable<(string, string)> expectation)
+        {
+            Assert.That(rootNode.ToEnumerableWithPath().Select(item => (item.Node.GetData().Id, string.Join("->", item.Path.Select(pathItem => pathItem.GetData().Id)))), Is.EquivalentTo(expectation));
         }
     }
 }
