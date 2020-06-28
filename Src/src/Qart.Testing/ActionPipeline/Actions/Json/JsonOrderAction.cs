@@ -12,19 +12,22 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public JsonOrderAction(string arrayJsonPath, string orderKeyPath, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        public JsonOrderAction(string arrayJsonPath, string orderKeyPath, string sourceKey = null, string targetKey = null)
         {
             _arrayJsonPath = arrayJsonPath;
             _orderKeyPath = orderKeyPath;
             _sourceKey = sourceKey;
-            _targetKey = targetKey;
+            _targetKey = targetKey ?? sourceKey;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("JsonPathOrder", $"{_sourceKey} => {_targetKey}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(_sourceKey);
-            if (_sourceKey != _targetKey)
+            var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
+            var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+
+            testCaseContext.DescriptionWriter.AddNote("JsonPathOrder", $"{effectiveSourceKey} => {effectiveTargetKey}");
+            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
+            if (effectiveSourceKey != effectiveTargetKey)
             {
                 jtoken = jtoken.DeepClone();
             }
@@ -34,7 +37,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
 
             arrayToken.OrderItems(item => item.SelectToken(_orderKeyPath).ToString());
 
-            testCaseContext.SetItem(_targetKey, jtoken);
+            testCaseContext.SetItem(effectiveTargetKey, jtoken);
         }
     }
 }

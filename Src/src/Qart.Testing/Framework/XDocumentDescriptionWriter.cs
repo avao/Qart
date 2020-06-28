@@ -25,7 +25,7 @@ namespace Qart.Testing.Framework
         public void AddNote(string name, string value)
         {
             _element.Add(new XElement(name, value));
-            _logger.LogDebug("Adding note {note}", new { name, value });
+            _logger?.LogDebug("Adding note {note}", new { name, value });
         }
 
         public IDescriptionWriter CreateNestedWriter(string scope)

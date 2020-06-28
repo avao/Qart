@@ -9,19 +9,22 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public JsonSelectManyAction(string jsonPath, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        public JsonSelectManyAction(string jsonPath, string sourceKey = null, string targetKey = null)
         {
             _jsonPath = jsonPath;
             _sourceKey = sourceKey;
-            _targetKey = targetKey;
+            _targetKey = targetKey ?? sourceKey;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{_sourceKey} => {_targetKey}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(_sourceKey);
+            var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
+            var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+
+            testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{effectiveSourceKey} => {effectiveTargetKey}");
+            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
             var result = new JArray(jtoken.SelectTokens(_jsonPath));
-            testCaseContext.SetItem(_targetKey, result);
+            testCaseContext.SetItem(effectiveTargetKey, result);
         }
     }
 }

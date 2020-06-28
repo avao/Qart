@@ -8,7 +8,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
         private readonly string _key;
         private readonly string _path;
 
-        public SaveItemAction(string path, string key = ItemKeys.Content)
+        public SaveItemAction(string path, string key = null)
         {
             _key = key;
             _path = path;
@@ -16,8 +16,9 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("SaveItem", $"{_key} => file: {_path}");
-            testCaseContext.TestCase.PutContent(_path, testCaseContext.GetRequiredItem(_key));
+            var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
+            testCaseContext.DescriptionWriter.AddNote("SaveItem", $"{effectiveItemKey} => file: {_path}");
+            testCaseContext.TestCase.PutContent(_path, testCaseContext.GetRequiredItem(effectiveItemKey));
         }
     }
 }

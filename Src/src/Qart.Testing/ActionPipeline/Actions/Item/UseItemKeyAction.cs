@@ -2,22 +2,20 @@
 
 namespace Qart.Testing.ActionPipeline.Actions.Item
 {
-    public class SetItemAction : IPipelineAction
+    public class UseItemKeyAction : IPipelineAction
     {
         private readonly string _key;
-        private readonly string _value;
 
-        public SetItemAction(string value, string key = null)
+        public UseItemKeyAction(string key)
         {
             _key = key;
-            _value = value;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
             var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
-            testCaseContext.DescriptionWriter.AddNote("SetItem", $"{effectiveItemKey}");
-            testCaseContext.SetItem(effectiveItemKey, _value);
+            testCaseContext.DescriptionWriter.AddNote("UseItemKey", $"{effectiveItemKey}");
+            testCaseContext.SetItemKey(effectiveItemKey);
         }
     }
 }

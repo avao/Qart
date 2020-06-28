@@ -8,17 +8,20 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public ToJTokenAction(string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        public ToJTokenAction(string sourceKey = null, string targetKey = null)
         {
             _sourceKey = sourceKey;
-            _targetKey = targetKey;
+            _targetKey = targetKey ?? sourceKey;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("ToJToken", $"{_sourceKey} => {_targetKey}");
-            string content = testCaseContext.GetRequiredItem<string>(_sourceKey);
-            testCaseContext.SetItem(_targetKey, JToken.Parse(content));
+            var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
+            var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+
+            testCaseContext.DescriptionWriter.AddNote("ToJToken", $"{effectiveSourceKey} => {effectiveTargetKey}");
+            string content = testCaseContext.GetRequiredItem<string>(effectiveSourceKey);
+            testCaseContext.SetItem(effectiveTargetKey, JToken.Parse(content));
         }
     }
 }

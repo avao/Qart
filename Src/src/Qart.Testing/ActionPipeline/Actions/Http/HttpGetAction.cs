@@ -10,7 +10,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly string _itemKey;
         private string _httpClientKey;
 
-        public HttpGetAction(string url, string itemKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
+        public HttpGetAction(string url, string itemKey = null, string httpClientKey = ItemKeys.HttpClient)
         {
             _url = url;
             _itemKey = itemKey;

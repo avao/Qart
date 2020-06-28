@@ -7,7 +7,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
         private readonly string _path;
         private readonly string _key;
 
-        public AssertItemAction(string path, string key = ItemKeys.Content)
+        public AssertItemAction(string path, string key = null)
         {
             _path = path;
             _key = key;
@@ -15,8 +15,9 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("AssertItem", $"{_key}");
-            testCaseContext.AssertContent(testCaseContext.GetRequiredItem(_key), _path);
+            var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
+            testCaseContext.DescriptionWriter.AddNote("AssertItem", $"{effectiveItemKey}");
+            testCaseContext.AssertContent(testCaseContext.GetRequiredItem(effectiveItemKey), _path);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public static class ItemKeys
     {
-        public const string Content = "Content";
+        public const string ItemKey = "ItemKey";
         public const string HttpClient = "HttpClient";
     }
 }

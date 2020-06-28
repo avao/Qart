@@ -9,7 +9,7 @@ namespace Qart.Testing.ActionPipeline.Actions
         private readonly string _jsonPath;
         private readonly string _itemKey;
 
-        public AssertContentJsonAction(string fileName, string jsonPath = null, string itemKey = ItemKeys.Content)
+        public AssertContentJsonAction(string fileName, string jsonPath = null, string itemKey = null)
         {
             _fileName = fileName;
             _jsonPath = jsonPath;
@@ -18,6 +18,9 @@ namespace Qart.Testing.ActionPipeline.Actions
 
         public void Execute(TestCaseContext testCaseContext)
         {
+            var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_itemKey);
+            testCaseContext.DescriptionWriter.AddNote("AssertContent", $"{effectiveItemKey} => file:{_fileName}");
+
             var token = testCaseContext.GetRequiredItemAsJToken(_itemKey);
             if (!string.IsNullOrEmpty(_jsonPath))
             {

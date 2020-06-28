@@ -12,33 +12,36 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public JsonRemoveAction(string path, object _ = null, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        public JsonRemoveAction(string path, object _ = null, string sourceKey = null, string targetKey = null)
             : this((testCase) => testCase.GetRequiredAllLines(path), sourceKey, targetKey)
         { }
 
-        public JsonRemoveAction(string jsonPath, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        public JsonRemoveAction(string jsonPath, string sourceKey = null, string targetKey = null)
             : this((testCase) => new[] { jsonPath }, sourceKey, targetKey)
         { }
 
-        private JsonRemoveAction(Func<TestCase, IEnumerable<string>> jsonPathsFunc, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content)
+        private JsonRemoveAction(Func<TestCase, IEnumerable<string>> jsonPathsFunc, string sourceKey = null, string targetKey = null)
         {
             _jsonPathsFunc = jsonPathsFunc;
             _sourceKey = sourceKey;
-            _targetKey = targetKey;
+            _targetKey = targetKey ?? sourceKey;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("JsonPathExclude", $"{_sourceKey} => {_targetKey}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(_sourceKey);
-            if (_sourceKey != _targetKey)
+            var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
+            var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+
+            testCaseContext.DescriptionWriter.AddNote("JsonPathExclude", $"{effectiveSourceKey} => {effectiveTargetKey}");
+            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
+            if (effectiveSourceKey != effectiveTargetKey)
             {
                 jtoken = jtoken.DeepClone();
             }
 
             jtoken.RemoveTokens(_jsonPathsFunc(testCaseContext.TestCase));
 
-            testCaseContext.SetItem(_targetKey, jtoken);
+            testCaseContext.SetItem(effectiveTargetKey, jtoken);
         }
     }
 }

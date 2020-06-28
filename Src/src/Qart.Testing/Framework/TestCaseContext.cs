@@ -1,4 +1,5 @@
-﻿using Qart.Testing.Framework.Logging;
+﻿using Qart.Testing.ActionPipeline;
+using Qart.Testing.Framework.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,23 +37,39 @@ namespace Qart.Testing.Framework
 
         public void SetItem<T>(string key, T item)
         {
-            _itemsHolder.SetItem(key, item);
+            _itemsHolder.SetItem(GetEffectiveItemKey(key), item);
         }
 
         public bool TryGetItem<T>(string key, out T item)
             where T : class
         {
-            return _itemsHolder.TryGetItem(key, out item);
+
+            return _itemsHolder.TryGetItem(GetEffectiveItemKey(key), out item);
         }
 
         public bool TryRemoveItem(string key)
         {
-            return _itemsHolder.TryRemoveItem(key);
+            return _itemsHolder.TryRemoveItem(GetEffectiveItemKey(key));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void SetItemKey(string key)
+        {
+            SetItem(ItemKeys.ItemKey, key);
+        }
+
+        public string GetItemKey()
+        {
+            return _itemsHolder.GetItem<string>(ItemKeys.ItemKey) ?? string.Empty;
+        }
+
+        public string GetEffectiveItemKey(string key)
+        {
+            return key ?? _itemsHolder.GetItem<string>(ItemKeys.ItemKey) ?? string.Empty;
         }
     }
 }

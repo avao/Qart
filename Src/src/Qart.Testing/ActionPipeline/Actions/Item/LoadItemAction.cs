@@ -8,7 +8,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
         private readonly string _key;
         private readonly string _path;
 
-        public LoadItemAction(string path, string key = ItemKeys.Content)
+        public LoadItemAction(string path, string key = null)
         {
             _key = key;
             _path = path;
@@ -16,9 +16,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            testCaseContext.DescriptionWriter.AddNote("LoadItem", $"file:{_path} => {_key}");
+            var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
+            testCaseContext.DescriptionWriter.AddNote("LoadItem", $"file:{_path} => {effectiveItemKey}");
             var content = testCaseContext.TestCase.GetContent(_path);
-            testCaseContext.SetItem(_key, content);
+            testCaseContext.SetItem(effectiveItemKey, content);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Qart.Testing.Framework.Http
             logger.LogTrace("Response code [{code}]", task.Result.StatusCode);
             if (!task.Result.IsSuccessStatusCode)
             {
-                var exception = new AssertException("Response code does not indicate success.");
+                var exception = new AssertException($"Response code {task.Result.StatusCode} does not indicate success.");
                 exception.Data.Add("content", task.Result.Content.ReadAsStringAsync().Result);
                 throw exception;
             }

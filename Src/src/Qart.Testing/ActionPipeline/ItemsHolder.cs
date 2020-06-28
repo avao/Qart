@@ -1,5 +1,4 @@
-﻿using Qart.Testing.Framework;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 namespace Qart.Testing.ActionPipeline
@@ -34,7 +33,7 @@ namespace Qart.Testing.ActionPipeline
                 return true;
             }
 
-            if (_itemsInitialiser.TryGetItem<T>(key, out item))
+            if (_itemsInitialiser != null && _itemsInitialiser.TryGetItem<T>(key, out item))
             {
                 SetItem(key, item);
                 return true;

@@ -15,12 +15,12 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly string _targetKey;
         private string _httpClientKey;
 
-        public HttpPostManyAction(string url, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem<IEnumerable<string>>(sourceKey), httpClientKey)
+        public HttpPostManyAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem<IEnumerable<string>>(sourceKey), httpClientKey)
         { }
 
-        public HttpPostManyAction(string path, string url, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey, (testCase, pipelineContext) => testCase.GetItemIds(path).Select(id => testCase.GetContent(id)), httpClientKey)
+        public HttpPostManyAction(string path, string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetItemIds(path).Select(id => testCase.GetContent(id)), httpClientKey)
         { }
 
         private HttpPostManyAction(string url, string targetKey, Func<TestCase, TestCaseContext, IEnumerable<string>> bodyFunc, string httpClientKey)

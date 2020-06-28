@@ -14,15 +14,15 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly string _targetKey;
         private string _httpClientKey;
 
-        public HttpPostAction(string url, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem(sourceKey), httpClientKey)
+        public HttpPostAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem(sourceKey), httpClientKey)
         { }
 
-        public HttpPostAction(string url, string path, string sourceKey = ItemKeys.Content, string targetKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey, (testCase, pipelineContext) => testCase.GetContent(path), httpClientKey)
+        public HttpPostAction(string url, string path, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetContent(path), httpClientKey)
         { }
 
-        public HttpPostAction(string url, object body, string targetKey = ItemKeys.Content, string httpClientKey = ItemKeys.HttpClient)
+        public HttpPostAction(string url, object body, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
             : this(url, targetKey, (testCase, pipelineContext) => JsonConvert.SerializeObject(body), httpClientKey)
         { }
 

@@ -15,7 +15,7 @@ namespace Qart.Testing.ActionPipeline.Actions
         private readonly string _categoriesFile;
         private readonly ITokenSelectorProvider _tokenSelectorProvider;
 
-        public AssertContentDiffAction(ITokenSelectorProvider tokenSelectorProvider, string baseFile, string diffName, string jsonPath = null, string itemKey = ItemKeys.Content, string categoriesFile = null)
+        public AssertContentDiffAction(ITokenSelectorProvider tokenSelectorProvider, string baseFile, string diffName, string jsonPath = null, string itemKey = null, string categoriesFile = null)
         {
             _baseFile = baseFile;
             _jsonPath = jsonPath;
@@ -27,7 +27,11 @@ namespace Qart.Testing.ActionPipeline.Actions
 
         public void Execute(TestCaseContext testCaseContext)
         {
-            var actual = testCaseContext.GetRequiredItemAsJToken(_itemKey);
+            var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_itemKey);
+            
+            testCaseContext.DescriptionWriter.AddNote("AssertContentDiff", $"{effectiveItemKey} => file: {_diffName}, base: {_baseFile}");
+
+            var actual = testCaseContext.GetRequiredItemAsJToken(effectiveItemKey);
             if (!string.IsNullOrEmpty(_jsonPath))
             {
                 actual = new JArray(actual.SelectTokens(_jsonPath));
