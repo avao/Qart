@@ -24,7 +24,8 @@ namespace Qart.Testing.ActionPipeline.Actions
             var token = testCaseContext.GetRequiredItemAsJToken(_itemKey);
             if (!string.IsNullOrEmpty(_jsonPath))
             {
-                token = new JArray(token.SelectTokens(_jsonPath));
+                var jsonPath = testCaseContext.Resolve(_jsonPath);
+                token = new JArray(token.SelectTokens(jsonPath));
             }
             testCaseContext.AssertContent(token, _fileName);
         }

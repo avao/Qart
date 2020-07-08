@@ -12,10 +12,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public JsonOrderAction(string arrayJsonPath, string orderKeyPath, string sourceKey = null, string targetKey = null)
+        public JsonOrderAction(string arrayJsonPath, string orderKeyPath = null, string sourceKey = null, string targetKey = null)
         {
             _arrayJsonPath = arrayJsonPath;
-            _orderKeyPath = orderKeyPath;
+            _orderKeyPath = orderKeyPath ?? "$";
             _sourceKey = sourceKey;
             _targetKey = targetKey ?? sourceKey;
         }

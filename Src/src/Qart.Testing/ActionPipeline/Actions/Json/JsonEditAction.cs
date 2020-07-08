@@ -33,8 +33,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
                 jtoken = jtoken.DeepClone();
             }
 
-            var result = jtoken.SelectToken(jsonPath);
-            result.Replace(JToken.Parse(value));
+            foreach (var token in jtoken.SelectTokens(jsonPath))
+            {
+                token.Replace(JToken.Parse(value));
+            }
 
             testCaseContext.SetItem(effectiveTargetKey, jtoken);
         }

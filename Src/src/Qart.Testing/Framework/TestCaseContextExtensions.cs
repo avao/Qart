@@ -19,6 +19,12 @@ namespace Qart.Testing.Framework
             IList<Exception> exceptions = null;
             foreach (var actionDescription in actionDescriptions)
             {
+                if (actionDescription.Name.StartsWith("#"))
+                {
+                    context.Logger.LogDebug("Skipping {0}", actionDescription.Name);
+                    continue;
+                }
+
                 context.Logger.LogDebug("Creating action {0} with parameters {1}", actionDescription.Name, actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value)));
                 var action = actionFactory.Get(actionDescription.Name, actionDescription.Parameters);
                 try
