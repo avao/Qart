@@ -19,10 +19,11 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         {
             var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
             var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+            var jsonPath = testCaseContext.Resolve(_jsonPath);
 
-            testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{effectiveSourceKey} => {effectiveTargetKey}");
+            testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{effectiveSourceKey} [{jsonPath}] => {effectiveTargetKey}");
             var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
-            var result = jtoken.SelectToken(_jsonPath);
+            var result = jtoken.SelectToken(jsonPath);
             testCaseContext.SetItem(effectiveTargetKey, result);
         }
     }

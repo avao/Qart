@@ -3,15 +3,17 @@ using Qart.Testing.Framework;
 
 namespace Qart.Testing.ActionPipeline.Actions.Json
 {
-    public class JsonSelectManyAction : IPipelineAction
+    public class JsonEditAction : IPipelineAction
     {
         private readonly string _jsonPath;
+        private readonly string _value;
         private readonly string _sourceKey;
         private readonly string _targetKey;
 
-        public JsonSelectManyAction(string jsonPath, string sourceKey = null, string targetKey = null)
+        public JsonEditAction(string jsonPath, string value, string sourceKey = null, string targetKey = null)
         {
             _jsonPath = jsonPath;
+            _value = value;
             _sourceKey = sourceKey;
             _targetKey = targetKey ?? sourceKey;
         }
@@ -20,12 +22,21 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
         {
             var effectiveSourceKey = testCaseContext.GetEffectiveItemKey(_sourceKey);
             var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
+
+            var value = testCaseContext.Resolve(_value);
             var jsonPath = testCaseContext.Resolve(_jsonPath);
 
-            testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{effectiveSourceKey} [{jsonPath}] => {effectiveTargetKey}");
+            testCaseContext.DescriptionWriter.AddNote("JsonPathEdit", $"{effectiveSourceKey} => {effectiveTargetKey}. {jsonPath} => {value}");
             var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
-            var result = new JArray(jtoken.SelectTokens(jsonPath));
-            testCaseContext.SetItem(effectiveTargetKey, result);
+            if (effectiveSourceKey != effectiveTargetKey)
+            {
+                jtoken = jtoken.DeepClone();
+            }
+
+            var result = jtoken.SelectToken(jsonPath);
+            result.Replace(JToken.Parse(value));
+
+            testCaseContext.SetItem(effectiveTargetKey, jtoken);
         }
     }
 }

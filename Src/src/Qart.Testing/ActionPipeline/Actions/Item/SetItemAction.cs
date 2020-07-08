@@ -16,8 +16,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
         public void Execute(TestCaseContext testCaseContext)
         {
             var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
-            testCaseContext.DescriptionWriter.AddNote("SetItem", $"{effectiveItemKey}");
-            testCaseContext.SetItem(effectiveItemKey, _value);
+            var value = testCaseContext.Resolve(_value);
+
+            testCaseContext.DescriptionWriter.AddNote("SetItem", $"{effectiveItemKey} = {value}");
+            testCaseContext.SetItem(effectiveItemKey, value);
         }
     }
 }

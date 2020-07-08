@@ -2,8 +2,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qart.Core.Collections;
+using Qart.Core.Text;
 using Qart.Testing.ActionPipeline;
-using Qart.Testing.Diff;
 using Qart.Testing.Framework.Json;
 using System;
 using System.Collections.Generic;
@@ -102,6 +102,11 @@ namespace Qart.Testing.Framework
             var knownCategories = categories.Where(kvp => !AreEqual(actualToken, expectedToken, kvp.Value)).Select(kvp => kvp.Key);
             //TODO unknown category
             return knownCategories;
+        }
+
+        public static string ResolveValue(this TestCaseContext testCaseContext, string value)
+        {
+            return VariableResolver.Resolve(value, item => testCaseContext.GetRequiredItem(item));
         }
 
         private static bool AreEqual(JToken actualToken, JToken expectedToken, IReadOnlyCollection<string> jsonPaths)
