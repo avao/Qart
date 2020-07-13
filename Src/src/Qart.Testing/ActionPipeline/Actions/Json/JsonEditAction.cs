@@ -27,18 +27,18 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
             var jsonPath = testCaseContext.Resolve(_jsonPath);
 
             testCaseContext.DescriptionWriter.AddNote("JsonPathEdit", $"{effectiveSourceKey} => {effectiveTargetKey}. {jsonPath} => {value}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
+            var itemToken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
             if (effectiveSourceKey != effectiveTargetKey)
             {
-                jtoken = jtoken.DeepClone();
+                itemToken = itemToken.DeepClone();
             }
 
-            foreach (var token in jtoken.SelectTokens(jsonPath))
+            foreach (var token in itemToken.SelectTokens(jsonPath))
             {
                 token.Replace(JToken.Parse(value));
             }
 
-            testCaseContext.SetItem(effectiveTargetKey, jtoken);
+            testCaseContext.SetItem(effectiveTargetKey, itemToken);
         }
     }
 }

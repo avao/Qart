@@ -41,6 +41,7 @@ namespace Qart.Wheels.TestAutomation
             kernel.RegisterPipelineAction<JsonSelectAction>("json_select");
             kernel.RegisterPipelineAction<JsonSelectManyAction>("json_select_many");
             kernel.RegisterPipelineAction<JsonRemoveAction>("json_remove");
+            kernel.RegisterPipelineAction<JsonReplaceAction>("json_replace");
             kernel.RegisterPipelineAction<LoadItemAction>("load_item");
             kernel.RegisterPipelineAction<SaveItemAction>("save_item");
             kernel.RegisterPipelineAction<SetItemAction>("set_item");

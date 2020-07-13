@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Core.Validation;
+using Qart.Testing.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -84,6 +85,35 @@ namespace Qart.Testing
         {
             var content = pipelineContext.GetRequiredResolvedContent(testCase, itemId);
             return JsonConvert.DeserializeObject<T>(content);
+        }
+
+        public static void ReplaceTokens(this IItemsHolder pipelineContext, JToken doc, IDictionary<string, IReadOnlyCollection<string>> groups)
+        {
+            if (!pipelineContext.TryGetItem("TokenGroups", out IDictionary<string, IDictionary<string, int>> tokenGroups))
+            {
+                tokenGroups = new Dictionary<string, IDictionary<string, int>>();
+                pipelineContext.SetItem("TokenGroups", tokenGroups);
+            }
+
+            Replace(doc, groups, new TokenHolder(tokenGroups));
+        }
+
+        public static void Replace(JToken doc, IDictionary<string, IReadOnlyCollection<string>> groups, ITokenHolder tokenMapper)
+        {
+            foreach (var kvp in groups)
+            {
+                foreach (var jsonPath in kvp.Value)
+                {
+                    foreach (var token in doc.SelectTokens(jsonPath))
+                    {
+                        var value = token.ToString();
+
+                        value = tokenMapper.GetName(kvp.Key, jsonPath, value);
+
+                        token.Replace(value);
+                    }
+                }
+            }
         }
     }
 }

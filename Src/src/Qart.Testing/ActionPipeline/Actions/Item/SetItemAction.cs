@@ -6,19 +6,25 @@ namespace Qart.Testing.ActionPipeline.Actions.Item
     {
         private readonly string _key;
         private readonly string _value;
+        private readonly bool _resolve;
 
-        public SetItemAction(string value, string key = null)
+        public SetItemAction(string value, string key = null, bool resolve = true)
         {
             _key = key;
             _value = value;
+            _resolve = resolve;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
             var effectiveItemKey = testCaseContext.GetEffectiveItemKey(_key);
-            var value = testCaseContext.Resolve(_value);
+
+            var value = _resolve
+                ? testCaseContext.Resolve(_value)
+                : _value;
 
             testCaseContext.DescriptionWriter.AddNote("SetItem", $"{effectiveItemKey} = {value}");
+
             testCaseContext.SetItem(effectiveItemKey, value);
         }
     }

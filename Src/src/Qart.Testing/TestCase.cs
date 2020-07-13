@@ -156,7 +156,16 @@ namespace Qart.Testing
             var expectedDiffs = testCase.GetObjectFromJson<IEnumerable<DiffItem>>(resultName) ?? Enumerable.Empty<DiffItem>();
 
             var expected = @base.DeepClone();
-            expected.ApplyPatch(expectedDiffs);
+
+            try
+            {
+                expected.ApplyPatch(expectedDiffs);
+            }
+            catch (Exception _)
+            {
+                testCase.RebaseContentOrStoreTmp(resultName, actualDiffs.ToIndentedJson(), rebaseline);
+                throw;
+            }
 
             var mismatches = JsonPatchCreator.Compare(expected, actual, idProvider).ToList();
             if (mismatches.Count > 0)

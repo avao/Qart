@@ -33,15 +33,15 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
             var effectiveTargetKey = testCaseContext.GetEffectiveItemKey(_targetKey);
 
             testCaseContext.DescriptionWriter.AddNote("JsonPathExclude", $"{effectiveSourceKey} => {effectiveTargetKey}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
+            var itemToken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
             if (effectiveSourceKey != effectiveTargetKey)
             {
-                jtoken = jtoken.DeepClone();
+                itemToken = itemToken.DeepClone();
             }
 
-            jtoken.RemoveTokens(_jsonPathsFunc(testCaseContext.TestCase));
+            itemToken.RemoveTokens(_jsonPathsFunc(testCaseContext.TestCase));
 
-            testCaseContext.SetItem(effectiveTargetKey, jtoken);
+            testCaseContext.SetItem(effectiveTargetKey, itemToken);
         }
     }
 }

@@ -22,8 +22,8 @@ namespace Qart.Testing.ActionPipeline.Actions.Json
             var jsonPath = testCaseContext.Resolve(_jsonPath);
 
             testCaseContext.DescriptionWriter.AddNote("JsonPathSelect", $"{effectiveSourceKey} [{jsonPath}] => {effectiveTargetKey}");
-            var jtoken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
-            var result = jtoken.SelectToken(jsonPath);
+            var itemToken = testCaseContext.GetRequiredItemAsJToken(effectiveSourceKey);
+            var result = itemToken.SelectToken(jsonPath);
             testCaseContext.SetItem(effectiveTargetKey, result);
         }
     }
