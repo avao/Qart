@@ -15,9 +15,10 @@ namespace Qart.Core.Tests.Text
         [TestCase("abc_${var}_", ExpectedResult = "abc_value_")]
         [TestCase("${var}", ExpectedResult = "value")]
         [TestCase("${var}_", ExpectedResult = "value_")]
+        [TestCase("${${var}}_", ExpectedResult = "${var}_")]
         public string ResolveSucceeds(string value)
         {
-            return VariableResolver.Resolve(value, (key) => _variables[key]);
+            return VariableResolver.Resolve(value, key => _variables[key]);
         }
 
         [TestCase("abc${")]
