@@ -41,6 +41,7 @@ namespace Qart.Testing.Framework.Http
             var request = new HttpRequestMessage(httpMethod, relativeUri);
             if (!string.IsNullOrEmpty(content))
             {
+                logger.LogTrace("Sending {Content}", content);
                 request.Content = CreateContent(content);
             }
             return client.SendAsync(request).GetContentAssertSuccessAsync(logger);
