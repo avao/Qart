@@ -9,6 +9,8 @@
     <Product>Qart</Product>
     <Copyright></Copyright>
     <RepositoryUrl>https://github.com/avao/Qart</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>
