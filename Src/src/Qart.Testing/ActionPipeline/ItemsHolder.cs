@@ -8,7 +8,7 @@ namespace Qart.Testing.ActionPipeline
         private readonly IDictionary<string, object> _items;
         private readonly IItemProvider _itemsInitialiser;
 
-        public ItemsHolder(IItemProvider itemsInitialiser)
+        public ItemsHolder(IItemProvider itemsInitialiser = null)
         {
             _items = new Dictionary<string, object>();
             _itemsInitialiser = itemsInitialiser;
