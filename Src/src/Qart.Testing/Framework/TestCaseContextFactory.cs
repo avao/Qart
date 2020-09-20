@@ -8,7 +8,7 @@ namespace Qart.Testing.Framework
         private readonly ITestCaseLoggerFactory _testCaseLoggerFactory;
         private readonly IItemProvider _itemsInitialiser;
 
-        public TestCaseContextFactory(ITestCaseLoggerFactory testCaseLoggerFactory, IItemProvider itemsInitialiser)
+        public TestCaseContextFactory(ITestCaseLoggerFactory testCaseLoggerFactory, IItemProvider itemsInitialiser = null)
         {
             _testCaseLoggerFactory = testCaseLoggerFactory;
             _itemsInitialiser = itemsInitialiser;
