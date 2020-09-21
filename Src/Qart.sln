@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28922.388
@@ -20,6 +20,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Core.Tests", "tests\Qart.Core.Tests\Qart.Core.Tests.csproj", "{DF5BBC1C-75DC-460C-BBA5-6FBD8A03FB46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.Testing.Tests", "tests\Qart.Testing.Tests\Qart.Testing.Tests.csproj", "{131928BB-4503-4E71-BDB2-F6DE24B2A687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkingQart", "BenchmarkingQart\BenchmarkingQart.csproj", "{755E41EB-9D93-415F-8A2B-BB2A29300D4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

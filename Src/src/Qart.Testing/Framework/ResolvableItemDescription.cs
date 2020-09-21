@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Primitives;
 
 namespace Qart.Testing.Framework
 {
@@ -12,6 +14,12 @@ namespace Qart.Testing.Framework
         {
             Name = name;
             Parameters = parameters;
+        }
+
+        public ResolvableItemDescription(in ReadOnlySpan<char> actionName, Dictionary<string, object> parametersAsNvc)
+        {
+            Name = actionName.ToString();
+            Parameters = parametersAsNvc;
         }
     }
 
