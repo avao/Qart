@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj" />
     <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj" />
+    <ProjectReference Include="..\Qart.Wheels.TestAutomation\Qart.Wheels.TestAutomation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using Qart.Core.Text;
+﻿using NUnit.Framework;
 using Qart.Testing.Framework;
 
 namespace Qart.Core.Tests.Text
@@ -13,7 +9,7 @@ namespace Qart.Core.Tests.Text
         public void UrlBasedParameterExtraction_Parse(string query, string key, string tokenKey, string tokenResult)
         {
             ResolvableItemDescription parsed = UrlBasedParameterExtraction.Parse(query);
-            ResolvableItemDescription parsed2 = UrlBasedParameterExtraction.Parse2(query);
+            ResolvableItemDescription parsed2 = UrlBasedParameterExtraction.Parse(query);
 
             Assert.That(parsed.Name, Is.EqualTo(key)); 
             Assert.That(parsed.Parameters[tokenKey], Is.EqualTo(tokenResult));

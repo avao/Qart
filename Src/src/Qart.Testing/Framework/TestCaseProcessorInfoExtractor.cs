@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
-using Qart.Core.Validation;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Qart.Testing.Framework
 {
@@ -15,14 +16,45 @@ namespace Qart.Testing.Framework
             public string ProcessorId { get; set; }
             public Dictionary<string, object> Parameters { get; set; }
         }
-
+        
         public ResolvableItemDescription Execute(TestCase testCase)
         {
             var content = testCase.GetContent(".test").TrimStart();
+       
+            (string pId, IDictionary<string, object> parameters) parsed = Parse(content);
+            
+            return new ResolvableItemDescription(parsed.pId, PostProcess(parsed.parameters));
+        }
 
+        public (string pId, IDictionary<string, object> parameters) Parse(in byte[] contentBytes)
+        {
+            //hacky check for json format
+            var firstElement = (char) contentBytes.First();
+            if(firstElement != '{')
+            {
+                if (firstElement =='[')
+                {
+                    //Placehoder for processorless actions
+                    return (null, new Dictionary<string, object> { { "actions", System.Text.Json.JsonSerializer.Deserialize<IEnumerable<object>>(contentBytes) } });
+                }
+            
+                var content = Encoding.ASCII.GetString(contentBytes);
+                var processorId = content.SubstringWhileSpan(_ => char.IsLetterOrDigit(_) || _ == '_');
+                var paramContent = content.Substring(processorId.Length).Trim();
+                
+                return !string.IsNullOrEmpty(paramContent) 
+                    ? (processorId, System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(paramContent)) 
+                    : (processorId, new Dictionary<string, object>());
+            }
+
+            var parsedJson = System.Text.Json.JsonSerializer.Deserialize<ProcessorInfo>(contentBytes);
+            return (parsedJson.ProcessorId, parsedJson.Parameters);
+        }
+
+        public (string pId, IDictionary<string, object> parameters) Parse(string content)
+        {
             string processorId;
             IDictionary<string, object> parameters = null;
-
             //hacky check for json format
             if (!content.StartsWith("{"))
             {
@@ -48,7 +80,8 @@ namespace Qart.Testing.Framework
                 processorId = parsedJson.ProcessorId;
                 parameters = parsedJson.Parameters;
             }
-            return new ResolvableItemDescription(processorId, PostProcess(parameters));
+
+            return (processorId, parameters);
         }
 
         private IDictionary<string, object> PostProcess(IDictionary<string, object> obj)

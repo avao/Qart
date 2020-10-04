@@ -1,8 +1,13 @@
 ﻿using Qart.Core.Validation;
 using System;
+using System.Buffers;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
+using Qart.Core.Io;
 
 namespace Qart.Core.DataStore
 {
@@ -39,6 +44,34 @@ namespace Qart.Core.DataStore
                 return reader.ReadToEnd();
             }
         }
+        
+        public static byte[] GetContentBytes(this IDataStore dataStore, string itemId)
+        {
+            byte[] bytes = { };
+            using (var fileStream = dataStore.GetRequiredReadStream(itemId)) 
+            {
+                var pool = ArrayPool<byte>.Shared;
+                var buff =  pool.Rent(16000 * 8);
+
+                var bytesRead = 0;
+                while ((bytesRead = fileStream.Read(buff, 0, buff.Length)) > 0)
+                {
+                    try
+                    {
+                        var slice = new ReadOnlySpan<byte>(buff, 0, bytesRead);
+                        Array.Resize(ref bytes, slice.ToArray().Length);
+                        slice.CopyTo(bytes);
+                        fileStream.Seek(slice.Length, SeekOrigin.Current);
+                    }
+                    finally
+                    {
+                        pool.Return(buff);
+                    }
+                }
+            }
+
+            return bytes;
+        }
 
         public static IEnumerable<string> GetRequiredAllLines(this IDataStore dataStore, string itemId)
         {
@@ -47,7 +80,7 @@ namespace Qart.Core.DataStore
             {
                 var lines = new List<string>();
                 var line = reader.ReadLine();
-                while(line!=null)
+                while (line != null)
                 {
                     lines.Add(line);
                     line = reader.ReadLine();

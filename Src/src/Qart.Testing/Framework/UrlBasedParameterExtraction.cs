@@ -23,7 +23,8 @@ namespace Qart.Testing.Framework
             }
             return new ResolvableItemDescription(actionName, parameters);
         }
-        public static ResolvableItemDescription Parse2(ReadOnlySpan<char> definition)
+
+        public static ResolvableItemDescription Parse(ReadOnlySpan<char> definition)
         {
             int index = definition.IndexOf('?');
             if (index == -1) return new ResolvableItemDescription(string.Empty, new Dictionary<string, object>());

@@ -1,6 +1,7 @@
 ﻿using Qart.Core.Validation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Qart.Core.Text
@@ -133,6 +134,27 @@ namespace Qart.Core.Text
             return builder.ToString();
         }
 
+        public static string SubstringWhileSpan(this string value, Func<char, bool> predicate)
+        {
+            int iteration = 0;
+            Span<char> spans = stackalloc char[value.Length];
+            ReadOnlySpan<char> chars = value.AsSpan();
+
+           for (int i = 0; i < chars.Length; i++)
+           {
+               if (predicate(chars[i]))
+               {
+                   spans[iteration] = chars[i];
+                   iteration++;
+               }
+               else
+               {
+                   break;
+               }
+            } 
+
+            return spans.Slice(0,iteration).ToString();
+        }
 
         public static string SubstringUpTo(this string value, int startIndex, int maxLength)
         {

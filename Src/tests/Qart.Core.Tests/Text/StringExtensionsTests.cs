@@ -97,5 +97,12 @@ namespace Qart.Core.Tests.Text
         {
             return value.Split(".").ToCsv();
         }
+
+        [TestCase("json_remove?jsonPath=$.array_property[1]", "json_remove")]
+        public void SubstringWhileTests(string value, string expected)
+        {
+            var content = value.SubstringWhileSpan(_ => char.IsLetterOrDigit(_) || _ == '_');
+            Assert.That(content, Is.EqualTo(expected));
+        }
     }
 }
