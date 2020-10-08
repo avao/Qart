@@ -11,6 +11,7 @@
     <RepositoryUrl>https://github.com/avao/Qart</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
 </Project>
