@@ -13,7 +13,7 @@ namespace Qart.Core.Xsd
 
         public static XmlSchema Load(string path)
         {
-            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            using var stream = FileUtils.OpenFileStreamForReading(path);
             using var reader = XmlReader.Create(stream, null, path);
 
             return XmlSchema.Read(reader, null);
