@@ -1,5 +1,5 @@
-﻿using Qart.Core.Io;
-using System.IO;
+﻿using System.IO;
+using System.Xml;
 using System.Xml.Schema;
 
 namespace Qart.Core.Xsd
@@ -13,10 +13,10 @@ namespace Qart.Core.Xsd
 
         public static XmlSchema Load(string path)
         {
-            using (var stream = FileUtils.OpenFileStreamForReading(path))
-            {
-                return Load(stream);
-            }
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            using var reader = XmlReader.Create(stream, null, path);
+
+            return XmlSchema.Read(reader, null);
         }
     }
 }
