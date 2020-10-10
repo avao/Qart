@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Qart.Core.Io;
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
