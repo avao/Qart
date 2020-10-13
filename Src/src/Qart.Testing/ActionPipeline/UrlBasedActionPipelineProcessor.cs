@@ -1,4 +1,4 @@
-﻿using Qart.Testing.Framework;
+using Qart.Testing.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Qart.Testing.ActionPipeline
         {
             if (actionDescription is string stringActionDef)
             {
-                return UrlBasedParameterExtraction.Parse(stringActionDef);
+                return UrlBasedParameterExtraction.Parse(stringActionDef.AsSpan());
             }
 
             if (actionDescription is IDictionary<string, object> dictionaryActionDef)
