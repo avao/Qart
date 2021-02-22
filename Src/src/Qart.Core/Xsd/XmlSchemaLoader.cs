@@ -5,7 +5,7 @@ using System.Xml.Schema;
 
 namespace Qart.Core.Xsd
 {
-    public static class SchemaLoader
+    public static class XmlSchemaLoader
     {
         public static XmlSchema Load(Stream stream)
         {
