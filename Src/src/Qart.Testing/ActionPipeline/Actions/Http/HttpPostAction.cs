@@ -12,26 +12,28 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly Func<TestCase, TestCaseContext, string> _bodyFunc;
         private readonly string _url;
         private readonly string _targetKey;
-        private string _httpClientKey;
+        private readonly string _mediaType;
+        private readonly string _httpClientKey;
 
-        public HttpPostAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem(sourceKey), httpClientKey)
+        public HttpPostAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient, string mediaType = null)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem(sourceKey), httpClientKey, mediaType)
         { }
 
-        public HttpPostAction(string url, string path, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetContent(path), httpClientKey)
+        public HttpPostAction(string url, string path, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient, string mediaType = null)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetContent(path), httpClientKey, mediaType)
         { }
 
-        public HttpPostAction(string url, object body, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey, (testCase, pipelineContext) => JsonConvert.SerializeObject(body), httpClientKey)
+        public HttpPostAction(string url, object body, string targetKey = null, string httpClientKey = ItemKeys.HttpClient, string mediaType = null)
+            : this(url, targetKey, (testCase, pipelineContext) => JsonConvert.SerializeObject(body), httpClientKey, mediaType)
         { }
 
-        private HttpPostAction(string url, string targetKey, Func<TestCase, TestCaseContext, string> bodyFunc, string httpClientKey)
+        private HttpPostAction(string url, string targetKey, Func<TestCase, TestCaseContext, string> bodyFunc, string httpClientKey, string mediaType)
         {
             _url = url;
             _targetKey = targetKey;
             _bodyFunc = bodyFunc;
             _httpClientKey = httpClientKey;
+            _mediaType = mediaType;
         }
 
         public void Execute(TestCaseContext testCaseContext)
@@ -40,7 +42,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
             testCaseContext.DescriptionWriter.AddNote("HttpPost", url);
             var body = _bodyFunc(testCaseContext.TestCase, testCaseContext);
             var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
-            testCaseContext.SetItem(_targetKey, httpClient.PostEnsureSuccess(url, body, testCaseContext.Logger));
+            testCaseContext.SetItem(_targetKey, httpClient.PostEnsureSuccess(url, body, _mediaType, testCaseContext.Logger));
         }
     }
 }

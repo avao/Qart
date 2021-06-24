@@ -12,14 +12,14 @@ namespace Qart.Testing.Framework.Http
             return client.SendEnsureSuccessAsync(HttpMethod.Get, relativeUri, null, logger).GetAwaiter().GetResult();
         }
 
-        public static string PostEnsureSuccess(this HttpClient client, string relativeUri, string content, ILogger logger)
+        public static string PostEnsureSuccess(this HttpClient client, string relativeUri, string content, string mediaType, ILogger logger)
         {
-            return client.SendEnsureSuccessAsync(HttpMethod.Post, relativeUri, content, logger).GetAwaiter().GetResult();
+            return client.SendEnsureSuccessAsync(HttpMethod.Post, relativeUri, CreateContent(content, mediaType), logger).GetAwaiter().GetResult();
         }
 
-        public static string PutEnsureSuccess(this HttpClient client, string relativeUri, string content, ILogger logger)
+        public static string PutEnsureSuccess(this HttpClient client, string relativeUri, string content, string mediaType, ILogger logger)
         {
-            return client.SendEnsureSuccessAsync(HttpMethod.Put, relativeUri, content, logger).GetAwaiter().GetResult();
+            return client.SendEnsureSuccessAsync(HttpMethod.Put, relativeUri, CreateContent(content, mediaType), logger).GetAwaiter().GetResult();
         }
 
         public static string DeleteEnsureSuccess(this HttpClient client, string relativeUri, ILogger logger)
@@ -27,22 +27,23 @@ namespace Qart.Testing.Framework.Http
             return client.SendEnsureSuccessAsync(HttpMethod.Delete, relativeUri, null, logger).GetAwaiter().GetResult();
         }
 
-        private static StringContent CreateContent(string content)
+        private static StringContent CreateContent(string content, string mediaType)
         {
-            var mediaType = content.StartsWith("<?xml")
+            mediaType ??= content.StartsWith("<?xml")
                 ? "application/xml"
                 : "application/json";
             return new StringContent(content, Encoding.UTF8, mediaType);
         }
 
-        private static Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, string content, ILogger logger)
+        private static Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, StringContent content, ILogger logger)
         {
             logger.LogDebug("Executing {HttpMethod} on {Url}", httpMethod, relativeUri);
             var request = new HttpRequestMessage(httpMethod, relativeUri);
-            if (!string.IsNullOrEmpty(content))
+            
+            if(content!=null)
             {
-                logger.LogTrace("Sending {Content}", content);
-                request.Content = CreateContent(content);
+                logger.LogTrace("with content: {content}", content.ReadAsStringAsync().Result);
+                request.Content = content;
             }
             return client.SendAsync(request).GetContentAssertSuccessAsync(logger);
         }

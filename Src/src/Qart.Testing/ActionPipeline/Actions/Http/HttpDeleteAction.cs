@@ -6,8 +6,8 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
 {
     public class HttpDeleteAction : IPipelineAction
     {
-        private string _url;
-        private string _httpClientKey;
+        private readonly string _url;
+        private readonly string _httpClientKey;
 
         public HttpDeleteAction(string url, string httpClientKey = ItemKeys.HttpClient)
         {

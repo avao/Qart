@@ -13,29 +13,32 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly Func<TestCase, TestCaseContext, IEnumerable<string>> _bodyFunc;
         private readonly string _url;
         private readonly string _targetKey;
-        private string _httpClientKey;
+        private readonly string _mediaType;
+        private readonly string _httpClientKey;
 
-        public HttpPostManyAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem<IEnumerable<string>>(sourceKey), httpClientKey)
+        public HttpPostManyAction(string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient, string mediaType = null)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => pipelineContext.GetRequiredItem<IEnumerable<string>>(sourceKey), httpClientKey, mediaType)
         { }
 
-        public HttpPostManyAction(string path, string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
-            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetItemIds(path).Select(id => testCase.GetContent(id)), httpClientKey)
+        public HttpPostManyAction(string path, string url, string sourceKey = null, string targetKey = null, string httpClientKey = ItemKeys.HttpClient, string mediaType = null)
+            : this(url, targetKey ?? sourceKey, (testCase, pipelineContext) => testCase.GetItemIds(path).Select(id => testCase.GetContent(id)), httpClientKey, mediaType)
         { }
 
-        private HttpPostManyAction(string url, string targetKey, Func<TestCase, TestCaseContext, IEnumerable<string>> bodyFunc, string httpClientKey)
+        private HttpPostManyAction(string url, string targetKey, Func<TestCase, TestCaseContext, IEnumerable<string>> bodyFunc, string httpClientKey, string mediaType)
         {
             _url = url;
             _targetKey = targetKey;
             _bodyFunc = bodyFunc;
             _httpClientKey = httpClientKey;
+            _mediaType = mediaType;
         }
 
         public void Execute(TestCaseContext testCaseContext)
         {
+            var url = testCaseContext.Resolve(_url);
             testCaseContext.DescriptionWriter.AddNote("HttpPostMany", _url);
             var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
-            var responses = _bodyFunc(testCaseContext.TestCase, testCaseContext).Select(body => httpClient.PostEnsureSuccess(_url, body, testCaseContext.Logger)).ToList();
+            var responses = _bodyFunc(testCaseContext.TestCase, testCaseContext).Select(body => httpClient.PostEnsureSuccess(url, body, _mediaType, testCaseContext.Logger)).ToList();
             testCaseContext.SetItem(_targetKey, responses);
         }
     }
