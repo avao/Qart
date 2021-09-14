@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Qart.Core.Collections;
+using Qart.Core.Comparison;
 using Qart.Core.Text;
 using Qart.Testing.ActionPipeline;
 using Qart.Testing.Framework.Json;

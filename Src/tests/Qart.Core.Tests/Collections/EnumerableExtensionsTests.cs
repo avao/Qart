@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Qart.Core.Collections;
+using Qart.Core.Comparison;
 using System.Linq;
 
 namespace Qart.Core.Tests.Collections

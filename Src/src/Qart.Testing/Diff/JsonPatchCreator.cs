@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using Qart.Core.Collections;
+using Qart.Core.Comparison;
 using Qart.Testing.Framework.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +73,7 @@ namespace Qart.Testing.Diff
 
         private static IEnumerable<DiffItem> CompareChildren(string jsonPath, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, ITokenSelectorProvider idProvider)
         {
-            foreach ((string lhsKey, string rhsKey) in lhsKeys.OrderBy(_ => _).JoinWithNulls(rhsKeys.OrderBy(_ => _)))
+            foreach ((string lhsKey, string rhsKey) in lhsKeys.JoinWithNulls(rhsKeys))
             {
                 if (lhsKey == null)
                 {

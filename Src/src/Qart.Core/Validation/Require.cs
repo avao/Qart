@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Qart.Core.Validation
 {
@@ -9,8 +10,8 @@ namespace Qart.Core.Validation
         public static void NotNullOrEmpty(string value) => NotNullOrEmpty(value, "Expected non null and not empty value.");
         public static void NotNullOrEmpty(string value, string message) => That(() => !string.IsNullOrEmpty(value), message);
         public static void DoesNotContain(string value, string substring) => That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
-        public static void Equal(string lhs, string rhs, string message) => That(() => lhs == rhs, message);
-        public static void NotEqual(string lhs, string rhs, string message) => That(() => lhs != rhs, message);
+        public static void Equal<T>(T lhs, T rhs, string message) => That(() => EqualityComparer<T>.Default.Equals(lhs, rhs), message);
+        public static void NotEqual<T>(T lhs, T rhs, string message) => That(() => !EqualityComparer<T>.Default.Equals(lhs, rhs), message);
 
         public static void That(Func<bool> predicate, string failMessage) => That(predicate, () => failMessage);
 

@@ -29,5 +29,20 @@ namespace Qart.Core.Tests.Validation
         {
             Require.DoesNotContain("abcde", "?");
         }
+
+
+        [Test]
+        public void EqualSucceeds()
+        {
+            Require.Equal("abcde", "abcde", "Not equal");
+            Require.Equal(123, 123, "Not equal");
+        }
+
+        [Test]
+        public void EqualFails()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => Require.Equal("abcde", "bcde", "Not equal"));
+            Assert.That(ex.Message, Is.EqualTo("Not equal"));
+        }
     }
 }
