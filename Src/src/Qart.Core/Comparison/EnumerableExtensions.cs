@@ -8,33 +8,23 @@ namespace Qart.Core.Comparison
     {
         public static IEnumerable<(T, T)> JoinWithNulls<T>(this IEnumerable<T> lhs, IEnumerable<T> rhs)
             where T : class
-        {
-            return lhs.JoinWithNulls(rhs, Comparer<T>.Default, item => item);
-        }
+            => lhs.JoinWithNulls(rhs, item => item);
 
-        public static IEnumerable<(T, T)> JoinWithNulls<T, TKey>(this IEnumerable<T> lhs, IEnumerable<T> rhs, IComparer<T> comparer, Func<T, TKey> keySelector)
+        public static IEnumerable<(T, T)> JoinWithNulls<T, TKey>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, TKey> keySelector)
+            where T : class
+            => lhs.JoinWithNulls(rhs, keySelector, Comparer<TKey>.Default);
+
+        public static IEnumerable<(T, T)> JoinWithNulls<T, TKey>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, TKey> keySelector, IComparer<TKey> keyComparer)
             where T : class
         {
-            return lhs.JoinWithNulls(rhs, (l, r) => comparer.Compare(l, r), keySelector);
-        }
-
-        public static IEnumerable<(T, T)> JoinWithNulls<T, TKey>(this IEnumerable<T> lhs, IEnumerable<T> rhs, Func<T, T, int> comparerFunc, Func<T, TKey> keySelector)
-            where T : class
-        {
-            return lhs.OrderBy(keySelector).JoinWithNulls(rhs.OrderBy(keySelector), comparerFunc);
-        }
-
-        public static IEnumerable<(T, T)> JoinWithNulls<T>(this IOrderedEnumerable<T> lhs, IOrderedEnumerable<T> rhs, Func<T, T, int> comparerFunc)
-            where T : class
-        {
-            using var lhsEnumerator = lhs.GetEnumerator();
-            using var rhsEnumerator = rhs.GetEnumerator();
+            using var lhsEnumerator = lhs.OrderBy(keySelector, keyComparer).GetEnumerator();
+            using var rhsEnumerator = rhs.OrderBy(keySelector, keyComparer).GetEnumerator();
 
             bool lhsMoved = lhsEnumerator.MoveNext();
             bool rhsMoved = rhsEnumerator.MoveNext();
             while (lhsMoved && rhsMoved)
             {
-                int compareResult = comparerFunc.Invoke(lhsEnumerator.Current, rhsEnumerator.Current);
+                int compareResult = keyComparer.Compare(keySelector.Invoke(lhsEnumerator.Current), keySelector.Invoke(rhsEnumerator.Current));
                 if (compareResult == 0)
                 {
                     yield return (lhsEnumerator.Current, rhsEnumerator.Current);
