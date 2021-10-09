@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Qart.Core.Text;
+using System;
 using System.Linq;
 using System.Xml;
-using Qart.Core.Text;
 
 namespace Qart.Core.Xml
 {
@@ -11,7 +10,7 @@ namespace Qart.Core.Xml
         public static void OrderElements(this XmlNode srcNode, Func<XmlElement, object> keySelector)
         {
             var allChidren = srcNode.ChildNodes.Cast<XmlNode>().ToList();
-            foreach(var node in allChidren.OfType<XmlElement>().OrderBy(keySelector))
+            foreach (var node in allChidren.OfType<XmlElement>().OrderBy(keySelector))
             {
                 srcNode.RemoveChild(node);
                 srcNode.AppendChild(node);

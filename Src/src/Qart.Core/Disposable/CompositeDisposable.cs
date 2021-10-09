@@ -5,9 +5,9 @@ namespace Qart.Core.Disposable
 {
     public class CompositeDisposable : IDisposable
     {
-        private readonly IEnumerable<IDisposable> _disposables;
+        private readonly IReadOnlyCollection<IDisposable> _disposables;
 
-        public CompositeDisposable(IEnumerable<IDisposable> disposables)
+        public CompositeDisposable(IReadOnlyCollection<IDisposable> disposables)
         {
             _disposables = disposables;
         }

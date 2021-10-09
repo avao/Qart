@@ -97,5 +97,24 @@ namespace Qart.Core.Tests.Text
         {
             return value.Split(".").ToCsv();
         }
+
+        [TestCase("ab.c..", ExpectedResult = "ab, c, , ")]
+        [TestCase("", ExpectedResult = "")]
+        [TestCase("ab", ExpectedResult = "ab")]
+        public string ToCsvWithASpaceSucceeds(string value)
+        {
+            return value.Split(".").ToCsvWithASpace();
+        }
+
+        [TestCase("ab", '.', ExpectedResult = "ab")]
+        [TestCase("ab.c", '.', ExpectedResult = "ab")]
+        [TestCase("", '.', ExpectedResult = "")]
+        [TestCase("cd:f", ':', ExpectedResult = "cd")]
+        [TestCase(":", ':', ExpectedResult = "")]
+        [TestCase(":ab", ':', ExpectedResult = "")]
+        public string SubstringWhileSucceeds(string value, char stopChar)
+        {
+            return value.SubstringWhile(c => c != stopChar);
+        }
     }
 }

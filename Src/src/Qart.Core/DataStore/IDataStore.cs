@@ -33,27 +33,24 @@ namespace Qart.Core.DataStore
             if (!dataStore.Contains(itemId))
                 return null;
 
-            using (var stream = dataStore.GetRequiredReadStream(itemId))
-            using (var reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+            using var stream = dataStore.GetRequiredReadStream(itemId);
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
         public static IEnumerable<string> GetRequiredAllLines(this IDataStore dataStore, string itemId)
         {
-            using (var stream = dataStore.GetRequiredReadStream(itemId))
-            using (var reader = new StreamReader(stream))
+            using var stream = dataStore.GetRequiredReadStream(itemId);
+            using var reader = new StreamReader(stream);
+
+            var lines = new List<string>();
+            var line = reader.ReadLine();
+            while (line != null)
             {
-                var lines = new List<string>();
-                var line = reader.ReadLine();
-                while(line!=null)
-                {
-                    lines.Add(line);
-                    line = reader.ReadLine();
-                }
-                return lines;
+                lines.Add(line);
+                line = reader.ReadLine();
             }
+            return lines;
         }
 
         public static string GetRequiredContent(this IDataStore dataStore, string itemId)
@@ -63,11 +60,9 @@ namespace Qart.Core.DataStore
 
         public static void PutContent(this IDataStore dataStore, string itemId, string content)
         {
-            using (var stream = dataStore.GetWriteStream(itemId))
-            using (var writer = new StreamWriter(stream))
-            {
-                writer.Write(content);
-            }
+            using var stream = dataStore.GetWriteStream(itemId);
+            using var writer = new StreamWriter(stream);
+            writer.Write(content);
         }
 
         public static void UsingReadStream(this IDataStore dataStore, string id, Action<Stream> action)
@@ -77,10 +72,8 @@ namespace Qart.Core.DataStore
 
         public static T UsingReadStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)
         {
-            using (var stream = dataStore.GetRequiredReadStream(id))
-            {
-                return action(stream);
-            }
+            using var stream = dataStore.GetRequiredReadStream(id);
+            return action(stream);
         }
 
         public static void UsingWriteStream(this IDataStore dataStore, string id, Action<Stream> action)
@@ -90,10 +83,8 @@ namespace Qart.Core.DataStore
 
         public static T UsingWriteStream<T>(this IDataStore dataStore, string id, Func<Stream, T> action)
         {
-            using (var stream = dataStore.GetWriteStream(id))
-            {
-                return action(stream);
-            }
+            using var stream = dataStore.GetWriteStream(id);
+            return action(stream);
         }
 
         public static Stream GetRequiredReadStream(this IDataStore dataStore, string id)

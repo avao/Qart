@@ -12,6 +12,7 @@ namespace Qart.Core.Validation
         public static void DoesNotContain(string value, string substring) => That(() => !value.Contains(substring), () => "Value should not contain substring [" + substring + "]");
         public static void Equal<T>(T lhs, T rhs, string message) => That(() => EqualityComparer<T>.Default.Equals(lhs, rhs), message);
         public static void NotEqual<T>(T lhs, T rhs, string message) => That(() => !EqualityComparer<T>.Default.Equals(lhs, rhs), message);
+        public static void True<T>(bool value, string message) => That(() => value, message);
 
         public static void That(Func<bool> predicate, string failMessage) => That(predicate, () => failMessage);
 

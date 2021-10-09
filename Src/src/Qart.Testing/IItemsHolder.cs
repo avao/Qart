@@ -39,35 +39,25 @@ namespace Qart.Testing
         public static string GetRequiredItem(this IItemsHolder pipelineContext, string key)
         {
             var item = pipelineContext.GetRequiredItem<object>(key);
-            switch (item)
+            return item switch
             {
-                case null:
-                    return null;
-                case string stringValue:
-                    return stringValue;
-                case JToken jtokenValue:
-                    return JsonConvert.SerializeObject(jtokenValue);
-                default:
-                    throw new NotSupportedException($"Unsupported item type {item.GetType()} for conversion into string");
-            }
+                null => null,
+                string stringValue => stringValue,
+                JToken jtokenValue => JsonConvert.SerializeObject(jtokenValue),
+                _ => throw new NotSupportedException($"Unsupported item type {item.GetType()} for conversion into string"),
+            };
         }
 
         public static JToken GetRequiredItemAsJToken(this IItemsHolder pipelineContext, string key)
         {
             var item = pipelineContext.GetRequiredItem<object>(key);
-            switch (item)
+            return item switch
             {
-                case null:
-                    return null;
-                case string stringValue:
-                    return JToken.Parse(stringValue);
-                case JToken jtokenValue:
-                    return jtokenValue;
-                case object obj:
-                    return JObject.FromObject(obj);
-                default:
-                    throw new NotSupportedException($"Unsupported item type {item.GetType()} for conversion into JToken");
-            }
+                null => null,
+                string stringValue => JToken.Parse(stringValue),
+                JToken jtokenValue => jtokenValue,
+                object obj => JObject.FromObject(obj)
+            };
         }
 
         public static string Resolve(this IItemsHolder pipelineContext, string value)

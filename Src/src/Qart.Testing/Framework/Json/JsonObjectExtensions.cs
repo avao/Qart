@@ -21,13 +21,9 @@ namespace Qart.Testing.Framework.Json
 
         public static void Order(this JObject obj, string path, Func<JToken, object> keySelector)
         {
-            foreach (var token in obj.SelectTokens(path))
+            foreach (var array in obj.SelectTokens(path).OfType<JArray>())
             {
-                var array = token as JArray;
-                if (array != null)
-                {
-                    array.OrderItems(keySelector);
-                }
+                array.OrderItems(keySelector);
             }
         }
 
