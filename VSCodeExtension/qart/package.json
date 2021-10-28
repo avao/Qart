@@ -1,0 +1,41 @@
+{
+  "name": "qart",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "1.0.0",
+  "publisher": "vscode",
+  "license": "MIT",
+  "engines": {
+    "vscode": "0.10.x"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "qart",
+        "aliases": [
+          "QART",
+          "qart"
+        ],
+        "extensions": [
+          ".test"
+        ],
+        "filenames": [
+          "composer.lock",
+          ".watchmanconfig",
+          ".ember-cli"
+        ],
+        "mimetypes": [
+          "application/qart"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "qart",
+        "scopeName": "source.qart",
+        "path": "./syntaxes/QART.tmLanguage.json"
+      }
+    ]
+  }
+}
