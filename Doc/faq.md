@@ -5,8 +5,6 @@
 At the moment CyberTester provides basic framework which should be extended with the custom behaviour.
 Create a project (xyz.TestAutomation)
 Add a dependency to Qart.CyberTester nuget package
-Add Qart.CyberTester.exe.config and mark it with 'copy if newer'
-Add WindsorContainerInstaller
 
 ## How do I supply multiple parameters to CyberTester on a Unix shell?
 

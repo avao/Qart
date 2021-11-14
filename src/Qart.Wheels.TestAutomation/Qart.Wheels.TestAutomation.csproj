@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Qart.Testing.Extensions\Qart.Testing.Extensions.csproj" />
+    <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj" />
+  </ItemGroup>
+
+</Project>
