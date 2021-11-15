@@ -19,14 +19,16 @@ namespace Qart.Testing
         private readonly ILoggerFactory _loggerFactory;
         private readonly ICriticalSectionTokensProvider<TestCase> _criticalSectionTokensProvider;
         private readonly IObjectFactory<IPipelineAction> _pipelineActionFactory;
+        private readonly IPriorityProvider _priorityProvider;
 
-        public CyberTester(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestStorage testStorage, ILoggerFactory loggerFactory, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null, IItemProvider itemProvider = null)
+        public CyberTester(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestStorage testStorage, ILoggerFactory loggerFactory, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null, IItemProvider itemProvider = null, IPriorityProvider priorityProvider = null)
         {
             _pipelineActionFactory = pipelineActionFactory;
             _testStorage = testStorage;
             _itemProvider = itemProvider;
             _loggerFactory = loggerFactory;
             _criticalSectionTokensProvider = criticalSectionTokensProvider ?? new NoTokensCriticalSectionTokensProvider<TestCase>();
+            _priorityProvider = priorityProvider;
         }
 
         public async Task<IReadOnlyCollection<TestCaseExecutionResult>> RunTestsAsync(ITestSession customSession, IDictionary<string, string> options)
@@ -36,6 +38,12 @@ namespace Qart.Testing
 
             //filter
             testCases = FilterByTags(testCases, options);
+
+            //order
+            if (_priorityProvider != null)
+            {
+                testCases = testCases.OrderBy(_priorityProvider.GetPriority);
+            }
 
             //execute
             using (var testSession = new TestSession(_pipelineActionFactory, customSession, _loggerFactory, options, _criticalSectionTokensProvider, _itemProvider))
