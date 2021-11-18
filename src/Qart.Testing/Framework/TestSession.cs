@@ -59,20 +59,20 @@ namespace Qart.Testing.Framework
 
             for (int i = 0; i < workerCount; ++i)
             {
-                _tasks.Add(Task.Factory.StartNew(() => WorkerAction(this, schedule), _cancellationToken));
+                _tasks.Add(Task.Factory.StartNew(async() => await WorkerActionAsync(this, schedule), _cancellationToken));
             }
             return Task.WhenAll(_tasks);
         }
 
 
-        private static async Task WorkerAction(TestSession testSession, CriticalSectionsAwareQueue<TestCase> schedule)
+        private static async Task WorkerActionAsync(TestSession testSession, CriticalSectionsAwareQueue<TestCase> schedule)
         {
             while (true)
             {
                 int queueDepth;
                 while (schedule.TryAcquireForProcessing(out var testCase, out queueDepth))
                 {
-                    await testSession.OnTestCaseAsync(testCase);
+                    testSession.OnTestCaseAsync(testCase).Wait();
                     schedule.Dequeue(testCase);
                 }
 
