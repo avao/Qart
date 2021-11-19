@@ -5,8 +5,8 @@
         "item.save?path=jtoken1.json",
         "item.load?path=value.json",
         "json.select_many?jsonPath=$.array_property[*]",
-        "item.assert?path=expected1.json",
+        "assert?path=expected1.json",
         "json.replace?groupsPath=groups.json",
-        "item.assert?path=expected2.json"
+        "assert?path=expected2.json"
     ]
 }

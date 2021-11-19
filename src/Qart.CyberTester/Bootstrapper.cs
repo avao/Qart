@@ -6,6 +6,7 @@ using Qart.Testing.ActionPipeline.Actions;
 using Qart.Testing.ActionPipeline.Actions.Http;
 using Qart.Testing.ActionPipeline.Actions.Item;
 using Qart.Testing.ActionPipeline.Actions.Json;
+using Qart.Testing.Diff;
 using Qart.Testing.Storage;
 using Qart.Testing.Transformations;
 using Qart.Testing.Transformations.StreamTransformers;
@@ -51,6 +52,8 @@ namespace Qart.CyberTester
             var transformersRegistry = new ActivationRegistry<IStreamTransformer>();
             services.AddSingleton(transformersRegistry);
             RegisterBuiltInStreamTransformers(transformersRegistry);
+
+            services.AddSingleton<ITokenSelectorProvider>(sp => new PropertyBasedTokenSelectorProvider("id"));
 
             return actionsRegistry;
         }

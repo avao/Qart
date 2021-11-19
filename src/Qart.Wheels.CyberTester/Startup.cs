@@ -2,7 +2,6 @@
 using Qart.Core.Activation;
 using Qart.Testing.ActionPipeline;
 using Qart.Testing.Context;
-using Qart.Testing.Diff;
 using Qart.Testing.Execution;
 using Qart.Wheels.TestAutomation;
 using Qart.Wheels.TestAutomation.PipelineActions;
@@ -15,7 +14,6 @@ namespace Qart.Wheels.CyberTester
         {
             services.AddSingleton<ITestSession, CustomTestSession>();
             services.AddSingleton<IItemProvider, ItemProvider>();
-            services.AddSingleton<ITokenSelectorProvider>(sp => new PropertyBasedTokenSelectorProvider("id"));
         }
 
         public static void RegisterActions(ActivationRegistry<IPipelineAction> registry)
