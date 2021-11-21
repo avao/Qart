@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Qart.Core.Collections;
 using Qart.Core.DataStore;
 using Qart.Core.Text;
 using Qart.Core.Validation;
@@ -41,13 +42,18 @@ namespace Qart.Testing.Storage
             var testCaseDataStore = new ExtendedDataStore(scopedTestCaseDataStore, (ds, transform, dataStore) => ContentProcessor.Process(ds.GetContent(transform), new ScopedDataStore(dataStore, Path.GetDirectoryName(transform))));
             var tmpDataStore = new ScopedDataStore(scopedTestCaseDataStore, ".tmp");
 
-            var testModel = JsonConvert.DeserializeObject<TestCaseModel>(testCaseDataStore.GetRequiredContent(".test"));
-            var tags = testModel.Tags ?? Array.Empty<string>();
+            var testCaseContent = testCaseDataStore.GetRequiredContent(".test");
+            var testModel = JsonConvert.DeserializeObject<TestCaseModel>(testCaseContent);
+            if (testModel.Actions == null)
+            {
+                var v1Model = JsonConvert.DeserializeObject<TestCaseModelV1>(testCaseContent);
+                testModel = new(v1Model.Tags, v1Model.Parameters?.Actions);
+            }
 
             Require.NotNull(testModel.Actions, $"No actions found for test {id}");
             var actions = testModel.Actions.Select(Parse).ToList();
 
-            return new TestCase(id, tags, actions, testCaseDataStore, tmpDataStore, _dataStoreProvider);
+            return new TestCase(id, testModel.Tags.ToEmptyIfNull(), actions, testCaseDataStore, tmpDataStore, _dataStoreProvider);
         }
 
         public IReadOnlyCollection<string> GetTestCaseIds()
@@ -56,10 +62,15 @@ namespace Qart.Testing.Storage
             return DataStorage.GetAllGroups().Concat(new[] { "." }).Where(_ => _isTestCasePredicate(new ScopedDataStore(DataStorage, _))).ToList();
         }
 
-        private class TestCaseModel
+        private record TestCaseModel(string[] Tags, string[] Actions);
+
+        private class TestCaseModelV1
         {
             public string[] Tags { get; set; }
-            public string[] Actions { get; set; }
+
+            public ParametersRecord Parameters { get; set; }
+
+            public record ParametersRecord(string[] Actions);
         }
 
         private static ResolvableItemDescription Parse(string definition)
