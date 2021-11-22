@@ -16,7 +16,9 @@ namespace Qart.Core.Activation
 
         public static T CreateInstance<T>(this IServiceProvider serviceProvider, Type type, IDictionary<string, object> parameterValues)
         {
-            var caseInsensitiveParameterValues = new Dictionary<string, object>(parameterValues, StringComparer.InvariantCultureIgnoreCase);
+            var caseInsensitiveParameterValues = parameterValues == null
+                ? new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)//TODO avoid allocation
+                : new Dictionary<string, object>(parameterValues, StringComparer.InvariantCultureIgnoreCase);
             foreach (var ctor in type.GetConstructors().OrderBy(c => c.GetParameters().Length))
             {
                 if (TryResolvingParameters(ctor, caseInsensitiveParameterValues, serviceProvider, out var resolvedParameters))
@@ -24,7 +26,7 @@ namespace Qart.Core.Activation
                     return (T)ctor.Invoke(resolvedParameters);
                 }
             }
-            throw new NotSupportedException($"Could not create {type} with parameter overrides {parameterValues.Keys.ToCsv()}");
+            throw new NotSupportedException($"Could not create {type} with parameter overrides {caseInsensitiveParameterValues.Keys.ToCsv()}");
         }
 
         private static bool TryResolvingParameters(ConstructorInfo constructorInfo, IDictionary<string, object> parameterValues, IServiceProvider serviceProvider, out object[] resolvedParameters)

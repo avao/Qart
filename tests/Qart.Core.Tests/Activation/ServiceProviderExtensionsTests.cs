@@ -44,6 +44,13 @@ namespace Qart.Core.Tests.Activation
         }
 
         [TestCase]
+        public void DefaultConstructorWithNullParametersSucceeds()
+        {
+            var instance = GetServiceProvider().CreateInstance<A>((IDictionary<string, object>)null);
+            Assert.That(instance, Is.Not.Null);
+        }
+
+        [TestCase]
         public void ExtraParameterValuesThrows()
         {
             var exception = Assert.Throws<NotSupportedException>(() => GetServiceProvider().CreateInstance<A>(new Dictionary<string, object> { { "p1", 3 } }));
