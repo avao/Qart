@@ -45,7 +45,8 @@ namespace Qart.Core.Activation
                 {
                     if (value is not null && parameter.ParameterType.IsAssignableFrom(value.GetType())
                         || !parameter.ParameterType.IsValueType
-                        || System.Nullable.GetUnderlyingType(parameter.ParameterType) != null)
+                        || System.Nullable.GetUnderlyingType(parameter.ParameterType) != null
+                        || TryChangeType(value, parameter.ParameterType, out value))
                     {
                         ++matchedParameterValues;
                     }
@@ -68,6 +69,23 @@ namespace Qart.Core.Activation
                 resolvedParameters[i] = value;
             }
             return matchedParameterValues == parameterValues.Count;
+        }
+
+        private static bool TryChangeType(object value, Type conversionType, out object convertedValue)
+        {
+            if (conversionType != null
+                && value != null
+                && value is IConvertible)
+            {
+                try
+                {
+                    convertedValue = Convert.ChangeType(value, conversionType);
+                    return true;
+                }
+                catch { }
+            }
+            convertedValue = default;
+            return false;
         }
     }
 }

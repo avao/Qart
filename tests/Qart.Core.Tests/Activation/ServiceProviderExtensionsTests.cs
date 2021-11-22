@@ -76,6 +76,8 @@ namespace Qart.Core.Tests.Activation
                 yield return new TestCaseData(new Dictionary<string, object> { { "p1", null }, { "p2", 3 } },
                                               new Dictionary<string, object> { { "p1", null }, { "p2", 3 } });
 
+                yield return new TestCaseData(new Dictionary<string, object> { { "p1", null }, { "p2", "3" } },
+                                              new Dictionary<string, object> { { "p1", null }, { "p2", 3 } });
             }
         }
 
