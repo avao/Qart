@@ -1,4 +1,5 @@
 ﻿using Qart.Core.Text;
+using Qart.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,17 +46,10 @@ namespace Qart.Core.Activation
                 var parameter = parameters[i];
                 if (parameterValues.TryGetValue(parameter.Name, out var value))
                 {
-                    if (value is not null && parameter.ParameterType.IsAssignableFrom(value.GetType())
-                        || !parameter.ParameterType.IsValueType
-                        || System.Nullable.GetUnderlyingType(parameter.ParameterType) != null
-                        || TryChangeType(value, parameter.ParameterType, out value))
-                    {
-                        ++matchedParameterValues;
-                    }
-                    else
-                    {
+                    if (!TryChangeType(value, parameter.ParameterType, out value))
                         return false;
-                    }
+
+                    ++matchedParameterValues;
                 }
                 else if (parameter.IsOptional)
                 {
@@ -73,19 +67,44 @@ namespace Qart.Core.Activation
             return matchedParameterValues == parameterValues.Count;
         }
 
-        private static bool TryChangeType(object value, Type conversionType, out object convertedValue)
+        private static bool TryChangeType(object value, Type targetType, out object convertedValue)
         {
-            if (conversionType != null
-                && value != null
-                && value is IConvertible)
+            Require.NotNull(targetType, "Target type cannot be null");
+                       
+
+            if (value == null)
             {
-                try
+                if (!targetType.IsValueType
+                    || System.Nullable.GetUnderlyingType(targetType) != null)
                 {
-                    convertedValue = Convert.ChangeType(value, conversionType);
+                    convertedValue = null;
                     return true;
                 }
-                catch { }
             }
+            else
+            {
+                var underlyingType = System.Nullable.GetUnderlyingType(targetType);
+                if (underlyingType != null)
+                {
+                    return TryChangeType(value, underlyingType, out convertedValue);
+                }
+
+                if (targetType.IsAssignableFrom(value.GetType()))
+                {
+                    convertedValue = value;
+                    return true;
+                }
+                else if (value is IConvertible convertable)
+                {
+                    try
+                    {
+                        convertedValue = convertable.ToType(targetType, null);
+                        return true;
+                    }
+                    catch { }
+                }
+            }
+            
             convertedValue = default;
             return false;
         }

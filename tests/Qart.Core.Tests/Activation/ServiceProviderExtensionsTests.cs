@@ -35,6 +35,14 @@ namespace Qart.Core.Tests.Activation
         private interface IDependency { }
         private class Dependency : IDependency { public static Dependency Instance = new Dependency(); }
 
+        private class C<T>
+        {
+            public T Value { get; }
+            public C(T value)
+            {
+                Value = value;
+            }
+        }
 
         [TestCase]
         public void DefaultConstructorWithNoParametersSucceeds()
@@ -93,6 +101,32 @@ namespace Qart.Core.Tests.Activation
         {
             var instance = GetServiceProvider().CreateInstance<B>(input);
             Assert.That(instance.Parameters, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void TypeConversionSucceeds()
+        {
+            ExecuteValueTypeConversion("true", true);
+            ExecuteValueTypeConversion("false", false);
+            ExecuteValueTypeConversion("3", 3);
+            ExecuteValueTypeConversion("-645", -645);
+            ExecuteValueTypeConversion("3.2", 3.2);
+            ExecuteValueTypeConversion("3.2", 3.2M);
+            ExecuteValueTypeConversion("2021-09-05T10:59:55", new DateTime(2021, 09, 05, 10, 59, 55));
+        }
+
+        private static void ExecuteValueTypeConversion<T>(object input, T expected)
+             where T : struct
+        {
+            ExecuteTypeConversion<T>(input, expected);
+            ExecuteTypeConversion<T?>(input, expected);
+            ExecuteTypeConversion<T?>(null, null);
+        }
+
+        private static void ExecuteTypeConversion<T>(object input, T expected)
+        {
+            var instance = GetServiceProvider().CreateInstance<C<T>>(new Dictionary<string, object> { { "value", input } });
+            Assert.That(instance.Value, Is.EqualTo(expected));
         }
 
         private static IServiceProvider GetServiceProvider()
