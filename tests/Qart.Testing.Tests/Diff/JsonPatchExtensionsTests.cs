@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Qart.Testing.Diff;
+using System;
 using System.Collections.Generic;
 
 namespace Qart.Testing.Tests.Diff
@@ -13,6 +14,7 @@ namespace Qart.Testing.Tests.Diff
         private static IEnumerable<object[]> AddTokenTestSource()
         {
             yield return new object[] { JObject.FromObject(new { a = new { prop = "abc" } }), "$.a.newProp", new JValue(1), "{\"a\":{\"prop\":\"abc\",\"newProp\":1}}" };
+            yield return new object[] { JObject.FromObject(new { a = new { prop = Array.Empty<string>() } }), "$.a.prop[0]", new JValue(1), "{\"a\":{\"prop\":[1]}}" };
         }
 
         [TestCaseSource(nameof(AddTokenTestSource))]

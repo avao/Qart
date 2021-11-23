@@ -16,6 +16,7 @@ namespace Qart.Testing.Tests.Diff
             yield return new object[] { new JArray("a", "b"), new JArray("c", "b"), "[{\"JsonPath\":\"$[0]\",\"Value\":\"c\"}]" };
             yield return new object[] { new JArray("a", "b"), new JArray("a"), "[{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
             yield return new object[] { new JArray("a", "b"), new JArray(), "[{\"JsonPath\":\"$[0]\",\"Value\":null},{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
+            yield return new object[] { new JArray(), new JArray("a"), "[{\"JsonPath\":\"$[0]\",\"Value\":\"a\"}]" };
         }
 
         [TestCaseSource(nameof(CompareTestSource))]
