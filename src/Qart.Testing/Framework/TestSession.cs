@@ -59,7 +59,7 @@ namespace Qart.Testing.Framework
 
             for (int i = 0; i < workerCount; ++i)
             {
-                _tasks.Add(Task.Factory.StartNew(async() => await WorkerActionAsync(this, schedule), _cancellationToken));
+                _tasks.Add(Task.Factory.StartNew(async () => await WorkerActionAsync(this, schedule), _cancellationToken));
             }
             return Task.WhenAll(_tasks);
         }
@@ -94,37 +94,25 @@ namespace Qart.Testing.Framework
             var isMuted = testCase.Contains(".muted");
             if (isMuted)
             {
-                _logger.LogDebug("Test is muted.");
+                _logger.LogDebug("Test is muted, not executing.");
             }
 
             var testResult = new TestCaseExecutionResult(testCase, isMuted);
             _results.Add(testResult);
 
+            using var testCaseContext = CreateContext(testCase, Options);
+            var descriptionWriter = new XDocumentDescriptionWriter(testCaseContext.Logger);
+            try
             {
-                using var testCaseContext = CreateContext(testCase, Options);
-                var descriptionWriter = new XDocumentDescriptionWriter(testCaseContext.Logger);
                 _customTestSession?.OnBegin(testCaseContext);
-
-                try
-                {
-                    await testCaseContext.ExecuteActionsAsync(_pipelineActionFactory, testCase.Actions, testCaseContext.Options.GetDeferExceptions());
-                }
-                catch (Exception ex)
-                {
-                    testCaseContext.Logger.LogError(ex, "an error occured");
-                    testResult.MarkAsFailed(ex);
-                }
-
-                try
-                {
-                    testResult.Description = testCaseContext.DescriptionWriter.GetContent();
-                }
-                catch (Exception ex)
-                {
-                    testCaseContext.Logger.LogError(ex, "an error occured while getting test case description");
-                }
-
+                await testCaseContext.ExecuteActionsAsync(_pipelineActionFactory, testCase.Actions, testCaseContext.Options.GetDeferExceptions());
+                testResult.Description = testCaseContext.DescriptionWriter.GetContent();
                 _customTestSession?.OnFinish(testResult, testCaseContext.Logger);
+            }
+            catch (Exception ex)
+            {
+                testCaseContext.Logger.LogError(ex, "an error occured");
+                testResult.MarkAsFailed(ex);
             }
 
             _logger.LogDebug("Finished processing test case [{0}]", testCase.Id);
