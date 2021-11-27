@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Qart.Core.Text;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
 
 namespace Qart.Core.Activation
 {
@@ -38,6 +41,21 @@ namespace Qart.Core.Activation
                 IsOptional = isOptional;
                 DefaultValue = defaultValue;
             }
+        }
+    }
+
+    public static class ActivationAliasDescriptionExtensions
+    {
+        public static string ToShortDescription(this ActivationAliasDescription description)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(description.Name);
+            foreach (var parameterGroup in description.ParameterGroups)
+            {
+                var parameters = parameterGroup.Select(p => (p.IsOptional ? "+" : "") + p.Name).ToCsvWithASpace();
+                stringBuilder.AppendLine($"\t{parameters}");
+            }
+            return stringBuilder.ToString();
         }
     }
 }

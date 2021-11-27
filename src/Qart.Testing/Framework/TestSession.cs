@@ -105,7 +105,7 @@ namespace Qart.Testing.Framework
             try
             {
                 _customTestSession?.OnBegin(testCaseContext);
-                await testCaseContext.ExecuteActionsAsync(_pipelineActionFactory, testCase.Actions, testCaseContext.Options.GetDeferExceptions());
+                await testCaseContext.ExecuteActionsAsync(_pipelineActionFactory, testCase.Actions, testCaseContext.Options.GetDeferExceptions(), _logger);
                 testResult.Description = testCaseContext.DescriptionWriter.GetContent();
                 _customTestSession?.OnFinish(testResult, testCaseContext.Logger);
             }

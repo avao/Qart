@@ -112,12 +112,7 @@ namespace Qart.CyberTester
                 foreach (var aliasDescription in descriptions)
                 {
                     Console.WriteLine();
-                    Console.WriteLine(aliasDescription.Name);
-                    foreach (var parameterGroup in aliasDescription.ParameterGroups)
-                    {
-                        var parameters = parameterGroup.Select(p => (p.IsOptional ? "+" : "") + p.Name).ToCsvWithASpace();
-                        Console.WriteLine($"\t{parameters}");
-                    }
+                    Console.WriteLine(aliasDescription.ToShortDescription());
                 }
             }
             else

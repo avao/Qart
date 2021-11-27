@@ -4,9 +4,9 @@ namespace Qart.Core.Activation
 {
     public class ActivationRegistry<T>
     {
-        private readonly IDictionary<string, ActivationInfo> _items;
+        private readonly Dictionary<string, ActivationInfo> _items;
 
-        public IEnumerable<string> Aliases => _items.Keys;
+        public IReadOnlyCollection<string> Aliases => _items.Keys;
 
 
         public ActivationRegistry()

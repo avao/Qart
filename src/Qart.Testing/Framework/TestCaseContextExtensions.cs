@@ -17,7 +17,7 @@ namespace Qart.Testing.Framework
 {
     public static class TestCaseContextExtensions
     {
-        public static async Task ExecuteActionsAsync(this TestCaseContext context, IObjectFactory<IPipelineAction> pipelineActionFactory, IEnumerable<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd)
+        public static async Task ExecuteActionsAsync(this TestCaseContext context, IObjectFactory<IPipelineAction> pipelineActionFactory, IReadOnlyCollection<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd, ILogger logger)
         {
             IList<Exception> exceptions = null;
             foreach (var actionDescription in actionDescriptions)
@@ -29,7 +29,30 @@ namespace Qart.Testing.Framework
                 }
 
                 context.Logger.LogDebug("Creating action {0} with parameters {1}", actionDescription.Name, actionDescription.Parameters.Select(_ => _.Key + ": " + JsonConvert.SerializeObject(_.Value)));
-                var action = pipelineActionFactory.Create(actionDescription.Name, actionDescription.Parameters);
+
+                IPipelineAction action;
+                try
+                {
+                    action = pipelineActionFactory.Create(actionDescription.Name, actionDescription.Parameters);
+                }
+                catch (Exception)
+                {
+                    var descriptions = pipelineActionFactory.GetDescriptions()
+                        .Where(x => x.Name == actionDescription.Name)
+                        .ToList();
+
+                    if (descriptions.Count == 0)
+                    {
+                        logger.LogError("No descriptions found for {action}", actionDescription.Name);
+                    }
+                    else
+                    {
+                        logger.LogWarning("Could not create {action} instance, exception details will follow", actionDescription.Name);
+                        descriptions.ForEach(d => logger.LogWarning("Registered descriptions: \n {description}", d.ToShortDescription()));
+                    }
+                    throw;
+                }
+
                 try
                 {
                     await action.ExecuteAsync(context);
@@ -52,7 +75,7 @@ namespace Qart.Testing.Framework
                 }
                 finally
                 {
-                    if(action is IDisposable disposable)
+                    if (action is IDisposable disposable)
                     {
                         disposable.Dispose();
                     }
@@ -72,7 +95,7 @@ namespace Qart.Testing.Framework
 
         public static Task AssertContentJsonAsync(this TestCaseContext testCaseContext, string content, string path)
             => testCaseContext.AssertContentAsync(JsonConvert.DeserializeObject<JToken>(content), path);
-        
+
 
         public static async Task AssertContentJsonManyAsync(this TestCaseContext testCaseContext, string content, string dir, Func<JToken, string> itemNameFunc)
         {
