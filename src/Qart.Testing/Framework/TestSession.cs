@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Qart.Core.Activation;
 using Qart.Core.Collections;
+using Qart.Core.Tracing;
 using Qart.Testing.ActionPipeline;
 using Qart.Testing.Context;
 using Qart.Testing.Execution;
@@ -59,37 +60,37 @@ namespace Qart.Testing.Framework
 
             for (int i = 0; i < workerCount; ++i)
             {
-                _tasks.Add(Task.Factory.StartNew(async () => await WorkerActionAsync(this, schedule), _cancellationToken));
+                _tasks.Add(WorkerActionAsync(this, schedule, _cancellationToken));
             }
             return Task.WhenAll(_tasks);
         }
 
 
-        private static async Task WorkerActionAsync(TestSession testSession, CriticalSectionsAwareQueue<TestCase> schedule)
+        private static async Task WorkerActionAsync(TestSession testSession, CriticalSectionsAwareQueue<TestCase> schedule, CancellationToken cancellationToken)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 int queueDepth;
                 while (schedule.TryAcquireForProcessing(out var testCase, out queueDepth))
                 {
-                    testSession.OnTestCaseAsync(testCase).Wait();
+                    await testSession.ExecuteTestCaseAsync(testCase);
                     schedule.Dequeue(testCase);
                 }
 
-                if (queueDepth > 0)
-                {
-                    await Task.Delay(100);
-                }
-                else
+                if (queueDepth == 0)
                 {
                     break;
                 }
+                await Task.Delay(100, cancellationToken);
             }
         }
 
 
-        private async Task OnTestCaseAsync(TestCase testCase)
+        private async Task ExecuteTestCaseAsync(TestCase testCase)
         {
+            var correlationId = Correlation.GetTickBasedId();
+            using var scope = _logger.BeginScope(correlationId);
+
             _logger.LogDebug("Starting processing test case [{0}]", testCase.Id);
             var isMuted = testCase.Contains(".muted");
             if (isMuted)
@@ -100,7 +101,7 @@ namespace Qart.Testing.Framework
             var testResult = new TestCaseExecutionResult(testCase, isMuted);
             _results.Add(testResult);
 
-            using var testCaseContext = CreateContext(testCase, Options);
+            using var testCaseContext = CreateContext(testCase, correlationId, Options);
             var descriptionWriter = new XDocumentDescriptionWriter(testCaseContext.Logger);
             try
             {
@@ -124,7 +125,7 @@ namespace Qart.Testing.Framework
         }
 
 
-        private TestCaseContext CreateContext(TestCase testCase, IDictionary<string, string> options)
+        private TestCaseContext CreateContext(TestCase testCase, string correlationId, IDictionary<string, string> options)
         {
             var writer = new StreamWriter(testCase.GetWriteStream("execution.log"));
 
@@ -133,8 +134,7 @@ namespace Qart.Testing.Framework
                 new CompositeLogger.LoggerInfo(new TextWriterLogger(LogLevel.Debug, writer), true)
             );
 
-            return new TestCaseContext(options, testCase, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger), new ItemsHolder(_itemsInitialiser));
+            return new TestCaseContext(options, testCase, correlationId, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger), new ItemsHolder(_itemsInitialiser));
         }
     }
-
 }

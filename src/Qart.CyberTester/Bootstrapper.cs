@@ -22,7 +22,7 @@ namespace Qart.CyberTester
         {
             Log.Logger = new LoggerConfiguration()
                   .Enrich.FromLogContext()
-                  .WriteTo.Console()
+                  .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Scope} {Message:lj}{NewLine}{Exception}")
                   .MinimumLevel.Is(logEventLevel)
                   .CreateLogger();
 

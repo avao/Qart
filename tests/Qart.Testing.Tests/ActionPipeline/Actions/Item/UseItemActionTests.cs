@@ -11,7 +11,7 @@ namespace Qart.Testing.Tests.ActionPipeline.Actions.Item
         [Test]
         public async Task UseItemAction_SetsItemKey()
         {
-            var context = new TestCaseContext(null, null, null, new XDocumentDescriptionWriter(null), new ItemsHolder(null));
+            var context = new TestCaseContext(null, null, null, null, new XDocumentDescriptionWriter(null), new ItemsHolder(null));
 
             Assert.That(context.GetItemKey(), Is.EqualTo(string.Empty));
 

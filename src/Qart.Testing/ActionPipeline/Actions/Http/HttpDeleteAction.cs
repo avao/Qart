@@ -22,7 +22,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
             var url = testCaseContext.Resolve(_url);
             testCaseContext.DescriptionWriter.AddNote("HttpDelete", url);
             var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
-            await httpClient.DeleteEnsureSuccessAsync(url, testCaseContext.Logger);
+            await httpClient.DeleteEnsureSuccessAsync(url, testCaseContext.CorrelationId, testCaseContext.Logger);
         }
     }
 }

@@ -20,8 +20,12 @@ namespace Qart.Testing.Framework
         public static async Task ExecuteActionsAsync(this TestCaseContext context, IObjectFactory<IPipelineAction> pipelineActionFactory, IReadOnlyCollection<ResolvableItemDescription> actionDescriptions, bool suppressExceptionsTilltheEnd, ILogger logger)
         {
             IList<Exception> exceptions = null;
+            int i = 0;
             foreach (var actionDescription in actionDescriptions)
             {
+                ++i;
+                using var scope = logger.BeginScope(i);
+                
                 if (actionDescription.Name.StartsWith("#"))
                 {
                     context.Logger.LogDebug("Skipping {0}", actionDescription.Name);

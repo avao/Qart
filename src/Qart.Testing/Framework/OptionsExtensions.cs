@@ -33,7 +33,7 @@ namespace Qart.Testing.Framework
 
         public static int GetWorkersCount(this IDictionary<string, string> options)
         {
-            return options.GetOptionalValue("workersCount", 1, int.Parse);
+            return options.GetOptionalValue("ct.workersCount", 1, int.Parse);
         }
 
         private static IReadOnlyCollection<string> GetCsv(IDictionary<string, string> options, string tagName)

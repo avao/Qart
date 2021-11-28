@@ -1,6 +1,7 @@
 ﻿using Qart.Testing.Context;
 using Qart.Testing.Framework;
 using Qart.Testing.Framework.Http;
+using System;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,10 +15,10 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly string _itemKey;
         private readonly string _httpClientKey;
 
-        public HttpGetAction([Description("relative url")]string url, string itemKey = null, string httpClientKey = ItemKeys.HttpClient)
+        public HttpGetAction([Description("relative url")] string url, string targetKey = null, string httpClientKey = ItemKeys.HttpClient)
         {
             _url = url;
-            _itemKey = itemKey;
+            _itemKey = targetKey;
             _httpClientKey = httpClientKey;
         }
 
@@ -25,8 +26,14 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         {
             var url = testCaseContext.Resolve(_url);
             testCaseContext.DescriptionWriter.AddNote("HttpGet", url);
-            var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
-            var response = await httpClient.GetEnsureSuccessAsync(url, testCaseContext.Logger);
+
+            var httpClient = testCaseContext.GetItem<HttpClient>(_httpClientKey);
+            if (httpClient == null && new Uri(url).IsAbsoluteUri)
+            {
+                httpClient = new HttpClient();
+            }
+
+            var response = await httpClient.GetEnsureSuccessAsync(url, testCaseContext.CorrelationId, testCaseContext.Logger);
             testCaseContext.SetItem(_itemKey, response);
         }
     }

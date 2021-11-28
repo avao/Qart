@@ -11,7 +11,7 @@ namespace Qart.Testing.Tests.ActionPipeline.Actions.Item
         [Test]
         public void ResolvesToken()
         {
-            var context = new TestCaseContext(null, null, null, new XDocumentDescriptionWriter(null), new ItemsHolder(null));
+            var context = new TestCaseContext(null, null, null, null, new XDocumentDescriptionWriter(null), new ItemsHolder(null));
 
             context.SetItem("v", "a value");
             var key = context.GetItemKey();

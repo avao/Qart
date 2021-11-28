@@ -10,6 +10,7 @@ namespace Qart.Testing.Framework
 {
     public class TestCaseContext : IDisposable, IItemsHolder
     {
+        public string CorrelationId { get; }
         public TestCase TestCase { get; }
         public IDisposableLogger Logger { get; }
         public IDescriptionWriter DescriptionWriter { get; }
@@ -17,20 +18,20 @@ namespace Qart.Testing.Framework
 
         private IItemsHolder _itemsHolder;
 
-        public TestCaseContext(IDictionary<string, string> options, TestCase testCase, IDisposableLogger logger, IDescriptionWriter descriptionWriter, IItemsHolder itemsHolder)
+        public TestCaseContext(IDictionary<string, string> options, TestCase testCase, string correlationId, IDisposableLogger logger, IDescriptionWriter descriptionWriter, IItemsHolder itemsHolder)
         {
             Options = options;
             TestCase = testCase;
             Logger = logger;
             DescriptionWriter = descriptionWriter;
             _itemsHolder = itemsHolder;
+            CorrelationId = correlationId;
         }
 
         public void Dispose()
         {
             Logger.Dispose();
         }
-
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {

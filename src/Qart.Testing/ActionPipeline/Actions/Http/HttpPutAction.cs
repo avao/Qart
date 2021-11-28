@@ -44,7 +44,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
             testCaseContext.DescriptionWriter.AddNote("HttpPut", url);
             var body = _bodyFunc(testCaseContext.TestCase, testCaseContext);
             var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
-            var response = await httpClient.PutEnsureSuccessAsync(url, body, _mediaType, testCaseContext.Logger);
+            var response = await httpClient.PutEnsureSuccessAsync(url, body, _mediaType, testCaseContext.CorrelationId, testCaseContext.Logger);
             testCaseContext.SetItem(_targetKey, response);
         }
     }

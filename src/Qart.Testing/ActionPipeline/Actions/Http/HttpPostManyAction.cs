@@ -40,7 +40,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
             testCaseContext.DescriptionWriter.AddNote("HttpPostMany", _url);
             var httpClient = testCaseContext.GetRequiredItem<HttpClient>(_httpClientKey);
             var responses = _bodyFunc(testCaseContext.TestCase, testCaseContext)
-                .Select(async (body) => await httpClient.PostEnsureSuccessAsync(url, body, _mediaType, testCaseContext.Logger))
+                .Select(async (body) => await httpClient.PostEnsureSuccessAsync(url, body, _mediaType, testCaseContext.CorrelationId, testCaseContext.Logger))
                 .ToList();
             testCaseContext.SetItem(_targetKey, responses);
         }

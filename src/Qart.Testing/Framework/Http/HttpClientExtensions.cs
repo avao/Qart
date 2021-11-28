@@ -7,25 +7,17 @@ namespace Qart.Testing.Framework.Http
 {
     public static class HttpClientExtensions
     {
-        public static Task<string> GetEnsureSuccessAsync(this HttpClient client, string relativeUri, ILogger logger)
-        {
-            return client.SendEnsureSuccessAsync(HttpMethod.Get, relativeUri, null, logger);
-        }
+        public static Task<string> GetEnsureSuccessAsync(this HttpClient client, string relativeUri, string correlationId, ILogger logger)
+            => client.SendEnsureSuccessAsync(HttpMethod.Get, relativeUri, null, correlationId, logger);
 
-        public static Task<string> PostEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, string mediaType, ILogger logger)
-        {
-            return client.SendEnsureSuccessAsync(HttpMethod.Post, relativeUri, CreateContent(content, mediaType), logger);
-        }
+        public static Task<string> PostEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, string mediaType, string correlationId, ILogger logger)
+            => client.SendEnsureSuccessAsync(HttpMethod.Post, relativeUri, CreateContent(content, mediaType), correlationId, logger);
 
-        public static Task<string> PutEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, string mediaType, ILogger logger)
-        {
-            return client.SendEnsureSuccessAsync(HttpMethod.Put, relativeUri, CreateContent(content, mediaType), logger);
-        }
+        public static Task<string> PutEnsureSuccessAsync(this HttpClient client, string relativeUri, string content, string mediaType, string correlationId, ILogger logger)
+            => client.SendEnsureSuccessAsync(HttpMethod.Put, relativeUri, CreateContent(content, mediaType), correlationId, logger);
 
-        public static Task<string> DeleteEnsureSuccessAsync(this HttpClient client, string relativeUri, ILogger logger)
-        {
-            return client.SendEnsureSuccessAsync(HttpMethod.Delete, relativeUri, null, logger);
-        }
+        public static Task<string> DeleteEnsureSuccessAsync(this HttpClient client, string relativeUri, string correlationId, ILogger logger)
+            => client.SendEnsureSuccessAsync(HttpMethod.Delete, relativeUri, null, correlationId, logger);
 
 
         private static StringContent CreateContent(string content, string mediaType)
@@ -36,17 +28,17 @@ namespace Qart.Testing.Framework.Http
             return new StringContent(content, Encoding.UTF8, mediaType);
         }
 
-        private static Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, StringContent content, ILogger logger)
+        private static async Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, StringContent content, string correlationId, ILogger logger)
         {
             logger.LogDebug("Executing {HttpMethod} on {Url}", httpMethod, relativeUri);
             var request = new HttpRequestMessage(httpMethod, relativeUri);
-            
-            if(content!=null)
+            request.Headers.Add("X-Correlation-ID", correlationId);
+            if (content != null)
             {
                 logger.LogTrace("with content: {content}", content.ReadAsStringAsync().Result);
                 request.Content = content;
             }
-            return client.SendAsync(request).GetContentAssertSuccessAsync(logger);
+            return await client.SendAsync(request).GetContentAssertSuccessAsync(logger);
         }
     }
 }

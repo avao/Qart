@@ -33,6 +33,9 @@ namespace Qart.CyberTester
             [Option('l', "logLevel", Required = false, HelpText = "Log level", Default = LogEventLevel.Information, SetName = "execution")]
             public LogEventLevel LogLevel { get; set; }
 
+            [Option('w', "workersCount", Required = false, HelpText = "Number of parallel execute", Default = 1, SetName = "execution")]
+            public int WorkersCount { get; set; }
+
 
             [Option('o', "options", Required = false, HelpText = "Custom options in format '<name>=<value>;<name>=<value>'", SetName = "execution")]
             public string Options { get; set; }
@@ -53,6 +56,7 @@ namespace Qart.CyberTester
             public bool Rebase { get; set; }
             public bool SuppressExceptions { get; set; }
             public LogEventLevel LogLevel { get; set; }
+            public int WorkersCount { get; set; }
             public string Options { get; set; }
 
 
@@ -86,7 +90,7 @@ namespace Qart.CyberTester
 
                         var extraOptions = parsedOptions.Options?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(_ => _.LeftOf("="), _ => _.RightOf("=")) ?? new Dictionary<string, string>();
 
-                        return await ExecuteAsync(parsedOptions.Dir, parsedOptions.Rebase, parsedOptions.SuppressExceptions, parsedOptions.LogLevel, extraOptions, customServiceRegistrationAction, customActionRegistrationAction);
+                        return await ExecuteAsync(parsedOptions.Dir, parsedOptions.Rebase, parsedOptions.SuppressExceptions, parsedOptions.LogLevel, parsedOptions.WorkersCount, extraOptions, customServiceRegistrationAction, customActionRegistrationAction);
                     }
                 },
                 err => Task.FromResult(-1));
@@ -121,7 +125,7 @@ namespace Qart.CyberTester
             }
         }
 
-        public static async Task<int> ExecuteAsync(string dir, bool rebase, bool suppressExceptions, LogEventLevel logLevel, IDictionary<string, string> extraOptions, Action<IServiceCollection> customServiceRegistrationAction, Action<ActivationRegistry<IPipelineAction>> customActionRegistrationAction)
+        public static async Task<int> ExecuteAsync(string dir, bool rebase, bool suppressExceptions, LogEventLevel logLevel, int workersCount, IDictionary<string, string> extraOptions, Action<IServiceCollection> customServiceRegistrationAction, Action<ActivationRegistry<IPipelineAction>> customActionRegistrationAction)
         {
             var serviceProvider = CreateServiceProvider(dir, logLevel, customServiceRegistrationAction, customActionRegistrationAction);
 
@@ -134,7 +138,8 @@ namespace Qart.CyberTester
             {
                 { "ct.dir", dir },
                 { "ct.rebase", rebase ? bool.TrueString : bool.FalseString },
-                { "ct.deferExceptions", suppressExceptions ? bool.TrueString : bool.FalseString }
+                { "ct.deferExceptions", suppressExceptions ? bool.TrueString : bool.FalseString },
+                { "ct.workersCount", workersCount.ToString() }
             };
 
             var results = await serviceProvider.GetRequiredService<Testing.CyberTester>().RunTestsAsync(serviceProvider.GetService<ITestSession>(), options);
