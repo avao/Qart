@@ -107,13 +107,21 @@ namespace Qart.Testing.Framework
             {
                 _customTestSession?.OnBegin(testCaseContext);
                 await testCaseContext.ExecuteActionsAsync(_pipelineActionFactory, testCase.Actions, testCaseContext.Options.GetDeferExceptions(), _logger);
+            }
+            catch (Exception ex)
+            {
+                testCaseContext.Logger.LogError(ex, "an error occured");
+                testResult.MarkAsFailed(ex);
+            }
+
+            try
+            {
                 testResult.Description = testCaseContext.DescriptionWriter.GetContent();
                 _customTestSession?.OnFinish(testResult, testCaseContext.Logger);
             }
             catch (Exception ex)
             {
                 testCaseContext.Logger.LogError(ex, "an error occured");
-                testResult.MarkAsFailed(ex);
             }
 
             _logger.LogDebug("Finished processing test case [{0}]", testCase.Id);
