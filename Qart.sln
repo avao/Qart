@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.CyberTester.Tests", "src\Qart.CyberTester.Tests\Qart.CyberTester.Tests.csproj", "{A1A0D817-CF47-426B-9C8A-6A6A36A39D31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qart.CyberTester.Tests", "tests\Qart.CyberTester.Tests\Qart.CyberTester.Tests.csproj", "{A1A0D817-CF47-426B-9C8A-6A6A36A39D31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

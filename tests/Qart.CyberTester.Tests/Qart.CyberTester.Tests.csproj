@@ -11,8 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Qart.CyberTester\Qart.CyberTester.csproj" />
-    <ProjectReference Include="..\Qart.Testing\Qart.Testing.csproj" />
+    <ProjectReference Include="..\..\src\Qart.CyberTester\Qart.CyberTester.csproj" />
   </ItemGroup>
 
 </Project>
