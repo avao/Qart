@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Qart.Testing.Framework.Json
 {
-    public static class IDataStoreJsonExtensions
+    public static class DataStoreJsonExtensions
     {
         public static T GetObjectFromJson<T>(this IDataStore dataStore, string id)
         {

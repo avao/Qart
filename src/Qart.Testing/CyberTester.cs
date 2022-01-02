@@ -27,7 +27,7 @@ namespace Qart.Testing
             _testStorage = testStorage;
             _itemProvider = itemProvider;
             _loggerFactory = loggerFactory;
-            _criticalSectionTokensProvider = criticalSectionTokensProvider ?? new NoTokensCriticalSectionTokensProvider<TestCase>();
+            _criticalSectionTokensProvider = criticalSectionTokensProvider;
             _priorityProvider = priorityProvider;
         }
 
@@ -46,7 +46,7 @@ namespace Qart.Testing
             }
 
             //execute
-            using (var testSession = new TestSession(_pipelineActionFactory, customSession, _loggerFactory, options, _criticalSectionTokensProvider, _itemProvider))
+            using (var testSession = new TestSession(_pipelineActionFactory, customSession, _loggerFactory, options, _itemProvider, _criticalSectionTokensProvider))
             {
                 await testSession.ExecuteAsync(testCases, options.GetWorkersCount());
                 return testSession.Results;

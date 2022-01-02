@@ -30,7 +30,7 @@ namespace Qart.Testing.Context
         {
             if (!pipelineContext.TryGetItem<T>(key, out var item))
             {
-                Require.Fail($"Could not get required item {key}");
+                Require.Fail($"Could not get required item: {key}");
             }
 
             return item;

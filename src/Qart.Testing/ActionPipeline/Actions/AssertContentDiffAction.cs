@@ -46,7 +46,7 @@ namespace Qart.Testing.ActionPipeline.Actions
             (var mismatches, var expected) = await testCase.CompareAndRebaseAsync(actual, expectedBase, diffs, _diffName, _tokenSelectorProvider, testCaseContext.Options.IsRebaseline());
             if (mismatches.Count > 0)
             {
-                var matchedDiffCategories = testCaseContext.GetDiffCategories(actual, expected, _categoriesFile).ToList();
+                var matchedDiffCategories = testCaseContext.GetDiffCategories(actual, expected, _categoriesFile);
                 throw new AssertException("Unexpected token changes:" + string.Join("\n", mismatches.Select(d => d.JsonPath)), matchedDiffCategories);
             }
         }

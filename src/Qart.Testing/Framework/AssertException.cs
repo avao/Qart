@@ -6,8 +6,6 @@ namespace Qart.Testing.Framework
     [Serializable]
     public class AssertException : Exception
     {
-        private static string[] NoCategories = new string[0];
-
         public static string CategoriesKey = "Categories";
 
         public AssertException(string message)

@@ -32,7 +32,7 @@ namespace Qart.Testing.Framework
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestSession customTestSession, ILoggerFactory loggerFactory, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider, IItemProvider itemProvider)
+        public TestSession(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestSession customTestSession, ILoggerFactory loggerFactory, IDictionary<string, string> options, IItemProvider itemProvider, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null)
         {
             _results = new ConcurrentBag<TestCaseExecutionResult>();
             _customTestSession = customTestSession;
@@ -55,7 +55,7 @@ namespace Qart.Testing.Framework
             var schedule = new CriticalSectionsAwareQueue<TestCase>();
             foreach (var testCase in testCases)
             {
-                schedule.Enqueue(testCase, _criticalSectionTokensProvider.GetTokens(testCase));
+                schedule.Enqueue(testCase, _criticalSectionTokensProvider?.GetTokens(testCase) ?? Array.Empty<string>());
             }
 
             for (int i = 0; i < workerCount; ++i)

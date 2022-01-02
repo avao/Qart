@@ -25,7 +25,7 @@ namespace Qart.Testing.Framework
             {
                 ++i;
                 using var scope = logger.BeginScope(i);
-                
+
                 if (actionDescription.Name.StartsWith("#"))
                 {
                     context.Logger.LogDebug("Skipping {0}", actionDescription.Name);
@@ -63,6 +63,8 @@ namespace Qart.Testing.Framework
                 }
                 catch (Exception ex)
                 {
+                    context.Logger.LogDebug("An exception occurred {message}", ex.Message);
+
                     if (suppressExceptionsTilltheEnd)
                     {
                         context.Logger.LogWarning("An exception occurred {message}", ex.Message);
@@ -126,17 +128,17 @@ namespace Qart.Testing.Framework
             }
         }
 
-        public static IEnumerable<string> GetDiffCategories(this TestCaseContext testCaseContext, JToken actual, JToken expected, string categoriesPath)
+        public static IReadOnlyCollection<string> GetDiffCategories(this TestCaseContext testCaseContext, JToken actual, JToken expected, string categoriesPath)
         {
             var categories = testCaseContext.TestCase.GetObjectFromJson<Dictionary<string, IReadOnlyCollection<string>>>(categoriesPath);
             return GetDiffCategories(actual, expected, categories);
         }
 
-        public static IEnumerable<string> GetDiffCategories(JToken actualToken, JToken expectedToken, IDictionary<string, IReadOnlyCollection<string>> categories)
+        public static IReadOnlyCollection<string> GetDiffCategories(JToken actualToken, JToken expectedToken, IDictionary<string, IReadOnlyCollection<string>> categories)
         {
             var knownCategories = categories.Where(kvp => !AreEqual(actualToken, expectedToken, kvp.Value)).Select(kvp => kvp.Key);
             //TODO unknown category
-            return knownCategories;
+            return knownCategories.ToList();
         }
 
         public static string ResolveValue(this TestCaseContext testCaseContext, string value)
@@ -149,7 +151,7 @@ namespace Qart.Testing.Framework
             return jsonPaths.All(jsonPath => AreEqual(actualToken.SelectTokens(jsonPath), expectedToken.SelectTokens(jsonPath)));
         }
 
-        private static IEqualityComparer<JToken> equalityComparer = new JTokenEqualityComparer();
+        private static readonly IEqualityComparer<JToken> equalityComparer = new JTokenEqualityComparer();
         private static bool AreEqual(IEnumerable<JToken> actualTokens, IEnumerable<JToken> expectedTokens)
         {
             return actualTokens.IsEqualTo(expectedTokens, equalityComparer);
