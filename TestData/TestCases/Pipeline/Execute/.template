@@ -1,0 +1,5 @@
+[
+    "http.get?url=https://api.nuget.org/${version}/index.json",
+    "json.select?jsonPath=$.version",
+    "assert?path=expected1.json"
+]

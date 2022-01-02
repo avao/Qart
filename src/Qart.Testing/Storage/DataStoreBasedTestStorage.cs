@@ -51,7 +51,7 @@ namespace Qart.Testing.Storage
             }
 
             Require.NotNull(testModel.Actions, $"No actions found for test {id}");
-            var actions = testModel.Actions.Select(Parse).ToList();
+            var actions = testModel.Actions.Select(ParseUrl).ToList();
 
             return new TestCase(id, testModel.Tags.ToEmptyIfNull(), actions, testCaseDataStore, tmpDataStore, _dataStoreProvider);
         }
@@ -73,7 +73,7 @@ namespace Qart.Testing.Storage
             public record ParametersRecord(string[] Actions);
         }
 
-        private static ResolvableItemDescription Parse(string definition)
+        public static ResolvableItemDescription ParseUrl(string definition)
         {
             (var actionName, var queryString) = definition.SplitOnFirstOptional("?");
             var parametersAsNVC = HttpUtility.ParseQueryString(queryString);

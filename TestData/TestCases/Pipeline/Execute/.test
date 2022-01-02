@@ -1,0 +1,6 @@
+{
+    "actions": [
+        "item.set?key=version&value=v3",
+        "execute?path=.template"
+    ]
+}

@@ -88,6 +88,7 @@ namespace Qart.CyberTester
             registry.Register<AssertContentJsonAction>("assert.json");
 
             registry.Register<SleepAction>("sleep");
+            registry.Register<ExecuteAction>("execute");
 
             //registry.Register<LogInfoAction>("log.info");
         }
