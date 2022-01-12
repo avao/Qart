@@ -3,7 +3,6 @@ using Qart.Core.Activation;
 using Qart.Core.Collections;
 using Qart.Core.Tracing;
 using Qart.Testing.ActionPipeline;
-using Qart.Testing.Context;
 using Qart.Testing.Execution;
 using Qart.Testing.Framework.Logging;
 using System;
@@ -24,7 +23,6 @@ namespace Qart.Testing.Framework
         private readonly ICriticalSectionTokensProvider<TestCase> _criticalSectionTokensProvider;
         private readonly IList<Task> _tasks;
         private readonly CancellationToken _cancellationToken;
-        private readonly IItemProvider _itemsInitialiser;
         private readonly IObjectFactory<IPipelineAction> _pipelineActionFactory;
 
         private readonly ConcurrentBag<TestCaseExecutionResult> _results;
@@ -32,7 +30,7 @@ namespace Qart.Testing.Framework
 
         public IDictionary<string, string> Options { get; private set; }
 
-        public TestSession(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestSession customTestSession, ILoggerFactory loggerFactory, IDictionary<string, string> options, IItemProvider itemProvider, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null)
+        public TestSession(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestSession customTestSession, ILoggerFactory loggerFactory, IDictionary<string, string> options, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null)
         {
             _results = new ConcurrentBag<TestCaseExecutionResult>();
             _customTestSession = customTestSession;
@@ -42,7 +40,6 @@ namespace Qart.Testing.Framework
             _criticalSectionTokensProvider = criticalSectionTokensProvider;
             _tasks = new List<Task>();
             _cancellationToken = Task.Factory.CancellationToken;
-            _itemsInitialiser = itemProvider;
             _pipelineActionFactory = pipelineActionFactory;
         }
 
@@ -142,7 +139,7 @@ namespace Qart.Testing.Framework
                 new CompositeLogger.LoggerInfo(new TextWriterLogger(LogLevel.Debug, writer), true)
             );
 
-            return new TestCaseContext(options, testCase, correlationId, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger), new ItemsHolder(_itemsInitialiser));
+            return new TestCaseContext(options, testCase, correlationId, testCaseLogger, new XDocumentDescriptionWriter(testCaseLogger), new ItemsHolder());
         }
     }
 }

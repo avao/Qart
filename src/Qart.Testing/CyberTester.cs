@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Qart.Core.Activation;
 using Qart.Testing.ActionPipeline;
-using Qart.Testing.Context;
 using Qart.Testing.Execution;
 using Qart.Testing.Framework;
 using Qart.Testing.Storage;
@@ -15,17 +14,15 @@ namespace Qart.Testing
     public class CyberTester
     {
         private readonly ITestStorage _testStorage;
-        private readonly IItemProvider _itemProvider;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ICriticalSectionTokensProvider<TestCase> _criticalSectionTokensProvider;
         private readonly IObjectFactory<IPipelineAction> _pipelineActionFactory;
         private readonly IPriorityProvider _priorityProvider;
 
-        public CyberTester(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestStorage testStorage, ILoggerFactory loggerFactory, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null, IItemProvider itemProvider = null, IPriorityProvider priorityProvider = null)
+        public CyberTester(IObjectFactory<IPipelineAction> pipelineActionFactory, ITestStorage testStorage, ILoggerFactory loggerFactory, ICriticalSectionTokensProvider<TestCase> criticalSectionTokensProvider = null, IPriorityProvider priorityProvider = null)
         {
             _pipelineActionFactory = pipelineActionFactory;
             _testStorage = testStorage;
-            _itemProvider = itemProvider;
             _loggerFactory = loggerFactory;
             _criticalSectionTokensProvider = criticalSectionTokensProvider;
             _priorityProvider = priorityProvider;
@@ -46,7 +43,7 @@ namespace Qart.Testing
             }
 
             //execute
-            using (var testSession = new TestSession(_pipelineActionFactory, customSession, _loggerFactory, options, _itemProvider, _criticalSectionTokensProvider))
+            using (var testSession = new TestSession(_pipelineActionFactory, customSession, _loggerFactory, options, _criticalSectionTokensProvider))
             {
                 await testSession.ExecuteAsync(testCases, options.GetWorkersCount());
                 return testSession.Results;

@@ -13,6 +13,8 @@ using Qart.Testing.Transformations.StreamTransformers;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Qart.CyberTester
 {
@@ -55,6 +57,8 @@ namespace Qart.CyberTester
 
             services.AddSingleton<ITokenSelectorProvider>(sp => new PropertyBasedTokenSelectorProvider("id"));
 
+            services.AddSingleton<HttpClient>();
+
             return actionsRegistry;
         }
 
@@ -67,10 +71,10 @@ namespace Qart.CyberTester
 
         public static void RegisterBuiltInActions(ActivationRegistry<IPipelineAction> registry)
         {
-            registry.Register<HttpGetAction>("http.get");
-            registry.Register<HttpPutAction>("http.put");
-            registry.Register<HttpPostAction>("http.post");
-            registry.Register<HttpDeleteAction>("http.delete");
+            registry.Register<HttpNoBodyAction>("http.get", new Dictionary<string, object> { { "httpMethod", HttpMethod.Get } });
+            registry.Register<HttpAction>("http.put", new Dictionary<string, object> { { "httpMethod", HttpMethod.Put } });
+            registry.Register<HttpAction>("http.post", new Dictionary<string, object> { { "httpMethod", HttpMethod.Post } });
+            registry.Register<HttpNoBodyAction>("http.delete", new Dictionary<string, object> { { "httpMethod", HttpMethod.Delete } });
 
             registry.Register<JsonSelectAction>("json.select");
             registry.Register<JsonSelectManyAction>("json.select_many");

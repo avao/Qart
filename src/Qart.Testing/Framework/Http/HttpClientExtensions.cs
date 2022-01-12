@@ -20,25 +20,42 @@ namespace Qart.Testing.Framework.Http
             => client.SendEnsureSuccessAsync(HttpMethod.Delete, relativeUri, null, correlationId, logger);
 
 
-        private static StringContent CreateContent(string content, string mediaType)
+        public static StringContent CreateContent(string content, string mediaType)
         {
+            if (content == null)
+                return null;
+
             mediaType ??= content.StartsWith("<?xml")
                 ? "application/xml"
                 : "application/json";
             return new StringContent(content, Encoding.UTF8, mediaType);
         }
 
-        private static async Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, StringContent content, string correlationId, ILogger logger)
+        private static async Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpMethod httpMethod, string relativeUri, HttpContent content, string correlationId, ILogger logger)
         {
-            logger.LogDebug("Executing {HttpMethod} on {Url}", httpMethod, relativeUri);
+            var request = CreateHttpRequestMessage(httpMethod, relativeUri, content, correlationId);
+            return await client.SendEnsureSuccessAsync(request, logger);
+        }
+
+        public static HttpRequestMessage CreateHttpRequestMessage(HttpMethod httpMethod, string relativeUri, HttpContent content, string correlationId)
+        {
             var request = new HttpRequestMessage(httpMethod, relativeUri);
             request.Headers.Add("X-Correlation-ID", correlationId);
             if (content != null)
             {
-                logger.LogTrace("with content: {content}", content.ReadAsStringAsync().Result);
                 request.Content = content;
             }
-            return await client.SendAsync(request).GetContentAssertSuccessAsync(logger);
+            return request;
+        }
+
+        public static async Task<string> SendEnsureSuccessAsync(this HttpClient client, HttpRequestMessage httpRequestMessage, ILogger logger)
+        {
+            logger.LogDebug("Executing {HttpMethod} for {Url}", httpRequestMessage.Method, httpRequestMessage.RequestUri);
+            if (httpRequestMessage.Content != null)
+            {
+                logger.LogTrace("with content: {content}", httpRequestMessage.Content.ReadAsStringAsync().Result);
+            }
+            return await client.SendAsync(httpRequestMessage).GetContentAssertSuccessAsync(logger);
         }
     }
 }

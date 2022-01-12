@@ -7,12 +7,10 @@ namespace Qart.Testing.ActionPipeline
     public class ItemsHolder : IItemsHolder
     {
         private readonly IDictionary<string, object> _items;
-        private readonly IItemProvider _itemsInitialiser;
 
-        public ItemsHolder(IItemProvider itemsInitialiser = null)
+        public ItemsHolder()
         {
             _items = new Dictionary<string, object>();
-            _itemsInitialiser = itemsInitialiser;
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
@@ -30,12 +28,6 @@ namespace Qart.Testing.ActionPipeline
             if (_items.TryGetValue(key, out var obj))
             {
                 item = (T)obj;
-                return true;
-            }
-
-            if (_itemsInitialiser != null && _itemsInitialiser.TryGetItem<T>(key, out item))
-            {
-                SetItem(key, item);
                 return true;
             }
 

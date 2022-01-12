@@ -23,8 +23,8 @@ namespace Qart.Testing.Framework.Http
             logger.LogTrace("Response code [{code}]", task.Result.StatusCode);
             if (!task.Result.IsSuccessStatusCode)
             {
-                var content = await task.Result.Content.ReadAsStringAsync().ConfigureAwait(false);
-                
+                var content = await task.Result.Content.ReadAsStringAsync();
+
                 var exception = new AssertException($"Response code {task.Result.StatusCode} does not indicate success.");
                 exception.Data.Add("content", content);
 
@@ -38,8 +38,8 @@ namespace Qart.Testing.Framework.Http
 
         public static async Task<string> GetContentAssertSuccessAsync(this Task<HttpResponseMessage> task, ILogger logger)
         {
-            var responseMessage = await task.AssertSuccessAsync(logger).ConfigureAwait(false);
-            var message = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseMessage = await task.AssertSuccessAsync(logger);
+            var message = await responseMessage.Content.ReadAsStringAsync();
             return message;
         }
     }
