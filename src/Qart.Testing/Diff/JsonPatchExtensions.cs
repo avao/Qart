@@ -33,7 +33,7 @@ namespace Qart.Testing.Diff
 
         public static void RemoveTokens(this JToken token, IEnumerable<string> jsonPaths)
         {
-            jsonPaths.SelectMany(jsonPath => token.SelectTokens(jsonPath).Select(t => () => Remove(t)))
+            jsonPaths.SelectMany(jsonPath => token.SelectTokens(jsonPath).Select<JToken, Action>(t => () => Remove(t)))
                      .ToList() //force iteration before updates
                      .ForEach(action => action.Invoke());
         }
