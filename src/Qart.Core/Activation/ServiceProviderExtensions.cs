@@ -54,6 +54,10 @@ namespace Qart.Core.Activation
                 else if (parameter.IsOptional)
                 {
                     value = parameter.DefaultValue;
+                    if(value == null)
+                    {
+                        value = serviceProvider.GetService(parameter.ParameterType);
+                    }
                 }
                 else
                 {
