@@ -82,6 +82,7 @@ namespace Qart.CyberTester
             registry.Register<JsonReplaceAction>("json.replace");
             registry.Register<JsonOrderAction>("json.order");
             registry.Register<JsonEditAction>("json.edit");
+            registry.Register<JsonValidateAction>("json.validate");
 
             registry.Register<ToJTokenAction>("to_jtoken");
             registry.Register<LoadItemAction>("item.load");

@@ -1,0 +1,7 @@
+{
+    "actions": [
+        "item.load?path=value.json",
+        "json.validate?schemaPath=schema.json",
+        "assert?path=expectedValidationResult.json"
+    ]
+}

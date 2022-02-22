@@ -1,0 +1,38 @@
+{
+  "$id": "test",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "property": {
+      "type": "object",
+      "properties": {
+        "nested_integer": {
+          "type": "number"
+        },
+        "nested_array": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "array_property": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
