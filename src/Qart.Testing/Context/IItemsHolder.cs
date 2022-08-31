@@ -96,7 +96,9 @@ namespace Qart.Testing.Context
                 {
                     foreach (var token in doc.SelectTokens(jsonPath))
                     {
-                        var value = token.ToString();
+                        var value = token.Type == JTokenType.Date
+                                ? token.Value<DateTime>().ToString("O") //DateTime drops milliseconds
+                                : token.ToString();
 
                         value = tokenMapper.GetName(kvp.Key, jsonPath, value);
 
