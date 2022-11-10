@@ -22,7 +22,7 @@ namespace Qart.Testing.ActionPipeline.Actions.Http
         private readonly bool _multipleResults;
 
         public HttpAction(HttpMethod httpMethod, string url, string sourceKey = null, string targetKey = null, string mediaType = null, IHttpRequestMessageProcessor httpRequestMessageProcessor = null)
-            : this(httpMethod, url, targetKey ?? sourceKey, (testCase, pipelineContext) => new[] { HttpClientExtensions.CreateContent(pipelineContext.TryGetItem(sourceKey, out string item) ? item : null, mediaType) }, httpRequestMessageProcessor, false)
+            : this(httpMethod, url, targetKey ?? sourceKey, (testCase, pipelineContext) => new[] { HttpClientExtensions.CreateContent(pipelineContext.TryGetItem(sourceKey, out object item) ? item.ToString() : null, mediaType) }, httpRequestMessageProcessor, false)
         { }
 
         public HttpAction(HttpMethod httpMethod, string url, string path, string sourceKey = null, string targetKey = null, string mediaType = null, IHttpRequestMessageProcessor httpRequestMessageProcessor = null)
