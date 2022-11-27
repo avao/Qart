@@ -22,7 +22,7 @@ namespace Qart.Testing.Diff
                 }
                 else
                 {
-                    actions.AddRange(tokens.Select<JToken, Action>(token => (diff.Value?.Type ?? JTokenType.Null) == JTokenType.Null
+                    actions.AddRange(tokens.Select<JToken, Action>(token => JsonPatchCreator.IsNull(diff.Value)
                                                                                 ? () => Remove(token)
                                                                                 : () => token.Replace(diff.Value)));
                 }

@@ -42,8 +42,8 @@ namespace Qart.Testing.ActionPipeline.Actions
             var testCase = testCaseContext.TestCase;
             var expectedBase = await testCase.GetObjectFromJsonAsync<JToken>(_baseFile);
 
-            var diffs = JsonPatchCreator.Compare(expectedBase, actual, _tokenSelectorProvider);
-            (var mismatches, var expected) = await testCase.CompareAndRebaseAsync(actual, expectedBase, diffs, _diffName, _tokenSelectorProvider, testCaseContext.Options.IsRebaseline());
+            var diffs = JsonPatchCreator.Compare(expectedBase, actual, _tokenSelectorProvider, true);
+            (var mismatches, var expected) = await testCase.CompareAndRebaseAsync(actual, expectedBase, diffs, _diffName, _tokenSelectorProvider, testCaseContext.Options.IsRebaseline(), true);
             if (mismatches.Count > 0)
             {
                 var matchedDiffCategories = testCaseContext.GetDiffCategories(actual, expected, _categoriesFile);

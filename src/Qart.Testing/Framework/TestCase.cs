@@ -144,22 +144,22 @@ namespace Qart.Testing.Framework
             });
         }
 
-        public static Task AssertContentAsDiffAsync(this TestCase testCase, JToken actual, string expectedName, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
+        public static Task AssertContentAsDiffAsync(this TestCase testCase, JToken actual, string expectedName, string resultName, ITokenSelectorProvider idProvider, bool rebaseline, bool treatNullValueAsMissing)
         {
-            return testCase.AssertContentAsDiffAsync(actual, testCase.GetObjectFromJson<JToken>(expectedName), resultName, idProvider, rebaseline);
+            return testCase.AssertContentAsDiffAsync(actual, testCase.GetObjectFromJson<JToken>(expectedName), resultName, idProvider, rebaseline, treatNullValueAsMissing);
         }
 
-        public static async Task AssertContentAsDiffAsync(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
+        public static async Task AssertContentAsDiffAsync(this TestCase testCase, JToken actual, JToken expected, string resultName, ITokenSelectorProvider idProvider, bool rebaseline, bool treatNullValueAsMissing)
         {
-            var diffs = JsonPatchCreator.Compare(expected, actual, idProvider);
-            (var mismatches, var _) = await testCase.CompareAndRebaseAsync(actual, expected, diffs, resultName, idProvider, rebaseline);
+            var diffs = JsonPatchCreator.Compare(expected, actual, idProvider, treatNullValueAsMissing);
+            (var mismatches, var _) = await testCase.CompareAndRebaseAsync(actual, expected, diffs, resultName, idProvider, rebaseline, treatNullValueAsMissing);
             if (mismatches.Count > 0)
             {
                 throw new AssertException("Unexpected token changes:" + string.Join("\n", mismatches.Select(d => d.JsonPath)));
             }
         }
 
-        public static async Task<(IReadOnlyCollection<DiffItem> mismatches, JToken expected)> CompareAndRebaseAsync(this TestCase testCase, JToken actual, JToken @base, IEnumerable<DiffItem> actualDiffs, string resultName, ITokenSelectorProvider idProvider, bool rebaseline)
+        public static async Task<(IReadOnlyCollection<DiffItem> mismatches, JToken expected)> CompareAndRebaseAsync(this TestCase testCase, JToken actual, JToken @base, IEnumerable<DiffItem> actualDiffs, string resultName, ITokenSelectorProvider idProvider, bool rebaseline, bool treatNullValueAsMissing)
         {
             var expectedDiffs = await testCase.GetObjectFromJsonAsync<IEnumerable<DiffItem>>(resultName) ?? Enumerable.Empty<DiffItem>();
 
@@ -175,7 +175,7 @@ namespace Qart.Testing.Framework
                 throw;
             }
 
-            var mismatches = JsonPatchCreator.Compare(expected, actual, idProvider).ToList();
+            var mismatches = JsonPatchCreator.Compare(expected, actual, idProvider, treatNullValueAsMissing).ToList();
             if (mismatches.Count > 0)
             {
                 await testCase.RebaseContentOrStoreTmpAsync(resultName, actualDiffs.ToIndentedJson(), rebaseline);

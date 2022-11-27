@@ -13,19 +13,28 @@ namespace Qart.Testing.Tests.Diff
 
         private static IEnumerable<object[]> CompareTestSource()
         {
-            yield return new object[] { new JArray("a", "b"), new JArray("c", "b"), "[{\"JsonPath\":\"$[0]\",\"Value\":\"c\"}]" };
-            yield return new object[] { new JArray("a", "b"), new JArray("a"), "[{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
-            yield return new object[] { new JArray("a", "b"), new JArray(), "[{\"JsonPath\":\"$[0]\",\"Value\":null},{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
-            yield return new object[] { new JArray(), new JArray("a"), "[{\"JsonPath\":\"$[0]\",\"Value\":\"a\"}]" };
+            yield return new object[] { new JArray("a", "b"), new JArray("c", "b"), true, "[{\"JsonPath\":\"$[0]\",\"Value\":\"c\"}]" };
+            yield return new object[] { new JArray("a", "b"), new JArray("a"), true, "[{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
+            yield return new object[] { new JArray("a", "b"), new JArray(), true, "[{\"JsonPath\":\"$[0]\",\"Value\":null},{\"JsonPath\":\"$[1]\",\"Value\":null}]" };
+            yield return new object[] { new JArray(), new JArray("a"), true, "[{\"JsonPath\":\"$[0]\",\"Value\":\"a\"}]" };
+            yield return new object[] { new JObject(new JProperty("prop", null)), new JObject(), false, "[{\"JsonPath\":\"$.prop\",\"Value\":null}]" };
+            yield return new object[] { new JObject(), new JObject(new JProperty("prop", null)), false, "[{\"JsonPath\":\"$.prop\",\"Value\":null}]" };
+            yield return new object[] { new JObject(new JProperty("prop", null)), new JObject(), true, "[]" };
+            yield return new object[] { new JObject(), new JObject(new JProperty("prop", null)), true, "[]" };
         }
 
         [TestCaseSource(nameof(CompareTestSource))]
-        public void CompareTest(JToken lhs, JToken rhs, string expectedResult)
+        public void CompareTest(JToken lhs, JToken rhs, bool treatNullValueAsMissing, string expectedResult)
         {
-            var result = JsonPatchCreator.Compare(lhs, rhs, _propertyBasedIdProvider).ToList();
+            var result = JsonPatchCreator.Compare(lhs, rhs, _propertyBasedIdProvider, treatNullValueAsMissing).ToList();
             Assert.That(JsonConvert.SerializeObject(result), Is.EqualTo(expectedResult));
             lhs.ApplyPatch(result);
-            Assert.That(lhs, Is.EqualTo(rhs));
+            
+            if(!treatNullValueAsMissing)
+            {
+                Assert.That(lhs, Is.EqualTo(rhs));
+            }
+            Assert.That(JsonPatchCreator.Compare(lhs, rhs, _propertyBasedIdProvider, treatNullValueAsMissing).ToList(), Is.Empty);
         }
     }
 }

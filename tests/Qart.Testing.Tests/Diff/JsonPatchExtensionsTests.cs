@@ -15,6 +15,7 @@ namespace Qart.Testing.Tests.Diff
         {
             yield return new object[] { JObject.FromObject(new { a = new { prop = "abc" } }), "$.a.newProp", new JValue(1), "{\"a\":{\"prop\":\"abc\",\"newProp\":1}}" };
             yield return new object[] { JObject.FromObject(new { a = new { prop = Array.Empty<string>() } }), "$.a.prop[0]", new JValue(1), "{\"a\":{\"prop\":[1]}}" };
+            yield return new object[] { JObject.FromObject(new { a = new { prop = "abc" } }), "$.a.newProp", null, "{\"a\":{\"prop\":\"abc\",\"newProp\":null}}" };
         }
 
         [TestCaseSource(nameof(AddTokenTestSource))]

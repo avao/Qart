@@ -8,12 +8,12 @@ namespace Qart.Testing.Diff
 {
     public class JsonPatchCreator
     {
-        public static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, ITokenSelectorProvider idProvider)
+        public static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, ITokenSelectorProvider idProvider, bool treatNullValueAsMissing)
         {
-            return Compare(lhs, rhs, "$", idProvider);
+            return Compare(lhs, rhs, "$", idProvider, treatNullValueAsMissing);
         }
 
-        private static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, string jsonPath, ITokenSelectorProvider idProvider)
+        private static IEnumerable<DiffItem> Compare(JToken lhs, JToken rhs, string jsonPath, ITokenSelectorProvider idProvider, bool treatNullValueAsMissing)
         {
             if (rhs == null)
             {
@@ -37,7 +37,7 @@ namespace Qart.Testing.Diff
                     {
                         var lhsOrderedKeys = lhsJobj.Properties().Select(p => p.Name);
                         var rhsOrderedKeys = rhsJobj.Properties().Select(p => p.Name);
-                        foreach (var diff in CompareChildren(jsonPath, lhsOrderedKeys, rhsOrderedKeys, lhsJobj, rhsJobj, idProvider))
+                        foreach (var diff in CompareChildren(jsonPath, lhsOrderedKeys, rhsOrderedKeys, lhsJobj, rhsJobj, idProvider, treatNullValueAsMissing))
                         {
                             yield return diff;
                         }
@@ -52,7 +52,7 @@ namespace Qart.Testing.Diff
                     {
                         var lhsElements = IdentifyElements(lhsArray, jsonPath, idProvider);
                         var rhsElements = IdentifyElements(rhsArray, jsonPath, idProvider);
-                        foreach (var diff in CompareChildren(jsonPath, lhsElements.Keys, rhsElements.Keys, lhsElements, rhsElements, idProvider))
+                        foreach (var diff in CompareChildren(jsonPath, lhsElements.Keys, rhsElements.Keys, lhsElements, rhsElements, idProvider, treatNullValueAsMissing))
                         {
                             yield return diff;
                         }
@@ -71,21 +71,27 @@ namespace Qart.Testing.Diff
             }
         }
 
-        private static IEnumerable<DiffItem> CompareChildren(string jsonPath, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, ITokenSelectorProvider idProvider)
+        private static IEnumerable<DiffItem> CompareChildren(string jsonPath, IEnumerable<string> lhsKeys, IEnumerable<string> rhsKeys, IDictionary<string, JToken> lhsElements, IDictionary<string, JToken> rhsElements, ITokenSelectorProvider idProvider, bool treatNullValueAsMissing)
         {
             foreach ((string lhsKey, string rhsKey) in lhsKeys.JoinWithNulls(rhsKeys))
             {
                 if (lhsKey == null)
                 {
-                    yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, rhsKey), rhsElements[rhsKey]);
+                    if (!treatNullValueAsMissing || !IsNull(rhsElements[rhsKey]))
+                    {
+                        yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, rhsKey), rhsElements[rhsKey]);
+                    }
                 }
                 else if (rhsKey == null)
                 {
-                    yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, lhsKey), null);
+                    if (!treatNullValueAsMissing || !IsNull(lhsElements[lhsKey]))
+                    {
+                        yield return new DiffItem(JsonPathFormatter.AddToken(jsonPath, lhsKey), null);
+                    }
                 }
                 else
                 {
-                    foreach (var diff in Compare(lhsElements[lhsKey], rhsElements[rhsKey], JsonPathFormatter.AddToken(jsonPath, lhsKey), idProvider))
+                    foreach (var diff in Compare(lhsElements[lhsKey], rhsElements[rhsKey], JsonPathFormatter.AddToken(jsonPath, lhsKey), idProvider, treatNullValueAsMissing))
                     {
                         yield return diff;
                     }
@@ -96,6 +102,11 @@ namespace Qart.Testing.Diff
         private static IDictionary<string, JToken> IdentifyElements(JArray array, string jsonPath, ITokenSelectorProvider idProvider)
         {
             return array.Select((item, index) => (idProvider.GetTokenSelector(jsonPath, item, index), item)).ToDictionary(kvp => kvp.Item1, kvp => kvp.Item2);
+        }
+
+        internal static bool IsNull(JToken token)
+        {
+            return token == null || token.Type == JTokenType.Null;
         }
     }
 }

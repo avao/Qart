@@ -8,7 +8,7 @@ namespace Qart.Testing.Framework.Json
 {
     public static class JsonExtensions
     {
-        public static void OrderItems(this JArray array, Func<JToken, object> keySelector)
+        public static void OrderItems<TKey>(this JArray array, Func<JToken, TKey> keySelector)
         {
             var orderedArray = new JArray();
             foreach (var item in array.Children().OrderBy(keySelector))
@@ -19,7 +19,7 @@ namespace Qart.Testing.Framework.Json
             array.ReplaceAll(orderedArray.Children());
         }
 
-        public static void Order(this JObject obj, string path, Func<JToken, object> keySelector)
+        public static void Order<TKey>(this JObject obj, string path, Func<JToken, TKey> keySelector)
         {
             foreach (var array in obj.SelectTokens(path).OfType<JArray>())
             {
